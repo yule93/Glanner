@@ -1,0 +1,13 @@
+package com.glanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class GlannerApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(GlannerApplication.class, args);
+	}
+
+}
