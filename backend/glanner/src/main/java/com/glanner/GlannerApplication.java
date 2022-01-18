@@ -11,5 +11,4 @@ public class GlannerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GlannerApplication.class, args);
 	}
-
 }
