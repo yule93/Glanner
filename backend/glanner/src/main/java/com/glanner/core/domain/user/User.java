@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @QueryEntity
@@ -18,9 +16,7 @@ import java.util.List;
 public class User extends BaseTimeEntity {
 
     @Builder
-    public User(Long id, String name, String email, String password,
-                String phoneNumber, UserRole role, Schedule schedule, List<Interest> interests) {
-        this.id = id;
+    public User(String name, String email, String password, String phoneNumber, UserRoleStatus role, Schedule schedule, String interests) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -29,29 +25,30 @@ public class User extends BaseTimeEntity {
         this.schedule = schedule;
         this.interests = interests;
     }
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-
-    @Column
     private String name;
-
-    @Column
     private String email;
-
-    @Column
     private String password;
-
-    @Column
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRoleStatus role;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
+    private String interests;
 
-    private List<Interest> interests = new ArrayList<>();
+    public void changeSchedule(Schedule schedule){
+        this.schedule = schedule;
+        schedule.changeUser(this);
+    }
+
+    public void changePassword(String password){
+        this.password = password;
+    }
 
 }

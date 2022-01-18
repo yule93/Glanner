@@ -2,21 +2,19 @@ spring:
   profiles:
     active: test
   datasource:
-    url: jdbc:h2:tcp://localhost/~/datajpa
-    username:
+    url: jdbc:h2:tcp://localhost/~/glannerTest
+    username: admin
     password:
     driver-class-name: org.h2.Driver
 
 
   jpa:
-    generate-ddl: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-        use_sql_comments: true
 
 logging.level:
   org.hibernate.SQL: debug
