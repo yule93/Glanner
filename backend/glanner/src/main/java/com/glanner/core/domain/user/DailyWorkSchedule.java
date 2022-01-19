@@ -1,4 +1,4 @@
-package com.glanner.core.domain.glanner;
+package com.glanner.core.domain.user;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
 import com.querydsl.core.annotations.QueryEntity;
@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @QueryEntity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DailyWorkGlanner extends BaseTimeEntity {
+public class DailyWorkSchedule extends BaseTimeEntity {
 
     @Builder
-    public DailyWorkGlanner(Glanner glanner, LocalDateTime startDate, LocalDateTime endDate, String title, String content) {
-        this.glanner = glanner;
+    public DailyWorkSchedule(Schedule schedule, LocalDateTime startDate, LocalDateTime endDate, String title, String content) {
+        this.schedule = schedule;
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
@@ -30,12 +30,25 @@ public class DailyWorkGlanner extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "glanner_id")
-    private Glanner glanner;
-
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
     private String content;
 
+    public void changeSchedule(Schedule schedule){
+        this.schedule = schedule;
+    }
+
+    public void changeDailyWork(LocalDateTime startDate, LocalDateTime endDate, String title, String content){
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.title = title;
+        this.content = content;
+    }
+
+    public void cancel(){
+        schedule.getWorks().remove(this);
+    }
 }

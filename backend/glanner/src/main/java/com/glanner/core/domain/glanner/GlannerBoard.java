@@ -5,6 +5,7 @@ import com.glanner.core.domain.board.Comment;
 import com.glanner.core.domain.user.User;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,17 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GlannerBoard extends BaseTimeEntity {
+
+    @Builder
+    public GlannerBoard(User user, Glanner glanner, String title, String content, List<Comment> comments, List<String> fileUrls, int count) {
+        this.user = user;
+        this.glanner = glanner;
+        this.title = title;
+        this.content = content;
+        this.comments = comments;
+        this.fileUrls = fileUrls;
+        this.count = count;
+    }
 
     @Id @GeneratedValue
     @Column(name = "glanner_board_id")
@@ -34,7 +46,8 @@ public class GlannerBoard extends BaseTimeEntity {
 
     private String content;
 
-    @OneToMany(mappedBy = "commet_id", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
     private List<Comment> comments = new ArrayList<>();
 
     private List<String> fileUrls = new ArrayList<>();

@@ -2,10 +2,10 @@ package com.glanner.core.domain.glanner;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
 import com.glanner.core.domain.board.Comment;
-import com.glanner.core.domain.user.Interest;
 import com.glanner.core.domain.user.User;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +18,17 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GroupBoard extends BaseTimeEntity {
+
+    @Builder
+    public GroupBoard(User user, String title, String content, List<Comment> comments, String interests, List<String> fileUrls, int count) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.comments = comments;
+        this.interests = interests;
+        this.fileUrls = fileUrls;
+        this.count = count;
+    }
 
     @Id @GeneratedValue
     @Column(name = "group_board_id")
@@ -42,5 +53,4 @@ public class GroupBoard extends BaseTimeEntity {
     private List<String> fileUrls = new ArrayList<>();
 
     private int count;
-
 }

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,20 +19,27 @@ import java.util.List;
 public class Schedule extends BaseTimeEntity {
 
     @Builder
-    public Schedule(Long id, User user, List<Work> works) {
-        this.id = id;
+    public Schedule(User user) {
         this.user = user;
-        this.works = works;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "schedule_id")
     private Long id;
 
     @OneToOne(mappedBy = "schedule", fetch = FetchType.LAZY)
     private User user;
 
-    @Embedded
-    private List<Work> works = new ArrayList<>();
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<DailyWorkSchedule> works = new ArrayList<>();
+
+    public void changeUser(User user){
+        this.user = user;
+    }
+
+    public void addDailyWork(DailyWorkSchedule work){
+        works.add(work);
+        work.changeSchedule(this);
+    }
+
 }

@@ -16,24 +16,21 @@ import javax.persistence.*;
 public class Log extends BaseTimeEntity {
 
     @Builder
-    public Log(Long id, User user, String content, String url) {
-        this.id = id;
+    public Log(User user, String content, String url) {
         this.user = user;
         this.content = content;
         this.url = url;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "schedule_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "log_id")
     private Long id;
 
-    @OneToOne(mappedBy = "schedule", fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column
     private String content;
 
-    @Column
     private String url;
 }
