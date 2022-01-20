@@ -22,7 +22,7 @@ public class UserGlanner extends BaseTimeEntity {
         this.user = user;
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "user_glanner_id")
     private Long id;
 
@@ -34,4 +34,7 @@ public class UserGlanner extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void changeUserGlanner(Glanner glanner){
+        this.glanner = glanner;
+    }
 }

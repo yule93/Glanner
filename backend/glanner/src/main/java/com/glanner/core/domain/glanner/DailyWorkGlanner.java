@@ -38,4 +38,8 @@ public class DailyWorkGlanner extends BaseTimeEntity {
     private String title;
     private String content;
 
+    public void changeGlanner(Glanner glanner){
+        this.glanner = glanner;
+    }
+
 }

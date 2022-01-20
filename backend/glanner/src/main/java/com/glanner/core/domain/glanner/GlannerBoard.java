@@ -13,6 +13,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 @QueryEntity
 @Getter
@@ -20,12 +21,11 @@ import java.util.List;
 public class GlannerBoard extends BaseTimeEntity {
 
     @Builder
-    public GlannerBoard(User user, Glanner glanner, String title, String content, List<Comment> comments, List<String> fileUrls, int count) {
+    public GlannerBoard(User user, Glanner glanner, String title, String content, String fileUrls, int count) {
         this.user = user;
         this.glanner = glanner;
         this.title = title;
         this.content = content;
-        this.comments = comments;
         this.fileUrls = fileUrls;
         this.count = count;
     }
@@ -43,15 +43,15 @@ public class GlannerBoard extends BaseTimeEntity {
     private Glanner glanner;
 
     private String title;
-
     private String content;
+    private String fileUrls;
+    private int count;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "glannerBoard", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    private List<String> fileUrls = new ArrayList<>();
-
-    private int count;
+    public void addComment(Comment comment){
+        comments.add(comment);
+    }
 
 }

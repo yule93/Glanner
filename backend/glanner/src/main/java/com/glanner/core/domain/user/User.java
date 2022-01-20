@@ -1,6 +1,8 @@
 package com.glanner.core.domain.user;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
+import com.glanner.core.domain.glanner.GroupBoard;
+import com.glanner.core.domain.glanner.UserGlanner;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @QueryEntity
@@ -26,7 +30,7 @@ public class User extends BaseTimeEntity {
         this.interests = interests;
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "user_id")
     private Long id;
     private String name;
@@ -42,6 +46,9 @@ public class User extends BaseTimeEntity {
     private Schedule schedule;
     private String interests;
 
+    @OneToMany(mappedBy = "user")
+    private List<UserGlanner> userGlanners = new ArrayList<>();
+
     public void changeSchedule(Schedule schedule){
         this.schedule = schedule;
         schedule.changeUser(this);
@@ -51,4 +58,7 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
 
+    public void addUserGlanner(UserGlanner userGlanner){
+        userGlanners.add(userGlanner);
+    }
 }

@@ -20,11 +20,10 @@ import java.util.List;
 public class GroupBoard extends BaseTimeEntity {
 
     @Builder
-    public GroupBoard(User user, String title, String content, List<Comment> comments, String interests, List<String> fileUrls, int count) {
+    public GroupBoard(User user, String title, String content, String interests, String fileUrls, int count) {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.comments = comments;
         this.interests = interests;
         this.fileUrls = fileUrls;
         this.count = count;
@@ -38,19 +37,25 @@ public class GroupBoard extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column
     private String title;
-
-    @Column
     private String content;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupBoard", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     private String interests;
-
-    private List<String> fileUrls = new ArrayList<>();
-
+    private String fileUrls;
     private int count;
+
+    public void changeGroupBoard(String title, String content, String interests, String fileUrls){
+        this.title = title;
+        this.content = content;
+        this.interests = interests;
+        this.fileUrls = fileUrls;
+    }
+
+    public void addCommnet(Comment comment){
+        comments.add(comment);
+    }
+
 }

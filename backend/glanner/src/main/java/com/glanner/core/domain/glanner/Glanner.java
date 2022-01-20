@@ -18,11 +18,8 @@ import java.util.List;
 public class Glanner extends BaseTimeEntity {
 
     @Builder
-    public Glanner(List<UserGlanner> userGlanners, List<DailyWorkGlanner> dailyworks, GroupBoard board, List<GlannerBoard> glannerBoards) {
-        this.userGlanners = userGlanners;
-        this.dailyworks = dailyworks;
+    public Glanner(GroupBoard board) {
         this.board = board;
-        this.glannerBoards = glannerBoards;
     }
 
     @Id @GeneratedValue
@@ -40,7 +37,21 @@ public class Glanner extends BaseTimeEntity {
     private GroupBoard board;
 
     @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY)
-    @JoinColumn(name = "glanner_board_id")
     private List<GlannerBoard> glannerBoards = new ArrayList<>();
 
+    public void addUserGlanner(UserGlanner userGlanner){
+        userGlanners.add(userGlanner);
+        userGlanner.changeUserGlanner(this);
+    }
+
+    public void addDailyWorkGlanner(DailyWorkGlanner work){
+        dailyworks.add(work);
+        work.changeGlanner(this);
+    }
+
+    public void addGlannerBoard(GlannerBoard glannerBoard){
+        glannerBoards.add(glannerBoard);
+    }
+
 }
+
