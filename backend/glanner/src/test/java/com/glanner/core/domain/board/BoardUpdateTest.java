@@ -1,14 +1,11 @@
 package com.glanner.core.domain.board;
 
-import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.CommentRepository;
 import com.glanner.core.repository.FreeBoardRepository;
 import com.glanner.core.repository.NoticeBoardRepository;
-import com.glanner.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -30,14 +27,14 @@ public class BoardUpdateTest {
     @Test
     public void testUpdateNoticeBoard() throws Exception{
         // given
-        NoticeBoard noticeBoard = noticeBoardRepository.findById((long)1).orElseThrow(
+        NoticeBoard noticeBoard = noticeBoardRepository.findByTitleLike("%공지%").orElseThrow(
                 () -> new IllegalStateException("없는 게시물 입니다.")
         );
 
         // when
         noticeBoard.changeContent("내용 업데이트");
         em.flush();
-        NoticeBoard updatedNoticeBoard = noticeBoardRepository.findById((long)1).orElseThrow(
+        NoticeBoard updatedNoticeBoard = noticeBoardRepository.findByTitleLike("%공지%").orElseThrow(
                 () -> new IllegalStateException("없는 게시물 입니다.")
         );
 
@@ -48,14 +45,14 @@ public class BoardUpdateTest {
     @Test
     public void testUpdateFreeBoard() throws Exception{
         // given
-        FreeBoard freeBoard = freeBoardRepository.findById((long)1).orElseThrow(
+        FreeBoard freeBoard = freeBoardRepository.findByTitleLike("%제목%").orElseThrow(
                 () -> new IllegalStateException("없는 게시물 입니다.")
         );
 
         // when
         freeBoard.changeContent("내용 업데이트");
         em.flush();
-        FreeBoard updatedFreeBoard = freeBoardRepository.findById((long)1).orElseThrow(
+        FreeBoard updatedFreeBoard = freeBoardRepository.findByTitleLike("%제목%").orElseThrow(
                 () -> new IllegalStateException("없는 게시물 입니다.")
         );
 

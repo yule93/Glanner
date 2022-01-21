@@ -42,7 +42,7 @@ public class FreeBoard extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "freeBoard", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "freeBoard", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public void changeContent(String content) {

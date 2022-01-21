@@ -106,12 +106,10 @@ public class BoardCreateTest {
         freeBoard.addComment(comment2);
 
 //        when
-        Comment savedComment1 = commentRepository.save(comment1);
-        Comment savedComment2 = commentRepository.save(comment2);
         FreeBoard savedFreeBoard = freeBoardRepository.save(freeBoard);
 
 //        then
-        assertThat(savedFreeBoard.getComments().get(0)).isEqualTo(savedComment1);
-        assertThat(savedFreeBoard.getComments().get(1)).isEqualTo(savedComment2);
+        assertThat(savedFreeBoard.getComments().get(0)).isEqualTo(comment1);
+        assertThat(savedFreeBoard.getComments().get(1)).isEqualTo(comment2);
     }
 }

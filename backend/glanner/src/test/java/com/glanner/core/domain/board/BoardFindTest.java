@@ -1,10 +1,7 @@
 package com.glanner.core.domain.board;
 
-import com.glanner.api.queryrepository.BoardQueryRepository;
-import com.glanner.core.repository.CommentRepository;
 import com.glanner.core.repository.FreeBoardRepository;
 import com.glanner.core.repository.NoticeBoardRepository;
-import com.glanner.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional(readOnly = true)
 public class BoardFindTest {
     @Autowired
-    private BoardQueryRepository boardQueryRepository;
+    private FreeBoardRepository freeBoardRepository;
     @Autowired
     private NoticeBoardRepository noticeBoardRepository;
 
@@ -25,7 +22,7 @@ public class BoardFindTest {
         //given
 
         //when
-        NoticeBoard noticeBoard = noticeBoardRepository.findById((long)1)
+        NoticeBoard noticeBoard = noticeBoardRepository.findByTitleLike("%공지%")
                                     .orElseThrow(() -> new IllegalStateException("없는 게시물 입니다."));
 
         //then
@@ -37,7 +34,7 @@ public class BoardFindTest {
         //given
 
         //when
-        FreeBoard freeBoard = boardQueryRepository.findById((long)1)
+        FreeBoard freeBoard = freeBoardRepository.findByTitleLike("%제목%")
                 .orElseThrow(() -> new IllegalStateException("없는 게시물 입니다."));
 
         //then
