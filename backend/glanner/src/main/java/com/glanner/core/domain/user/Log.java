@@ -22,7 +22,7 @@ public class Log extends BaseTimeEntity {
         this.url = url;
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "log_id")
     private Long id;
 
@@ -33,4 +33,8 @@ public class Log extends BaseTimeEntity {
     private String content;
 
     private String url;
+
+    public void changeUser(User user){
+        this.user = user;
+    }
 }

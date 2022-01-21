@@ -45,7 +45,7 @@ public class UserFindTest {
     }
 
     /**
-     * cherish8513@naver.com 유저는 3시간 분량의 일을 1개 가지고 있는 상황
+     * cherish8513@naver.com 유저는 3시간 분량의 일을 6개 가지고 있는 상황
      */
     @Test
     public void testFindUserDailyWork() throws Exception{

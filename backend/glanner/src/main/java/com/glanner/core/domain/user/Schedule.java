@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class Schedule extends BaseTimeEntity {
     @OneToOne(mappedBy = "schedule", fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DailyWorkSchedule> works = new ArrayList<>();
 
     public void changeUser(User user){
