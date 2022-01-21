@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @QueryEntity
@@ -26,7 +28,7 @@ public class User extends BaseTimeEntity {
         this.interests = interests;
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "user_id")
     private Long id;
     private String name;
@@ -50,5 +52,4 @@ public class User extends BaseTimeEntity {
     public void changePassword(String password){
         this.password = password;
     }
-
 }

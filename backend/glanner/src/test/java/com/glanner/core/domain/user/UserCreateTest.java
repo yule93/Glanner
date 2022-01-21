@@ -1,9 +1,11 @@
 package com.glanner.core.domain.user;
 
+import com.glanner.core.repository.LogRepository;
 import com.glanner.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +15,13 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Commit
 class UserCreateTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void testCreateUser() throws Exception{
@@ -69,6 +73,7 @@ class UserCreateTest {
     }
 
     @Test
+    @Commit
     public void testAddWork() throws Exception{
         //given
         User user = User.builder()
@@ -106,6 +111,7 @@ class UserCreateTest {
         //then
         assertThat(savedUser.getSchedule().getWorks().get(0)).isEqualTo(work);
     }
+
 
     public DailyWorkSchedule createWork(String content){
         return DailyWorkSchedule.builder()
