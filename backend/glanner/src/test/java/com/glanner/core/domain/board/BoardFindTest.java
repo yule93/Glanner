@@ -40,7 +40,7 @@ public class BoardFindTest {
         //then
         assertThat(freeBoard.getTitle()).isEqualTo("제목이에요");
         assertThat(freeBoard.getComments().get(0).getContent()).isEqualTo("안녕?");
-        assertThat(freeBoard.getComments().get(1).getContent()).isEqualTo("대댓");
+        assertThat(freeBoard.getComments().get(1).getParent()).isEqualTo(freeBoard.getComments().get(0));
     }
 
 }

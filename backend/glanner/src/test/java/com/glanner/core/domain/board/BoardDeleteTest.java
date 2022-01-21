@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -58,12 +60,10 @@ public class BoardDeleteTest {
     @Test
     public void testDeleteComment() throws Exception{
         //given
-        Comment comment = commentRepository.findById((long)1).orElseThrow(
-                () -> new IllegalStateException("없는 댓글 입니다.")
-        );
+        List<Comment> comments= commentRepository.findAll();
 
         //when
-        commentRepository.delete(comment);
+        for(Comment cmt:comments){ commentRepository.delete(cmt); }
 
         //then
         assertThat(commentRepository.count()).isEqualTo(0);

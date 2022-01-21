@@ -6,9 +6,12 @@ import com.glanner.core.repository.NoticeBoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,18 +66,18 @@ public class BoardUpdateTest {
     @Test
     public void testUpdateComment() throws Exception{
         // given
-        Comment comment = commentRepository.findById((long)1).orElseThrow(
-                () -> new IllegalStateException("없는 댓글 입니다.")
-        );
+        List<Comment> comments = freeBoardRepository.findByTitleLike("%제목%").orElseThrow(
+                () -> new IllegalStateException("없는 게시물 입니다.")
+        ).getComments();
 
         // when
-        comment.changeContent("내용 업데이트");
+        comments.get(0).changeContent("내용 업데이트");
         em.flush();
-        Comment updatedComment = commentRepository.findById((long)1).orElseThrow(
-                () -> new IllegalStateException("없는 댓글 입니다.")
-        );
+        List<Comment> updatedComments = freeBoardRepository.findByTitleLike("%제목%").orElseThrow(
+                () -> new IllegalStateException("없는 게시물 입니다.")
+        ).getComments();
 
         // then
-        assertThat(updatedComment.getContent()).isEqualTo("내용 업데이트");
+        assertThat(updatedComments.get(0).getContent()).isEqualTo("내용 업데이트");
     }
 }
