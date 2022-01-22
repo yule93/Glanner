@@ -21,15 +21,15 @@ import javax.persistence.*;
 public class Comment extends BaseTimeEntity {
 
     @Builder
-    public Comment(String content, User user, Comment parent/*, FreeBoard freeBoard*/) {
+    public Comment(String content, User user, Comment parent, FreeBoard freeBoard) {
         this.content = content;
         this.user = user;
         this.parent = parent;
-//        this.freeBoard = freeBoard;
+        this.freeBoard = freeBoard;
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "comment_id")
     private Long id;
     private String content;
@@ -43,9 +43,9 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "free_board_id")
-//    private FreeBoard freeBoard;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "free_board_id")
+    private FreeBoard freeBoard;
 
     public void changeContent(String content) {
         this.content = content;

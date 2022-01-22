@@ -1,4 +1,4 @@
-package com.glanner.core.domain.glanner;
+package com.glanner.core.domain.board;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,20 +11,18 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QGlannerBoard is a Querydsl query type for GlannerBoard
+ * QNoticeBoard is a Querydsl query type for NoticeBoard
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QGlannerBoard extends EntityPathBase<GlannerBoard> {
+public class QNoticeBoard extends EntityPathBase<NoticeBoard> {
 
-    private static final long serialVersionUID = 902389999L;
+    private static final long serialVersionUID = 2111001401L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QGlannerBoard glannerBoard = new QGlannerBoard("glannerBoard");
+    public static final QNoticeBoard noticeBoard = new QNoticeBoard("noticeBoard");
 
     public final com.glanner.core.domain.base.QBaseTimeEntity _super = new com.glanner.core.domain.base.QBaseTimeEntity(this);
-
-    public final ListPath<com.glanner.core.domain.board.Comment, SimplePath<com.glanner.core.domain.board.Comment>> comments = this.<com.glanner.core.domain.board.Comment, SimplePath<com.glanner.core.domain.board.Comment>>createList("comments", com.glanner.core.domain.board.Comment.class, SimplePath.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 
@@ -35,8 +33,6 @@ public class QGlannerBoard extends EntityPathBase<GlannerBoard> {
 
     public final StringPath fileUrls = createString("fileUrls");
 
-    public final QGlanner glanner;
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
@@ -46,25 +42,24 @@ public class QGlannerBoard extends EntityPathBase<GlannerBoard> {
 
     public final com.glanner.core.domain.user.QUser user;
 
-    public QGlannerBoard(String variable) {
-        this(GlannerBoard.class, forVariable(variable), INITS);
+    public QNoticeBoard(String variable) {
+        this(NoticeBoard.class, forVariable(variable), INITS);
     }
 
-    public QGlannerBoard(Path<? extends GlannerBoard> path) {
+    public QNoticeBoard(Path<? extends NoticeBoard> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QGlannerBoard(PathMetadata metadata) {
+    public QNoticeBoard(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QGlannerBoard(PathMetadata metadata, PathInits inits) {
-        this(GlannerBoard.class, metadata, inits);
+    public QNoticeBoard(PathMetadata metadata, PathInits inits) {
+        this(NoticeBoard.class, metadata, inits);
     }
 
-    public QGlannerBoard(Class<? extends GlannerBoard> type, PathMetadata metadata, PathInits inits) {
+    public QNoticeBoard(Class<? extends NoticeBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.glanner = inits.isInitialized("glanner") ? new QGlanner(forProperty("glanner"), inits.get("glanner")) : null;
         this.user = inits.isInitialized("user") ? new com.glanner.core.domain.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

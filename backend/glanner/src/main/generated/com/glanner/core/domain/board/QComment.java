@@ -29,6 +29,8 @@ public class QComment extends EntityPathBase<Comment> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
+    public final QFreeBoard freeBoard;
+
     public final com.glanner.core.domain.glanner.QGlannerBoard glannerBoard;
 
     public final com.glanner.core.domain.glanner.QGroupBoard groupBoard;
@@ -60,6 +62,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.freeBoard = inits.isInitialized("freeBoard") ? new QFreeBoard(forProperty("freeBoard"), inits.get("freeBoard")) : null;
         this.glannerBoard = inits.isInitialized("glannerBoard") ? new com.glanner.core.domain.glanner.QGlannerBoard(forProperty("glannerBoard"), inits.get("glannerBoard")) : null;
         this.groupBoard = inits.isInitialized("groupBoard") ? new com.glanner.core.domain.glanner.QGroupBoard(forProperty("groupBoard"), inits.get("groupBoard")) : null;
         this.parent = inits.isInitialized("parent") ? new QComment(forProperty("parent"), inits.get("parent")) : null;

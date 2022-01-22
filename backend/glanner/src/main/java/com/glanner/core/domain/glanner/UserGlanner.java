@@ -17,9 +17,9 @@ import javax.persistence.*;
 public class UserGlanner extends BaseTimeEntity {
 
     @Builder
-    public UserGlanner(Glanner glanner, User user) {
-        this.glanner = glanner;
+    public UserGlanner(User user) {
         this.user = user;
+        user.addUserGlanner(this);
     }
 
     @Id @GeneratedValue
@@ -34,7 +34,7 @@ public class UserGlanner extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void changeUserGlanner(Glanner glanner){
+    public void changeGlanner(Glanner glanner){
         this.glanner = glanner;
     }
 }

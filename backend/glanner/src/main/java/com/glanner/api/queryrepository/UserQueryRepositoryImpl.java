@@ -1,10 +1,9 @@
 package com.glanner.api.queryrepository;
 
-import com.glanner.core.domain.user.QDailyWorkSchedule;
+import com.glanner.core.domain.glanner.QUserGlanner;
 import com.glanner.core.domain.user.QSchedule;
 import com.glanner.core.domain.user.QUser;
 import com.glanner.core.domain.user.User;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +19,17 @@ public class UserQueryRepositoryImpl implements UserQueryRepository{
 
     private QUser user = new QUser("user1");
     private QSchedule schedule = new QSchedule("schedule1");
+    private QUserGlanner userGlanner = new QUserGlanner("userGlanner1");
+
     @Override
     public Optional<User> findByEmail(String email) {
         return Optional.ofNullable(query
                 .select(user)
                 .from(user)
                 .join(user.schedule, schedule).fetchJoin()
+                .join(user.userGlanners, userGlanner)
                 .where(userEmailEq(email))
-                .fetchOne());
+                .fetchFirst());
     }
 
     private BooleanExpression userEmailEq(String userEmail) {

@@ -54,7 +54,7 @@ public class GroupBoard extends BaseTimeEntity {
         this.fileUrls = fileUrls;
     }
 
-    public void addCommnet(Comment comment){
+    public void addComment(Comment comment){
         comments.add(comment);
     }
 

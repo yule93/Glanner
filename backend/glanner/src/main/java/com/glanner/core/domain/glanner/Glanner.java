@@ -1,6 +1,8 @@
 package com.glanner.core.domain.glanner;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
+import com.glanner.core.domain.user.DailyWorkSchedule;
+import com.glanner.core.domain.user.User;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,40 +20,35 @@ import java.util.List;
 public class Glanner extends BaseTimeEntity {
 
     @Builder
-    public Glanner(GroupBoard board) {
-        this.board = board;
+    public Glanner(User host) {
+        this.host = host;
     }
 
     @Id @GeneratedValue
     @Column(name = "glanner_id")
     private Long id;
 
-    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private User host;
+
+    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserGlanner> userGlanners = new ArrayList<>();
 
-    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY)
-    private List<DailyWorkGlanner> dailyworks = new ArrayList<>();
+    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<DailyWorkGlanner> works = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_board_id")
-    private GroupBoard board;
-
-    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GlannerBoard> glannerBoards = new ArrayList<>();
 
     public void addUserGlanner(UserGlanner userGlanner){
         userGlanners.add(userGlanner);
-        userGlanner.changeUserGlanner(this);
+        userGlanner.changeGlanner(this);
     }
 
-    public void addDailyWorkGlanner(DailyWorkGlanner work){
-        dailyworks.add(work);
+    public void addDailyWork(DailyWorkGlanner work){
+        works.add(work);
         work.changeGlanner(this);
     }
-
-    public void addGlannerBoard(GlannerBoard glannerBoard){
-        glannerBoards.add(glannerBoard);
-    }
-
 }
 

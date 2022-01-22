@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 public class DailyWorkSchedule extends BaseTimeEntity {
 
     @Builder
-    public DailyWorkSchedule(Schedule schedule, LocalDateTime startDate, LocalDateTime endDate, String title, String content) {
-        this.schedule = schedule;
+    public DailyWorkSchedule(LocalDateTime startDate, LocalDateTime endDate, String title, String content) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;

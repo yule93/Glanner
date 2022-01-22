@@ -24,14 +24,14 @@ public class QGlanner extends EntityPathBase<Glanner> {
 
     public final com.glanner.core.domain.base.QBaseTimeEntity _super = new com.glanner.core.domain.base.QBaseTimeEntity(this);
 
-    public final QGroupBoard board;
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
-    public final ListPath<DailyWorkGlanner, QDailyWorkGlanner> dailyworks = this.<DailyWorkGlanner, QDailyWorkGlanner>createList("dailyworks", DailyWorkGlanner.class, QDailyWorkGlanner.class, PathInits.DIRECT2);
+    public final ListPath<DailyWorkGlanner, QDailyWorkGlanner> dailyWorks = this.<DailyWorkGlanner, QDailyWorkGlanner>createList("dailyWorks", DailyWorkGlanner.class, QDailyWorkGlanner.class, PathInits.DIRECT2);
 
     public final ListPath<GlannerBoard, QGlannerBoard> glannerBoards = this.<GlannerBoard, QGlannerBoard>createList("glannerBoards", GlannerBoard.class, QGlannerBoard.class, PathInits.DIRECT2);
+
+    public final com.glanner.core.domain.user.QUser host;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -58,7 +58,7 @@ public class QGlanner extends EntityPathBase<Glanner> {
 
     public QGlanner(Class<? extends Glanner> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.board = inits.isInitialized("board") ? new QGroupBoard(forProperty("board"), inits.get("board")) : null;
+        this.host = inits.isInitialized("host") ? new com.glanner.core.domain.user.QUser(forProperty("host"), inits.get("host")) : null;
     }
 
 }
