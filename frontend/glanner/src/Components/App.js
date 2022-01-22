@@ -1,11 +1,12 @@
 import Example from "./Sidebar";
 import GlobalStyles from "./GlobalStyles";
-
+import SignupComponent from "../Routes/Signup/SignupComponent";
 function App() {
   return (
     <>
-      <Example />
-      <GlobalStyles />
+    <SignupComponent />
+      {/* <Example />
+      <GlobalStyles /> */}
     </>
   );
 }
