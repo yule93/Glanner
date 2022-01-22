@@ -27,7 +27,7 @@ public class NoticeBoard extends BaseTimeEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "notice_board_id")
     private Long id;
     private String title;
@@ -42,4 +42,6 @@ public class NoticeBoard extends BaseTimeEntity {
     public void changeContent(String content) {
         this.content = content;
     }
+
 }
+

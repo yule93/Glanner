@@ -1,7 +1,7 @@
 package com.glanner.core.domain.glanner;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
-import com.glanner.core.domain.glanner.Glanner;
+import com.glanner.core.domain.user.Schedule;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,9 +33,24 @@ public class DailyWorkGlanner extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "glanner_id")
     private Glanner glanner;
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String title;
     private String content;
 
+    public void changeGlanner(Glanner glanner){
+        this.glanner = glanner;
+    }
+
+    public void changeDailyWork(LocalDateTime startDate, LocalDateTime endDate, String title, String content){
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.title = title;
+        this.content = content;
+    }
+
+    public void cancel(){
+        glanner.getWorks().remove(this);
+    }
 }

@@ -29,7 +29,7 @@ public class Comment extends BaseTimeEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "comment_id")
     private Long id;
     private String content;
@@ -51,12 +51,12 @@ public class Comment extends BaseTimeEntity {
         this.content = content;
     }
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "group_board_id")
-//    private GroupBoard groupBoard;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "glanner_board_id")
-//    private GlannerBoard glannerBoard;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_board_id")
+    private GroupBoard groupBoard;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "glanner_board_id")
+    private GlannerBoard glannerBoard;
 
 }

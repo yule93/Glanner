@@ -2,18 +2,21 @@ package com.glanner.core.domain.user;
 
 import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * cherish8513@naver.com 회원은 이미 등록되어있는 상태
+ * 특정 유저 찾기 단위 테스트
  */
 @SpringBootTest
-@Transactional(readOnly = true)
+@Transactional
 public class UserFindTest {
 
     @Autowired
@@ -21,6 +24,31 @@ public class UserFindTest {
 
     @Autowired
     private UserQueryRepository userQueryRepository;
+
+    @BeforeEach
+    public void createUser(){
+        User user = User.builder()
+                .phoneNumber("010-6575-2938")
+                .email("cherish8513@naver.com")
+                .name("JeongJooHeon")
+                .interests("#난그게재밌더라강식당다시보기#")
+                .password("1234")
+                .role(UserRoleStatus.ROLE_USER)
+                .build();
+
+        Schedule schedule = Schedule.builder()
+                .build();
+
+        DailyWorkSchedule workSchedule = DailyWorkSchedule.builder()
+                .content("hard")
+                .title("work")
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now().plusHours(3))
+                .build();
+        schedule.addDailyWork(workSchedule);
+        user.changeSchedule(schedule);
+        userRepository.save(user);
+    }
 
     @Test
     public void testFindUser() throws Exception{
@@ -55,11 +83,6 @@ public class UserFindTest {
         User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
 
         //then
-        assertThat(user.getSchedule().getWorks().get(0).getContent()).isEqualTo("something1");
-        assertThat(user.getSchedule().getWorks().get(1).getContent()).isEqualTo("something2");
-        assertThat(user.getSchedule().getWorks().get(2).getContent()).isEqualTo("something3");
-        assertThat(user.getSchedule().getWorks().get(3).getContent()).isEqualTo("something4");
-        assertThat(user.getSchedule().getWorks().get(4).getContent()).isEqualTo("something5");
-        assertThat(user.getSchedule().getWorks().get(5).getContent()).isEqualTo("something6");
+        assertThat(user.getSchedule().getWorks().get(0).getContent()).isEqualTo("hard");
     }
 }

@@ -1,6 +1,7 @@
 package com.glanner.core.domain.user;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
+import com.glanner.core.domain.glanner.UserGlanner;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,8 +25,8 @@ public class User extends BaseTimeEntity {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
-        this.schedule = schedule;
         this.interests = interests;
+        this.schedule = schedule;
     }
 
     @Id @GeneratedValue
@@ -44,6 +45,10 @@ public class User extends BaseTimeEntity {
     private Schedule schedule;
     private String interests;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<UserGlanner> userGlanners = new ArrayList<>();
+
+
     public void changeSchedule(Schedule schedule){
         this.schedule = schedule;
         schedule.changeUser(this);
@@ -51,5 +56,8 @@ public class User extends BaseTimeEntity {
 
     public void changePassword(String password){
         this.password = password;
+    }
+    public void addUserGlanner(UserGlanner userGlanner){
+        this.userGlanners.add(userGlanner);
     }
 }

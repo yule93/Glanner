@@ -115,7 +115,6 @@ class UserCreateTest {
 
     public DailyWorkSchedule createWork(String content){
         return DailyWorkSchedule.builder()
-                .schedule(null)
                 .content(content)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusHours(3))

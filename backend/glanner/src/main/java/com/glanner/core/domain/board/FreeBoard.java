@@ -28,7 +28,7 @@ public class FreeBoard extends BaseTimeEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "free_board_id")
     private Long id;
     private String title;
