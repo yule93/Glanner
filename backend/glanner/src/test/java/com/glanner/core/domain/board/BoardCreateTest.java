@@ -1,11 +1,14 @@
 package com.glanner.core.domain.board;
 
+import com.glanner.api.queryrepository.UserQueryRepository;
+import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
 import com.glanner.core.repository.CommentRepository;
 import com.glanner.core.repository.FreeBoardRepository;
 import com.glanner.core.repository.NoticeBoardRepository;
 import com.glanner.core.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,19 +26,37 @@ public class BoardCreateTest {
     @Autowired
     private FreeBoardRepository freeBoardRepository;
     @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserQueryRepository userQueryRepository;
+
+    @BeforeEach
+    public void createUser(){
+        User user = User.builder()
+                .phoneNumber("010-6575-2938")
+                .email("cherish8513@naver.com")
+                .name("JeongJooHeon")
+                .interests("#난그게재밌더라강식당다시보기#")
+                .password("1234")
+                .role(UserRoleStatus.ROLE_USER)
+                .build();
+
+        Schedule schedule = Schedule.builder()
+                .build();
+        user.changeSchedule(schedule);
+        userRepository.save(user);
+    }
 
     @Test
     public void testCreateNoticeBoard() throws Exception{
+        User findUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
         // given
         NoticeBoard noticeBoard = NoticeBoard.builder()
             .title("공지사항이요")
             .content("이거 꼭 읽어야합니다. 공지사항이니까요.")
             .fileUrls(null)
             .count(0)
-            .user(null)
+            .user(findUser)
             .build();
 
         // when
@@ -50,8 +71,6 @@ public class BoardCreateTest {
     @Test
     public void testCreateFreeBoard() throws Exception{
         // given
-        User user = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 유저 입니다."));
-
         FreeBoard freeBoard = FreeBoard.builder()
                 .title("제목이에요")
                 .content("내용입니다")
@@ -59,7 +78,7 @@ public class BoardCreateTest {
                 .disLikeCount(0)
                 .count(0)
                 .fileUrls(null)
-                .user(user)
+                .user(null)
                 .build();
 
         // when
@@ -71,8 +90,6 @@ public class BoardCreateTest {
         assertThat(savedFreeBoard.getLikeCount()).isEqualTo(0);
         assertThat(savedFreeBoard.getDisLikeCount()).isEqualTo(0);
         assertThat(savedFreeBoard.getCount()).isEqualTo(0);
-        assertThat(savedFreeBoard.getUser()).isEqualTo(user);
-
     }
 
     @Test
@@ -92,14 +109,14 @@ public class BoardCreateTest {
                 .user(null)
                 .content("안녕?")
                 .parent(null)
-                .freeBoard(freeBoard)
+                .board(freeBoard)
                 .build();
 
         Comment comment2 = Comment.builder()
                 .user(null)
                 .content("대댓")
                 .parent(comment1)
-                .freeBoard(freeBoard)
+                .board(freeBoard)
                 .build();
 
         freeBoard.addComment(comment1);

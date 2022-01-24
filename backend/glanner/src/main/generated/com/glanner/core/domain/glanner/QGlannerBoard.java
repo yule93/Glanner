@@ -22,28 +22,35 @@ public class QGlannerBoard extends EntityPathBase<GlannerBoard> {
 
     public static final QGlannerBoard glannerBoard = new QGlannerBoard("glannerBoard");
 
-    public final com.glanner.core.domain.base.QBaseTimeEntity _super = new com.glanner.core.domain.base.QBaseTimeEntity(this);
-
-    public final ListPath<com.glanner.core.domain.board.Comment, SimplePath<com.glanner.core.domain.board.Comment>> comments = this.<com.glanner.core.domain.board.Comment, SimplePath<com.glanner.core.domain.board.Comment>>createList("comments", com.glanner.core.domain.board.Comment.class, SimplePath.class, PathInits.DIRECT2);
-
-    public final StringPath content = createString("content");
-
-    public final NumberPath<Integer> count = createNumber("count", Integer.class);
+    public final com.glanner.core.domain.board.QBoard _super;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+    public final ListPath<com.glanner.core.domain.board.Comment, com.glanner.core.domain.board.QComment> comments;
 
-    public final StringPath fileUrls = createString("fileUrls");
+    //inherited
+    public final StringPath content;
+
+    //inherited
+    public final NumberPath<Integer> count;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate;
+
+    //inherited
+    public final StringPath fileUrls;
 
     public final QGlanner glanner;
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    //inherited
+    public final NumberPath<Long> id;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate;
 
-    public final StringPath title = createString("title");
+    //inherited
+    public final StringPath title;
 
+    // inherited
     public final com.glanner.core.domain.user.QUser user;
 
     public QGlannerBoard(String variable) {
@@ -64,8 +71,17 @@ public class QGlannerBoard extends EntityPathBase<GlannerBoard> {
 
     public QGlannerBoard(Class<? extends GlannerBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this._super = new com.glanner.core.domain.board.QBoard(type, metadata, inits);
+        this.comments = _super.comments;
+        this.content = _super.content;
+        this.count = _super.count;
+        this.createdDate = _super.createdDate;
+        this.fileUrls = _super.fileUrls;
         this.glanner = inits.isInitialized("glanner") ? new QGlanner(forProperty("glanner"), inits.get("glanner")) : null;
-        this.user = inits.isInitialized("user") ? new com.glanner.core.domain.user.QUser(forProperty("user"), inits.get("user")) : null;
+        this.id = _super.id;
+        this.modifiedDate = _super.modifiedDate;
+        this.title = _super.title;
+        this.user = _super.user;
     }
 
 }

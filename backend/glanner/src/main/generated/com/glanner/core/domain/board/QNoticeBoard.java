@@ -22,24 +22,33 @@ public class QNoticeBoard extends EntityPathBase<NoticeBoard> {
 
     public static final QNoticeBoard noticeBoard = new QNoticeBoard("noticeBoard");
 
-    public final com.glanner.core.domain.base.QBaseTimeEntity _super = new com.glanner.core.domain.base.QBaseTimeEntity(this);
-
-    public final StringPath content = createString("content");
-
-    public final NumberPath<Integer> count = createNumber("count", Integer.class);
+    public final QBoard _super;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    public final StringPath fileUrls = createString("fileUrls");
-
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final ListPath<Comment, QComment> comments;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+    public final StringPath content;
 
-    public final StringPath title = createString("title");
+    //inherited
+    public final NumberPath<Integer> count;
 
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate;
+
+    //inherited
+    public final StringPath fileUrls;
+
+    //inherited
+    public final NumberPath<Long> id;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate;
+
+    //inherited
+    public final StringPath title;
+
+    // inherited
     public final com.glanner.core.domain.user.QUser user;
 
     public QNoticeBoard(String variable) {
@@ -60,7 +69,16 @@ public class QNoticeBoard extends EntityPathBase<NoticeBoard> {
 
     public QNoticeBoard(Class<? extends NoticeBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new com.glanner.core.domain.user.QUser(forProperty("user"), inits.get("user")) : null;
+        this._super = new QBoard(type, metadata, inits);
+        this.comments = _super.comments;
+        this.content = _super.content;
+        this.count = _super.count;
+        this.createdDate = _super.createdDate;
+        this.fileUrls = _super.fileUrls;
+        this.id = _super.id;
+        this.modifiedDate = _super.modifiedDate;
+        this.title = _super.title;
+        this.user = _super.user;
     }
 
 }

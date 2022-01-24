@@ -24,20 +24,13 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final com.glanner.core.domain.base.QBaseTimeEntity _super = new com.glanner.core.domain.base.QBaseTimeEntity(this);
 
+    public final QBoard board;
+
     public final StringPath content = createString("content");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
-    public final QFreeBoard freeBoard;
-
-<<<<<<< HEAD
-=======
-    public final com.glanner.core.domain.glanner.QGlannerBoard glannerBoard;
-
-    public final com.glanner.core.domain.glanner.QGroupBoard groupBoard;
-
->>>>>>> hotfix/backend/glanner_domain
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
@@ -65,12 +58,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.freeBoard = inits.isInitialized("freeBoard") ? new QFreeBoard(forProperty("freeBoard"), inits.get("freeBoard")) : null;
-<<<<<<< HEAD
-=======
-        this.glannerBoard = inits.isInitialized("glannerBoard") ? new com.glanner.core.domain.glanner.QGlannerBoard(forProperty("glannerBoard"), inits.get("glannerBoard")) : null;
-        this.groupBoard = inits.isInitialized("groupBoard") ? new com.glanner.core.domain.glanner.QGroupBoard(forProperty("groupBoard"), inits.get("groupBoard")) : null;
->>>>>>> hotfix/backend/glanner_domain
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
         this.parent = inits.isInitialized("parent") ? new QComment(forProperty("parent"), inits.get("parent")) : null;
         this.user = inits.isInitialized("user") ? new com.glanner.core.domain.user.QUser(forProperty("user"), inits.get("user")) : null;
     }
