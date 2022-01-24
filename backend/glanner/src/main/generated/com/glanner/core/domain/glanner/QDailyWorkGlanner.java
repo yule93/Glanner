@@ -60,11 +60,7 @@ public class QDailyWorkGlanner extends EntityPathBase<DailyWorkGlanner> {
 
     public QDailyWorkGlanner(Class<? extends DailyWorkGlanner> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-<<<<<<< HEAD
-        this.glanner = inits.isInitialized("glanner") ? new QGlanner(forProperty("glanner")) : null;
-=======
         this.glanner = inits.isInitialized("glanner") ? new QGlanner(forProperty("glanner"), inits.get("glanner")) : null;
->>>>>>> hotfix/backend/glanner_domain
     }
 
 }

@@ -26,8 +26,8 @@ public class UserQueryRepositoryImpl implements UserQueryRepository{
         return Optional.ofNullable(query
                 .select(user)
                 .from(user)
-                .join(user.schedule, schedule).fetchJoin()
-                .join(user.userGlanners, userGlanner)
+                .leftJoin(user.schedule, schedule).fetchJoin()
+                .leftJoin(user.userGlanners, userGlanner)
                 .where(userEmailEq(email))
                 .fetchFirst());
     }

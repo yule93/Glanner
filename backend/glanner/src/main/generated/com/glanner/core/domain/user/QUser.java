@@ -46,11 +46,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final QSchedule schedule;
 
-<<<<<<< HEAD
-=======
     public final ListPath<com.glanner.core.domain.glanner.UserGlanner, com.glanner.core.domain.glanner.QUserGlanner> userGlanners = this.<com.glanner.core.domain.glanner.UserGlanner, com.glanner.core.domain.glanner.QUserGlanner>createList("userGlanners", com.glanner.core.domain.glanner.UserGlanner.class, com.glanner.core.domain.glanner.QUserGlanner.class, PathInits.DIRECT2);
 
->>>>>>> hotfix/backend/glanner_domain
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);
     }

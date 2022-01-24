@@ -21,11 +21,11 @@ import javax.persistence.*;
 public class Comment extends BaseTimeEntity {
 
     @Builder
-    public Comment(String content, User user, Comment parent, FreeBoard freeBoard) {
+    public Comment(String content, User user, Comment parent, Board board) {
         this.content = content;
         this.user = user;
         this.parent = parent;
-        this.freeBoard = freeBoard;
+        this.board = board;
     }
 
     @Id
@@ -44,19 +44,11 @@ public class Comment extends BaseTimeEntity {
     private Comment parent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "free_board_id")
-    private FreeBoard freeBoard;
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     public void changeContent(String content) {
         this.content = content;
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_board_id")
-    private GroupBoard groupBoard;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "glanner_board_id")
-    private GlannerBoard glannerBoard;
 
 }
