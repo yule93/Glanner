@@ -4,13 +4,11 @@ import com.glanner.api.dto.request.BoardAddCommentReqDto;
 import com.glanner.api.dto.request.BoardSaveReqDto;
 import com.glanner.api.dto.request.BoardUpdateReqDto;
 import com.glanner.core.domain.board.Board;
+import com.glanner.core.domain.board.Comment;
 import com.glanner.core.domain.board.FreeBoard;
 import com.glanner.core.domain.board.NoticeBoard;
 import com.glanner.core.domain.user.User;
-import com.glanner.core.repository.BoardRepository;
-import com.glanner.core.repository.FreeBoardRepository;
-import com.glanner.core.repository.NoticeBoardRepository;
-import com.glanner.core.repository.UserRepository;
+import com.glanner.core.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class BoardServiceImpl implements BoardService{
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
     private final FreeBoardRepository freeBoardRepository;
     private final NoticeBoardRepository noticeBoardRepository;
 
@@ -50,8 +49,13 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board addComment(BoardAddCommentReqDto reqDto) {
-        return null;
+    public Comment addComment(Long userId, BoardAddCommentReqDto reqDto) {
+        User user = userRepository.findById(userId).orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        Board board = boardRepository.findById(reqDto.getBoardId()).orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다."));
+        Comment parent = (reqDto.getParentId() == null)?
+                null:commentRepository.findById(reqDto.getParentId()).orElseThrow(()->new IllegalStateException("존재하지 않는 댓글입니다."));
+        Comment comment = reqDto.toEntity(user, board, parent);
+        return commentRepository.save(comment);
     }
 
 
