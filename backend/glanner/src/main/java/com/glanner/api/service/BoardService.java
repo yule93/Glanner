@@ -1,5 +1,6 @@
 package com.glanner.api.service;
 
+import com.glanner.api.dto.request.BoardAddCommentReqDto;
 import com.glanner.api.dto.request.BoardSaveReqDto;
 import com.glanner.api.dto.request.BoardUpdateReqDto;
 import com.glanner.core.domain.board.Board;
@@ -10,4 +11,5 @@ public interface BoardService {
     public FreeBoard saveFreeBoard(Long userId, BoardSaveReqDto reqDto);
     public NoticeBoard saveNoticeBoard(Long userId, BoardSaveReqDto reqDto);
     public Board editBoard(BoardUpdateReqDto reqDto);
+    public Board addComment(BoardAddCommentReqDto reqDto);
 }

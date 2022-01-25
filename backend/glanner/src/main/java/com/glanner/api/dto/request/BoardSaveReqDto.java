@@ -53,4 +53,6 @@ public class BoardSaveReqDto {
                 .glanner(glanner)
                 .build();
     }
+
+
 }

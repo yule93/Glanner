@@ -1,5 +1,6 @@
 package com.glanner.api.service;
 
+import com.glanner.api.dto.request.BoardAddCommentReqDto;
 import com.glanner.api.dto.request.BoardSaveReqDto;
 import com.glanner.api.dto.request.BoardUpdateReqDto;
 import com.glanner.core.domain.board.Board;
@@ -47,4 +48,11 @@ public class BoardServiceImpl implements BoardService{
 
         return boardRepository.save(board);
     }
+
+    @Override
+    public Board addComment(BoardAddCommentReqDto reqDto) {
+        return null;
+    }
+
+
 }
