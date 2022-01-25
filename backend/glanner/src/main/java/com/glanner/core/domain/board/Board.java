@@ -3,7 +3,6 @@ package com.glanner.core.domain.board;
 import com.glanner.core.domain.base.BaseTimeEntity;
 import com.glanner.core.domain.user.User;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,8 +40,10 @@ public class Board extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    public void changeContent(String content) {
+    public void changeBoard(String title, String content, String fileUrls) {
+        this.title = title;
         this.content = content;
+        this.fileUrls = fileUrls;
     }
 
     public void addComment(Comment comment){
