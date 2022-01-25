@@ -17,6 +17,7 @@ public class UserServiceImpl implements UserService{
 
     public Long saveUser(UserSaveReqDto reqDto){
         User user = reqDto.toEntity();
+
         user.changePassword(passwordEncoder.encode(user.getPassword()));
 
         validateDuplicateMember(user);
@@ -30,7 +31,8 @@ public class UserServiceImpl implements UserService{
     }
 
     private void validateDuplicateMember(User user) {
-        userRepository.findById(user.getId())
+        System.out.println(user.getEmail());
+        userRepository.findByEmail(user.getEmail())
                 .ifPresent(m -> {throw new IllegalStateException("이미 존재하는 회원입니다");
                 });
     }
