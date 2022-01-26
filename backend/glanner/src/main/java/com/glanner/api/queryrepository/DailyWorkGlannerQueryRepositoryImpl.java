@@ -8,16 +8,15 @@ import com.glanner.core.domain.user.QUser;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DailyWorkGlannerQueryRepositoryImpl implements DailyWorkGlannerQueryRepository{
 
     private final JPAQueryFactory query;
