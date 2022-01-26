@@ -15,4 +15,3 @@ public class BaseResponseEntity {
         this.message = message;
     }
 }
-

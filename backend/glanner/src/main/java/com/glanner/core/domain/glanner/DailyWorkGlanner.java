@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 public class DailyWorkGlanner extends BaseTimeEntity {
 
     @Builder
-    public DailyWorkGlanner(Glanner glanner, LocalDateTime startDate, LocalDateTime endDate, String title, String content) {
-        this.glanner = glanner;
+    public DailyWorkGlanner(LocalDateTime startDate, LocalDateTime endDate, String title, String content) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;

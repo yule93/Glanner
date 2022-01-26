@@ -1,13 +1,13 @@
 package com.glanner.security.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.glanner.api.dto.response.BaseResponseEntity;
 import com.glanner.security.dto.LoginDto;
-import com.glanner.security.jwt.JWTFilter;
+import com.glanner.security.jwt.JwtFilter;
 import com.glanner.security.jwt.TokenProvider;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -43,31 +43,24 @@ public class AuthenticationRestController {
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
       boolean rememberMe = loginDto.getRememberMe() != null && loginDto.getRememberMe();
-      String jwt = tokenProvider.createToken(authentication, rememberMe);
+      String token = tokenProvider.createToken(authentication, rememberMe);
 
       HttpHeaders httpHeaders = new HttpHeaders();
-      httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+      httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
 
-      return ResponseEntity.ok(new JWTToken(jwt));
+      return ResponseEntity.status(200).body(new JWTToken(token, 200, "Success"));
    }
 
    /**
     * Object to return as body in JWT Authentication.
     */
-   static class JWTToken {
+   @Getter
+   static class JWTToken extends BaseResponseEntity{
 
       private String idToken;
 
-      JWTToken(String idToken) {
-         this.idToken = idToken;
-      }
-
-      @JsonProperty("id_token")
-      String getIdToken() {
-         return idToken;
-      }
-
-      void setIdToken(String idToken) {
+      JWTToken(String idToken, int status, String message) {
+         super(status, message);
          this.idToken = idToken;
       }
    }

@@ -1,5 +1,9 @@
 package com.glanner.core.domain.glanner;
 
+import com.glanner.api.dto.response.FindGlannerWorkResDto;
+import com.glanner.api.exception.UserNotFoundException;
+import com.glanner.api.queryrepository.DailyWorkGlannerQueryRepository;
+import com.glanner.api.queryrepository.GlannerQueryRepository;
 import com.glanner.core.domain.user.DailyWorkSchedule;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
@@ -31,7 +35,14 @@ class GlannerFindTest {
     private GlannerRepository glannerRepository;
 
     @Autowired
+    private GlannerQueryRepository glannerQueryRepository;
+
+    @Autowired
+    private DailyWorkGlannerQueryRepository dailyWorkGlannerQueryRepository;
+
+    @Autowired
     private EntityManager em;
+    private User host;
 
     @BeforeEach
     public void init(){
@@ -53,6 +64,21 @@ class GlannerFindTest {
         //then
         assertThat(userGlanners.size()).isEqualTo(1);
 
+    }
+
+    @Test
+    public void testFindGlannerDailyWorks() throws Exception{
+        //given
+        User host = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        Glanner findGlanner = glannerQueryRepository.findByHostId(host.getId()).orElseThrow(UserNotFoundException::new);
+
+        //when
+        List<FindGlannerWorkResDto> dailyWorks = dailyWorkGlannerQueryRepository.findByGlannerIdWithDate(findGlanner.getId(), LocalDateTime.now().minusHours(1), LocalDateTime.now().plusHours(20));
+
+        //then
+        for (FindGlannerWorkResDto dailyWork: dailyWorks)  {
+            System.out.println(dailyWork.getStartTime());
+        }
     }
 
     public void createUser(){
@@ -92,10 +118,29 @@ class GlannerFindTest {
                 .user(user)
                 .build();
 
+        DailyWorkGlanner dailyWorkGlanner = createDailyWork(1);
+        DailyWorkGlanner dailyWorkGlanner2 = createDailyWork(2);
+        DailyWorkGlanner dailyWorkGlanner3 = createDailyWork(3);
+        DailyWorkGlanner dailyWorkGlanner4 = createDailyWork(4);
+        DailyWorkGlanner dailyWorkGlanner5 = createDailyWork(5);
+
         glanner.addUserGlanner(userGlanner);
 
         Glanner savedGlanner = glannerRepository.save(glanner);
+        glanner.addDailyWork(dailyWorkGlanner);
+        glanner.addDailyWork(dailyWorkGlanner2);
+        glanner.addDailyWork(dailyWorkGlanner3);
+        glanner.addDailyWork(dailyWorkGlanner4);
+        glanner.addDailyWork(dailyWorkGlanner5);
         em.flush();
         em.clear();
+    }
+
+    public DailyWorkGlanner createDailyWork(int hour){
+        return DailyWorkGlanner
+                .builder()
+                .startDate(LocalDateTime.now().plusHours(hour))
+                .endDate(LocalDateTime.now().plusHours(3 + hour))
+                .build();
     }
 }

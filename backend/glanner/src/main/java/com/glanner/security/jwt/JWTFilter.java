@@ -1,8 +1,6 @@
 package com.glanner.security.jwt;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -20,12 +18,12 @@ import java.io.IOException;
  * found.
  */
 @Slf4j
-public class JWTFilter extends GenericFilterBean {
+public class JwtFilter extends GenericFilterBean {
    public static final String AUTHORIZATION_HEADER = "Authorization";
 
    private TokenProvider tokenProvider;
 
-   public JWTFilter(TokenProvider tokenProvider) {
+   public JwtFilter(TokenProvider tokenProvider) {
       this.tokenProvider = tokenProvider;
    }
 

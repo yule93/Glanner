@@ -22,6 +22,9 @@ logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
 
+glanner:
+  max-perssonel-size: 5
+
 jwt:
   header: Authorization
   # This token must be encoded using Base64 with mininum 88 Bits (you can type `echo 'secret-key'|base64` on your command line)

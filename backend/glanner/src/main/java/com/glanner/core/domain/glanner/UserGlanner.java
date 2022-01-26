@@ -37,4 +37,9 @@ public class UserGlanner extends BaseTimeEntity {
     public void changeGlanner(Glanner glanner){
         this.glanner = glanner;
     }
+
+    public void delete(){
+        user.getUserGlanners().remove(this);
+        glanner.getUserGlanners().remove(this);
+    }
 }
