@@ -3,7 +3,7 @@ package com.glanner.config;
 import com.glanner.core.domain.user.UserRoleStatus;
 import com.glanner.security.jwt.JwtAccessDeniedHandler;
 import com.glanner.security.jwt.JwtAuthenticationEntryPoint;
-import com.glanner.security.jwt.JWTFilter;
+import com.glanner.security.jwt.JwtFilter;
 import com.glanner.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -62,7 +62,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
          .httpBasic().disable()
 
          .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-         .addFilterBefore(new JWTFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+         .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
 
          .exceptionHandling()
          .authenticationEntryPoint(authenticationErrorHandler)
@@ -76,7 +76,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
          .and()
          .authorizeRequests()
          .antMatchers("/api/auth").permitAll()
-         .antMatchers("/user/**").permitAll()
 
          .antMatchers("/api/**").hasAuthority(UserRoleStatus.ROLE_USER.name())
 //         .antMatchers("/api/**").permitAll()

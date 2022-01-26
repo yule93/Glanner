@@ -2,7 +2,7 @@ package com.glanner.security.controller;
 
 import com.glanner.api.dto.response.BaseResponseEntity;
 import com.glanner.security.dto.LoginDto;
-import com.glanner.security.jwt.JWTFilter;
+import com.glanner.security.jwt.JwtFilter;
 import com.glanner.security.jwt.TokenProvider;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class AuthenticationRestController {
       String token = tokenProvider.createToken(authentication, rememberMe);
 
       HttpHeaders httpHeaders = new HttpHeaders();
-      httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + token);
+      httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
 
       return ResponseEntity.status(200).body(new JWTToken(token, 200, "Success"));
    }

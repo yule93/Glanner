@@ -6,7 +6,6 @@ import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
 import com.glanner.core.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,34 +64,7 @@ class UserServiceImplTest {
         assertThat(savedUser.getSchedule()).isEqualTo(schedule);
     }
 
-    @Test
-    public void testWithdrawal() throws Exception{
-        //given
-        UserSaveReqDto reqDto = UserSaveReqDto.builder()
-                .email("cherish8513@naver.com")
-                .name("싸피")
-                .password("1234")
-                .phoneNumber("010-1234-5678")
-                .build();
-
-        User user = reqDto.toEntity();
-        //when
-        User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new IllegalStateException("없는 유저 입니다."));
-        Long id = findUser.getId();
-
-        userRepository.deleteById(id);
-        //then
-        assertEquals(user.getEmail(), findUser.getEmail());
-    }
-
-    @Test
-    public void findByEmailFailureTest() {
-        Optional<User> userFindByEmail = userRepository.findByEmail("not exist email");
-        assertEquals(Optional.empty(), userFindByEmail);
-    }
-
     private void validateDuplicateMember(User user) {
-        System.out.println("User의 Email 값: "+ user.getEmail());
         userRepository.findByEmail(user.getEmail())
                 .ifPresent(m -> {throw new IllegalStateException("이미 존재하는 회원입니다");
                 });

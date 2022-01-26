@@ -3,7 +3,11 @@ package com.glanner.api.dto.request;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class UserSaveReqDto {
 
     private String name;
@@ -14,12 +18,11 @@ public class UserSaveReqDto {
     private String interests;
 
     @Builder
-    public UserSaveReqDto(String name, String email, String password, String phoneNumber, UserRoleStatus role, String interests) {
+    public UserSaveReqDto(String name, String email, String password, String phoneNumber, String interests) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.role = role;
         this.interests = interests;
     }
 

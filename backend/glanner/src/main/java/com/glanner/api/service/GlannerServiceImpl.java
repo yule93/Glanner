@@ -45,8 +45,9 @@ public class GlannerServiceImpl implements GlannerService{
 
     @Override
     public void deleteGlanner(DeleteGlannerReqDto reqDto) {
-        Glanner findGlanner = getGlanner(glannerQueryRepository.findById(reqDto.getGlannerId()));
+        Glanner findGlanner = getGlanner(glannerRepository.findById(reqDto.getGlannerId()));
 
+        glannerQueryRepository.deleteAllWorksById(findGlanner.getId());
         glannerRepository.delete(findGlanner);
     }
 
@@ -83,12 +84,7 @@ public class GlannerServiceImpl implements GlannerService{
     @Override
     public void addDailyWork(AddGlannerWorkReqDto reqDto) {
         Glanner glanner = getGlanner(glannerQueryRepository.findById(reqDto.getGlannerId()));
-        glanner.addDailyWork(DailyWorkGlanner.builder()
-                .title(reqDto.getTitle())
-                .content(reqDto.getContent())
-                .startDate(reqDto.getStartTime())
-                .endDate(reqDto.getEndTime())
-                .build());
+        glanner.addDailyWork(reqDto.toEntity());
     }
 
     @Override
