@@ -16,10 +16,9 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 public class Board extends BaseTimeEntity {
-    public Board(String title, String content, String fileUrls, int count, User user) {
+    public Board(String title, String content, int count, User user) {
         this.title = title;
         this.content = content;
-        this.fileUrls = fileUrls;
         this.count = count;
         this.user = user;
     }
@@ -30,7 +29,6 @@ public class Board extends BaseTimeEntity {
     private  Long id;
     private String title;
     private String content;
-    private String fileUrls;
     private int count;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,10 +38,12 @@ public class Board extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL)
+    private List<FileInfo> fileInfos = new ArrayList<>();
+
     public void changeBoard(String title, String content, String fileUrls) {
         this.title = title;
         this.content = content;
-        this.fileUrls = fileUrls;
     }
 
     public void addComment(Comment comment){
@@ -52,6 +52,10 @@ public class Board extends BaseTimeEntity {
 
     public void updateCount(){
         this.count++;
+    }
+
+    public void addFile(FileInfo fileInfo) {
+       this.fileInfos.add(fileInfo);
     }
 }
 

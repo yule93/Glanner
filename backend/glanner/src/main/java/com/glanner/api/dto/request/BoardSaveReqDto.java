@@ -19,20 +19,17 @@ public class BoardSaveReqDto {
     private String title;
     @NotNull
     private String content;
-    private String fileUrls;
 
     @Builder
-    public BoardSaveReqDto(String title, String content, String fileUrls) {
+    public BoardSaveReqDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.fileUrls = fileUrls;
     }
 
     public FreeBoard toFreeBoardEntity(User user){
         return FreeBoard.builder()
                 .title(title)
                 .content(content)
-                .fileUrls(fileUrls)
                 .user(user)
                 .count(0)
                 .disLikeCount(0)
@@ -44,7 +41,6 @@ public class BoardSaveReqDto {
         return NoticeBoard.builder()
                 .title(title)
                 .content(content)
-                .fileUrls(fileUrls)
                 .user(user)
                 .count(0)
                 .build();
@@ -54,7 +50,6 @@ public class BoardSaveReqDto {
         return GlannerBoard.builder()
                 .title(title)
                 .content(content)
-                .fileUrls(fileUrls)
                 .user(user)
                 .count(0)
                 .glanner(glanner)

@@ -37,7 +37,7 @@ public class QNoticeBoard extends EntityPathBase<NoticeBoard> {
     public final DateTimePath<java.time.LocalDateTime> createdDate;
 
     //inherited
-    public final StringPath fileUrls;
+    public final ListPath<FileInfo, QFileInfo> fileInfos;
 
     //inherited
     public final NumberPath<Long> id;
@@ -74,7 +74,7 @@ public class QNoticeBoard extends EntityPathBase<NoticeBoard> {
         this.content = _super.content;
         this.count = _super.count;
         this.createdDate = _super.createdDate;
-        this.fileUrls = _super.fileUrls;
+        this.fileInfos = _super.fileInfos;
         this.id = _super.id;
         this.modifiedDate = _super.modifiedDate;
         this.title = _super.title;

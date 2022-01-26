@@ -15,8 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FreeBoard extends Board {
     @Builder
-    public FreeBoard(String title, String content, int likeCount, int disLikeCount, int count, String fileUrls, User user) {
-        super(title, content, fileUrls, count, user);
+    public FreeBoard(String title, String content, int likeCount, int disLikeCount, int count, User user) {
+        super(title, content, count, user);
         this.likeCount = likeCount;
         this.disLikeCount = disLikeCount;
     }

@@ -1,28 +1,37 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.*;
+import com.glanner.api.dto.request.BoardAddCommentReqDto;
+import com.glanner.api.dto.request.BoardCountReqDto;
+import com.glanner.api.dto.request.BoardSaveReqDto;
+import com.glanner.api.dto.request.BoardUpdateReqDto;
 import com.glanner.api.queryrepository.UserQueryRepository;
-import com.glanner.core.domain.board.Board;
-import com.glanner.core.domain.board.Comment;
-import com.glanner.core.domain.board.FreeBoard;
-import com.glanner.core.domain.board.NoticeBoard;
+import com.glanner.core.domain.board.*;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
 import com.glanner.core.repository.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Commit;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Commit
 class BoardServiceTest {
     @Autowired
     private UserRepository userRepository;
@@ -45,7 +54,7 @@ class BoardServiceTest {
     @Autowired
     private EntityManager em;
 
-//    @BeforeEach
+    @BeforeEach
     public void createUser(){
         User user = User.builder()
                 .phoneNumber("010-6575-2938")
@@ -69,7 +78,6 @@ class BoardServiceTest {
         BoardSaveReqDto boardSaveReqDto = BoardSaveReqDto.builder()
                 .title("제목")
                 .content("내용")
-                .fileUrls(null)
                 .build();
 
 
@@ -90,12 +98,45 @@ class BoardServiceTest {
         BoardSaveReqDto boardSaveReqDto = BoardSaveReqDto.builder()
                 .title("제목")
                 .content("내용")
-                .fileUrls(null)
                 .build();
 
+        List<MultipartFile> files = new ArrayList<>();
+        files.add(new MockMultipartFile("files", "imagefile.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()));
+        files.add(new MockMultipartFile("files", "imagefile.jpeg", "image/jpeg", "<<jpeg data>>".getBytes()));
 
         //when
         NoticeBoard noticeBoard = boardSaveReqDto.toNoticeBoardEntity(user);
+
+        if(!files.isEmpty()){
+            String realPath = "uploads/";
+            String date = new SimpleDateFormat("yyMMdd").format(new Date());
+            String saveFolder = realPath + File.separator + date;
+
+            File folder = new File(saveFolder);
+
+            if(!folder.exists()) folder.mkdir();
+            for(MultipartFile file: files){
+                String originalFileName = file.getOriginalFilename();
+                FileInfo fileInfo = null;
+                if(!originalFileName.isEmpty()){
+                    String saveFileName = UUID.randomUUID().toString()
+                            + originalFileName.substring(originalFileName.lastIndexOf('.'));
+                    fileInfo = FileInfo.builder()
+                            .saveFolder(date)
+                            .originFile(originalFileName)
+                            .saveFile(saveFileName)
+                            .board(noticeBoard)
+                            .build();
+                    try {
+                        file.transferTo(new File(folder, saveFileName));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                noticeBoard.addFile(fileInfo);
+            }
+        }
+
         NoticeBoard savedNoticeBoard = boardRepository.save(noticeBoard);
 
         //then
@@ -111,7 +152,6 @@ class BoardServiceTest {
         BoardSaveReqDto boardSaveReqDto = BoardSaveReqDto.builder()
                 .title("제목")
                 .content("내용")
-                .fileUrls(null)
                 .build();
 
         FreeBoard freeBoard = boardSaveReqDto.toFreeBoardEntity(user);
@@ -132,7 +172,6 @@ class BoardServiceTest {
         //then
         assertThat(updatedBoard.getTitle()).isEqualTo("제목 수정");
         assertThat(updatedBoard.getContent()).isEqualTo("내용 수정");
-        assertThat(updatedBoard.getFileUrls()).isEqualTo(null);
         assertThat(updatedBoard.getUser()).isEqualTo(savedBoard.getUser());
     }
 
@@ -244,7 +283,6 @@ class BoardServiceTest {
                 .likeCount(0)
                 .disLikeCount(0)
                 .count(0)
-                .fileUrls(null)
                 .user(user)
                 .build();
         return boardRepository.save(freeBoard);

@@ -37,7 +37,7 @@ public class QGlannerBoard extends EntityPathBase<GlannerBoard> {
     public final DateTimePath<java.time.LocalDateTime> createdDate;
 
     //inherited
-    public final StringPath fileUrls;
+    public final ListPath<com.glanner.core.domain.board.FileInfo, com.glanner.core.domain.board.QFileInfo> fileInfos;
 
     public final QGlanner glanner;
 
@@ -76,7 +76,7 @@ public class QGlannerBoard extends EntityPathBase<GlannerBoard> {
         this.content = _super.content;
         this.count = _super.count;
         this.createdDate = _super.createdDate;
-        this.fileUrls = _super.fileUrls;
+        this.fileInfos = _super.fileInfos;
         this.glanner = inits.isInitialized("glanner") ? new QGlanner(forProperty("glanner"), inits.get("glanner")) : null;
         this.id = _super.id;
         this.modifiedDate = _super.modifiedDate;

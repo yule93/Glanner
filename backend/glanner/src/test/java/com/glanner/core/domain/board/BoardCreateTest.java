@@ -54,7 +54,6 @@ public class BoardCreateTest {
         NoticeBoard noticeBoard = NoticeBoard.builder()
             .title("공지사항이요")
             .content("이거 꼭 읽어야합니다. 공지사항이니까요.")
-            .fileUrls(null)
             .count(0)
             .user(findUser)
             .build();
@@ -77,7 +76,6 @@ public class BoardCreateTest {
                 .likeCount(0)
                 .disLikeCount(0)
                 .count(0)
-                .fileUrls(null)
                 .user(null)
                 .build();
 
@@ -101,7 +99,6 @@ public class BoardCreateTest {
                 .likeCount(0)
                 .disLikeCount(0)
                 .count(0)
-                .fileUrls(null)
                 .user(null)
                 .build();
 

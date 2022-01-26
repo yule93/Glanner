@@ -39,7 +39,7 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
     public final NumberPath<Integer> disLikeCount = createNumber("disLikeCount", Integer.class);
 
     //inherited
-    public final StringPath fileUrls;
+    public final ListPath<FileInfo, QFileInfo> fileInfos;
 
     //inherited
     public final NumberPath<Long> id;
@@ -78,7 +78,7 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
         this.content = _super.content;
         this.count = _super.count;
         this.createdDate = _super.createdDate;
-        this.fileUrls = _super.fileUrls;
+        this.fileInfos = _super.fileInfos;
         this.id = _super.id;
         this.modifiedDate = _super.modifiedDate;
         this.title = _super.title;

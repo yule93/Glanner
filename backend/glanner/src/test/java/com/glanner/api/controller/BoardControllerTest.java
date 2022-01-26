@@ -18,9 +18,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +52,8 @@ class BoardControllerTest {
     public void testGetFreeBoards() throws Exception{
         //given
         List<FreeBoard> response = new ArrayList<>();
-        response.add(new FreeBoard("title", "content", 0, 0, 0, null, null));
-        response.add(new FreeBoard("title1", "content2", 1, 2, 0, null, null));
+        response.add(new FreeBoard("title", "content", 0, 0, 0, null));
+        response.add(new FreeBoard("title1", "content2", 1, 2, 0, null));
 
         when(freeBoardRepository.findAll()).thenReturn(response);
 
@@ -66,7 +69,7 @@ class BoardControllerTest {
     @WithUserDetails("cherish8513@naver.com")
     public void testGetFreeBoard() throws Exception{
         //given
-        FreeBoard response = new FreeBoard("title1", "content2", 1, 2, 0, null, null);
+        FreeBoard response = new FreeBoard("title1", "content2", 1, 2, 0, null);
 
         when(freeBoardRepository.findById(1L)).thenReturn(Optional.of(response));
 
@@ -83,8 +86,8 @@ class BoardControllerTest {
     public void testGetNoticeBoards() throws Exception{
         //given
         List<NoticeBoard> response = new ArrayList<>();
-        response.add(new NoticeBoard("title", "content", null, 0, null));
-        response.add(new NoticeBoard("title1", "content2", null, 2, null));
+        response.add(new NoticeBoard("title", "content", 0, null));
+        response.add(new NoticeBoard("title1", "content2", 2, null));
 
         when(noticeBoardRepository.findAll()).thenReturn(response);
 
@@ -100,7 +103,7 @@ class BoardControllerTest {
     @WithUserDetails("cherish8513@naver.com")
     public void testGetNoticeBoard() throws Exception{
         //given
-        NoticeBoard response = new NoticeBoard("title1", "content2", null, 2, null);
+        NoticeBoard response = new NoticeBoard("title1", "content2", 2, null);
 
         when(noticeBoardRepository.findById(1L)).thenReturn(Optional.of(response));
 
@@ -116,7 +119,7 @@ class BoardControllerTest {
     @WithUserDetails("cherish8513@naver.com")
     public void testSaveFreeBoard() throws Exception{
         //given
-        BoardSaveReqDto reqDto = new BoardSaveReqDto("제목","내용",null);
+        BoardSaveReqDto reqDto = new BoardSaveReqDto("제목","내용");
 
         //when
         mockMvc.perform(post("/api/board/saveFreeBoard")
@@ -135,10 +138,17 @@ class BoardControllerTest {
     @WithUserDetails("cherish8513@naver.com")
     public void testSaveNoticeBoard() throws Exception{
         //given
-        BoardSaveReqDto reqDto = new BoardSaveReqDto("제목","내용",null);
+        BoardSaveReqDto reqDto = new BoardSaveReqDto("제목","내용");
+        MockMultipartFile multipartFile1 = new MockMultipartFile("files", "imagefile.jpeg", "image/jpeg", "<<jpeg data>>".getBytes());
+        MockMultipartFile multipartFile2 = new MockMultipartFile("files", "imagefile.jpeg", "image/jpeg", "<<jpeg data>>".getBytes());
+        List<MultipartFile> files = new ArrayList<>();
+        files.add(multipartFile1);
+        files.add(multipartFile2);
 
         //when
-        mockMvc.perform(post("/api/board/saveNoticeBoard")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/board/saveNoticeBoard")
+                        .file(multipartFile1)
+                        .file(multipartFile2)
                         .content(asJsonString(reqDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -147,7 +157,8 @@ class BoardControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        verify(boardService, times(1)).saveNoticeBoard("cherish8513@naver.com", reqDto);
+
+        verify(boardService, times(1)).saveNoticeBoard("cherish8513@naver.com", reqDto, files);
     }
 
     @Test
