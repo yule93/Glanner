@@ -29,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 @RequiredArgsConstructor
 @Transactional
-@Commit
 class GlannerDeleteTest {
 
     @Autowired
@@ -69,8 +68,8 @@ class GlannerDeleteTest {
         assertThatThrownBy(() -> {
             glannerRepository.findById(glannerId).orElseThrow(IllegalArgumentException::new);
         }).isInstanceOf(IllegalArgumentException.class);
-//        User deleteAfterUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
-//        assertThat(deleteAfterUser.getUserGlanners().size()).isEqualTo(0);
+        User deleteAfterUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        assertThat(deleteAfterUser.getUserGlanners().size()).isEqualTo(0);
     }
 
     public void createUser(){
