@@ -48,6 +48,7 @@ public class GlannerServiceImpl implements GlannerService{
         Glanner findGlanner = getGlanner(glannerRepository.findById(reqDto.getGlannerId()));
 
         glannerQueryRepository.deleteAllWorksById(findGlanner.getId());
+        glannerQueryRepository.deleteAllUserGlannerById(findGlanner.getId());
         glannerRepository.delete(findGlanner);
     }
 
