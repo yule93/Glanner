@@ -28,10 +28,19 @@ const GroupPlannerList = styled.div`
   border-radius: 5px;
   box-shadow: 0.5px 2px 5px 0.5px rgba(130, 130, 130, 0.2);
   min-width: 200px;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
 `;
 
 const myPlanners = ["글래너님의 플래너", "개인 플래너1"]; // useState, useRedux 들어갈 자리
-const groupPlanners = ["알고리즘 스터디", "스프링 스터디", "독서 모임"]; // useState, useRedux 들어갈 자리
+const myPlan = new Map();
+const groupPlanners = [
+  "알고리즘 스터디",
+  "스프링 스터디",
+  "독서 모임",
+  "00대 16학번 모임",
+]; // useState, useRedux 들어갈 자리
 
 const categories = [
   {
@@ -40,6 +49,10 @@ const categories = [
       {
         id: myPlanners[0],
         active: true,
+      },
+      {
+        id: myPlanners[1],
+        active: false,
       },
       {
         id: myPlanners[1],
@@ -60,6 +73,10 @@ const categories = [
       },
       {
         id: groupPlanners[2],
+        active: false,
+      },
+      {
+        id: groupPlanners[3],
         active: false,
       },
     ],
@@ -124,7 +141,6 @@ const settings = [
 
 const item = {
   py: 0,
-
   color: "#5f5f5f",
   "&:hover, &:focus": {
     bgcolor: "rgba(255, 255, 255, 0.08)",
@@ -140,34 +156,42 @@ const groupItem = {
 };
 
 const settingItem = {
-  p: 0,
+  position: "relative",
   color: "#909090",
   fontSize: "16px",
-  mt: 10
 };
 
 export default function Navigator(props) {
   const { ...other } = props;
 
+  console.log(myPlan);
+
   // ! 아래와 같은 css 방식을 inline css라고 하는데, 이는 렌더링될 때마다 스타일 객체를 다시 계산해서 전체 앱의 성능이 저하될 수 있다.
   // ! 따라서 좀 고민해야 할 방향인 것 같긴 함....
   return (
-    <Drawer variant="persistent" {...other} open="true">
+    <Drawer variant="persistent" {...other} open="true" varient="no">
       <List disablePadding sx={{ display: "inline-block" }}>
         <ListItem
           sx={{
-            py: 1.5,
-            px: 3,
+            px: "20px",
+            mt: "25px",
             color: "#000000",
             fontWeight: "bold",
             fontFamily: "Rozha One",
-            mt: 1,
           }}
         >
           <img src={logo} style={{ height: 40 + "px" }} />
         </ListItem>
         {categories.map(({ id, children }) => (
-          <Box key={id}>
+          <Box
+            key={id}
+            sx={{
+              maxHeight: "240px",
+              "&::-webkit-scrollbar": {
+                display: 'none' 
+              },
+            }}
+          >
             <ListItem sx={{ pb: 0, px: 2, mt: 2 }}>
               <ListItemText sx={{ color: "#959595", fontSize: "14px" }}>
                 {id}
@@ -233,13 +257,13 @@ export default function Navigator(props) {
             ))}
           </Box>
         ))}
-
+        <div style={{maxHeight: "200px", minHeight: "20px", width: "auto", content: ''}}></div>
         {/* ! 설정&로그아웃 부분 */}
         {settings.map(({ id, children }) => (
           <Box key={id} sx={settingItem}>
             {children.map(({ id: childId, icon }) => (
               <ListItem key={childId} sx={{ p: 0 }}>
-                <ListItemButton sx={{ m: 0, height: "30px" }}>
+                <ListItemButton sx={{ m: 0, height: "30px" }} components="a">
                   <ListItemText>
                     {icon} {childId}
                   </ListItemText>
