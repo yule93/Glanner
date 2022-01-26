@@ -1,9 +1,6 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.BoardAddCommentReqDto;
-import com.glanner.api.dto.request.BoardCountReqDto;
-import com.glanner.api.dto.request.BoardSaveReqDto;
-import com.glanner.api.dto.request.BoardUpdateReqDto;
+import com.glanner.api.dto.request.*;
 import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.board.*;
 import com.glanner.core.domain.user.Schedule;
@@ -15,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.Commit;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -218,37 +214,88 @@ class BoardServiceTest {
                 .build();
 
         //when
-        Board board1 = boardRepository.findById(boardAddCommentReqDto1.getBoardId())
+        Board board = boardRepository.findById(boardAddCommentReqDto1.getBoardId())
                 .orElseThrow(()->new IllegalStateException("없는 게시물입니다."));
         Comment parent1 = (boardAddCommentReqDto1.getParentId() == null)?
                 null:commentRepository.findById(boardAddCommentReqDto1.getParentId()).orElseThrow(()->new IllegalStateException("없는 댓글 입니다."));
-        Comment comment1 = boardAddCommentReqDto1.toEntity(user, board1, parent1);
-        Comment savedComment1 = commentRepository.save(comment1);
+        Comment comment1 = boardAddCommentReqDto1.toEntity(user, board, parent1);
+        board.addComment(comment1);
+        commentRepository.save(comment1);
+        boardRepository.save(board);
 
         // given: 대댓글
         BoardAddCommentReqDto boardAddCommentReqDto2 = BoardAddCommentReqDto.builder()
                 .content("대댓글이용")
-                .parentId(savedComment1.getId())
+                .parentId(comment1.getId())
                 .boardId(savedFreeBoard.getId())
                 .build();
 
         // when: 대댓글
-        Board board2 = boardRepository.findById(boardAddCommentReqDto2.getBoardId())
-                .orElseThrow(()->new IllegalStateException("없는 게시물입니다."));
         Comment parent2 = (boardAddCommentReqDto2.getParentId() == null)?
                 null:commentRepository.findById(boardAddCommentReqDto2.getParentId()).orElseThrow(()->new IllegalStateException("없는 댓글 입니다."));
-        Comment comment2 = boardAddCommentReqDto2.toEntity(user, board2, parent2);
-        Comment savedComment2 = commentRepository.save(comment2);
+        Comment comment2 = boardAddCommentReqDto2.toEntity(user, board, parent2);
+        board.addComment(comment2);
+
+        Board savedBoard = boardRepository.save(board);
 
         //then
-        assertThat(savedComment1.getUser()).isEqualTo(user);
-        assertThat(savedComment2.getUser()).isEqualTo(savedComment1.getUser());
-        assertThat(savedComment1.getBoard()).isEqualTo(board1);
-        assertThat(savedComment2.getBoard()).isEqualTo(savedComment1.getBoard());
-        assertThat(savedComment1.getContent()).isEqualTo("댓글이용");
-        assertThat(savedComment2.getContent()).isEqualTo("대댓글이용");
-        assertThat(savedComment2.getParent()).isEqualTo(savedComment1);
+        assertThat(savedBoard.getComments().size()).isEqualTo(2);
+        assertThat(savedBoard.getComments().get(0).getContent()).isEqualTo("댓글이용");
+        assertThat(savedBoard.getComments().get(1).getContent()).isEqualTo("대댓글이용");
+        assertThat(savedBoard.getComments().get(1).getParent()).isEqualTo(savedBoard.getComments().get(0));
 
+    }
+
+    @Test
+    public void testEditComment() throws Exception{
+        //given
+        FreeBoard savedFreeBoard = createFreeBoard();
+        Comment comment = Comment.builder()
+                .content("내용내용")
+                .parent(null)
+                .board(savedFreeBoard).build();
+        savedFreeBoard.addComment(comment);
+        savedFreeBoard = freeBoardRepository.save(savedFreeBoard);
+
+        BoardUpdateCommentReqDto reqDto = new BoardUpdateCommentReqDto("내용수정수정");
+
+        //when
+        Comment savedComment = commentRepository.findById(savedFreeBoard.getComments().get(0).getId()).orElseThrow(
+                ()->new IllegalStateException("존재하지 않는 댓글입니다.")
+        );
+        savedComment.changeContent(reqDto.getContent());
+        commentRepository.save(comment);
+
+        //then
+        assertThat(savedComment.getContent()).isEqualTo("내용수정수정");
+        assertThat(savedComment.getBoard().getComments().get(0).getContent()).isEqualTo("내용수정수정");
+    }
+
+    @Test
+    public void testDeleteComment() throws Exception{
+        //given
+        FreeBoard savedFreeBoard = createFreeBoard();
+        Comment comment = Comment.builder()
+                .content("내용내용")
+                .parent(null)
+                .board(savedFreeBoard).build();
+        savedFreeBoard.addComment(comment);
+        savedFreeBoard = freeBoardRepository.save(savedFreeBoard);
+
+        //when
+        Comment savedComment = commentRepository.findById(savedFreeBoard.getComments().get(0).getId()).orElseThrow(
+                ()->new IllegalStateException("존재하지 않는 댓글입니다.")
+        );
+        Board board = savedComment.getBoard();
+        board.getComments().remove(savedComment);
+        commentRepository.delete(savedComment);
+
+        //then
+        FreeBoard updatedFreeBoard = freeBoardRepository.findById(savedFreeBoard.getId()).orElseThrow(
+                ()->new IllegalStateException("존재하지 않는 게시물입니다")
+        );
+        assertThat(updatedFreeBoard.getComments().size()).isEqualTo(0);
+        assertThat(commentRepository.count()).isEqualTo(0);
     }
 
     @Test

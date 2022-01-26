@@ -96,6 +96,18 @@ public class BoardController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
+    @PutMapping("/editComment/{commentId}")
+    public ResponseEntity<BaseResponseEntity> editComment(@PathVariable Long commentId, @RequestBody @Valid BoardUpdateCommentReqDto reqDto){
+        boardService.editComment(commentId, reqDto);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
+    @DeleteMapping("/deleteComment/{commentId}")
+    public ResponseEntity<BaseResponseEntity> deleteComment(@PathVariable Long commentId){
+        boardService.deleteComment(commentId);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
     @PutMapping("/updateCount/{boardId}")
     public ResponseEntity<BaseResponseEntity> updateCount(@PathVariable Long boardId, @RequestBody @Valid BoardCountReqDto reqDto){
         boardService.updateCount(boardId, reqDto);

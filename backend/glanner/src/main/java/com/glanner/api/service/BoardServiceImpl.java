@@ -1,16 +1,11 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.BoardAddCommentReqDto;
-import com.glanner.api.dto.request.BoardCountReqDto;
-import com.glanner.api.dto.request.BoardSaveReqDto;
-import com.glanner.api.dto.request.BoardUpdateReqDto;
+import com.glanner.api.dto.request.*;
 import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.board.*;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.BoardRepository;
 import com.glanner.core.repository.CommentRepository;
-import com.glanner.core.repository.FreeBoardRepository;
-import com.glanner.core.repository.NoticeBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +24,6 @@ public class BoardServiceImpl implements BoardService{
     private final UserQueryRepository userQueryRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final FreeBoardRepository freeBoardRepository;
-    private final NoticeBoardRepository noticeBoardRepository;
 
     @Override
     public void saveFreeBoard(String userEmail, BoardSaveReqDto reqDto) {
@@ -94,8 +87,25 @@ public class BoardServiceImpl implements BoardService{
         Board board = boardRepository.findById(reqDto.getBoardId()).orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다."));
         Comment parent = (reqDto.getParentId() == null)?
                 null:commentRepository.findById(reqDto.getParentId()).orElseThrow(()->new IllegalStateException("존재하지 않는 댓글입니다."));
-        Comment comment = reqDto.toEntity(user, board, parent);
+        board.addComment(reqDto.toEntity(user, board, parent));
+        boardRepository.save(board);
+    }
+
+    @Override
+    public void editComment(Long commentId, BoardUpdateCommentReqDto reqDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new IllegalStateException("존재하지 않는 댓글입니다."));
+        comment.changeContent(reqDto.getContent());
         commentRepository.save(comment);
+    }
+
+    @Override
+    public void deleteComment(Long commentId) {
+        Comment savedComment = commentRepository.findById(commentId).orElseThrow(
+                ()->new IllegalStateException("존재하지 않는 댓글입니다.")
+        );
+        Board board = savedComment.getBoard();
+        board.getComments().remove(savedComment);
+        commentRepository.delete(savedComment);
     }
 
     @Override
