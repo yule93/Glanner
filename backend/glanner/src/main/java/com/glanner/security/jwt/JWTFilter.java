@@ -18,12 +18,12 @@ import java.io.IOException;
  * found.
  */
 @Slf4j
-public class JwtFilter extends GenericFilterBean {
+public class JWTFilter extends GenericFilterBean {
    public static final String AUTHORIZATION_HEADER = "Authorization";
 
    private TokenProvider tokenProvider;
 
-   public JwtFilter(TokenProvider tokenProvider) {
+   public JWTFilter(TokenProvider tokenProvider) {
       this.tokenProvider = tokenProvider;
    }
 

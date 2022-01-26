@@ -19,13 +19,6 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody UserSaveReqDto userSaveReqDto) {
-//        UserSaveReqDto reqDto = UserSaveReqDto.builder()
-//                .email("ssafy@ssafy.com")
-//                .name("싸피")
-//                .password("1234")
-//                .phoneNumber("010-1234-5678")
-//                .build();
-//        return userSaveReqDto.toEntity().getId();
 
         userService.saveUser(userSaveReqDto);
 
