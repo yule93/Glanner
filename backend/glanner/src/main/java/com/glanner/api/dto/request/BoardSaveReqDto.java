@@ -5,12 +5,19 @@ import com.glanner.core.domain.board.NoticeBoard;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.glanner.GlannerBoard;
 import com.glanner.core.domain.user.User;
+import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+import javax.validation.constraints.NotNull;
+
+@Data
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardSaveReqDto {
+    @NotNull
     private String title;
+    @NotNull
     private String content;
     private String fileUrls;
 

@@ -3,10 +3,13 @@ package com.glanner.api.dto.request;
 import com.glanner.core.domain.board.Board;
 import com.glanner.core.domain.board.Comment;
 import com.glanner.core.domain.user.User;
+import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardAddCommentReqDto {
     private Long boardId;
     private Long parentId;

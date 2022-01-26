@@ -23,4 +23,9 @@ public class FreeBoard extends Board {
 
     private int likeCount;
     private int disLikeCount;
+
+    public void updateCount(String type){
+        if(type.equals("LIKE")) this.likeCount++;
+        else if(type.equals("DISLIKE")) this.disLikeCount++;
+    }
 }

@@ -1,16 +1,17 @@
 package com.glanner.api.dto.request;
 
+import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardCountReqDto {
-    private Long boardId;
     private String countType;
 
     @Builder
-    public BoardCountReqDto(Long boardId, String countType) {
-        this.boardId = boardId;
+    public BoardCountReqDto(String countType) {
         this.countType = countType;
     }
 }

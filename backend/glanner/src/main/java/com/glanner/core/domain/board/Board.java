@@ -49,5 +49,9 @@ public class Board extends BaseTimeEntity {
     public void addComment(Comment comment){
         comments.add(comment);
     }
+
+    public void updateCount(){
+        this.count++;
+    }
 }
 
