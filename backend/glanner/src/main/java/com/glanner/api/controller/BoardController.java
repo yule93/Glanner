@@ -9,7 +9,9 @@ import com.glanner.api.dto.response.BaseResponseEntity;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.service.BoardService;
 import com.glanner.core.domain.board.FreeBoard;
+import com.glanner.core.domain.board.NoticeBoard;
 import com.glanner.core.repository.FreeBoardRepository;
+import com.glanner.core.repository.NoticeBoardRepository;
 import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class BoardController {
     private final BoardService boardService;
     private final FreeBoardRepository freeBoardRepository;
+    private final NoticeBoardRepository noticeBoardRepository;
 
     @GetMapping("/getFreeBoard")
     public ResponseEntity<List<FreeBoard>> getFreeBoards(){
@@ -37,6 +40,19 @@ public class BoardController {
         FreeBoard freeBoard= freeBoardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 입니다."));
         return ResponseEntity.status(200).body(freeBoard);
+    }
+
+    @GetMapping("/getNoticeBoard")
+    public ResponseEntity<List<NoticeBoard>> getNoticeBoard(){
+        List<NoticeBoard> noticeBoards= noticeBoardRepository.findAll();
+        return ResponseEntity.status(200).body(noticeBoards);
+    }
+
+    @GetMapping("/getNoticeBoard/{boardId}")
+    public ResponseEntity<NoticeBoard> getNoticeBoard(@PathVariable Long boardId){
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 입니다."));
+        return ResponseEntity.status(200).body(noticeBoard);
     }
 
     @PostMapping("/saveFreeBoard")

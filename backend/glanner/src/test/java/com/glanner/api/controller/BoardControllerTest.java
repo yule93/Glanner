@@ -8,7 +8,9 @@ import com.glanner.api.dto.request.BoardSaveReqDto;
 import com.glanner.api.dto.request.BoardUpdateReqDto;
 import com.glanner.api.service.BoardService;
 import com.glanner.core.domain.board.FreeBoard;
+import com.glanner.core.domain.board.NoticeBoard;
 import com.glanner.core.repository.FreeBoardRepository;
+import com.glanner.core.repository.NoticeBoardRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,8 @@ class BoardControllerTest {
     private BoardService boardService;
     @MockBean
     private FreeBoardRepository freeBoardRepository;
+    @MockBean
+    private NoticeBoardRepository noticeBoardRepository;
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
@@ -68,6 +72,40 @@ class BoardControllerTest {
 
         //when
         mockMvc.perform(get("/api/board/getFreeBoard/{boardId}",1))
+
+                //then
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testGetNoticeBoards() throws Exception{
+        //given
+        List<NoticeBoard> response = new ArrayList<>();
+        response.add(new NoticeBoard("title", "content", null, 0, null));
+        response.add(new NoticeBoard("title1", "content2", null, 2, null));
+
+        when(noticeBoardRepository.findAll()).thenReturn(response);
+
+        //when
+        mockMvc.perform(get("/api/board/getNoticeBoard"))
+
+                //then
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testGetNoticeBoard() throws Exception{
+        //given
+        NoticeBoard response = new NoticeBoard("title1", "content2", null, 2, null);
+
+        when(noticeBoardRepository.findById(1L)).thenReturn(Optional.of(response));
+
+        //when
+        mockMvc.perform(get("/api/board/getNoticeBoard/{boardId}",1))
 
                 //then
                 .andExpect(status().isOk())
