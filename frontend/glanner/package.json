@@ -5,6 +5,14 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
+<<<<<<< HEAD
+=======
+    "@material-ui/icons": "^4.11.2",
+    "@mui/icons-material": "^5.3.0",
+    "@mui/lab": "^5.0.0-alpha.65",
+    "@mui/material": "^5.3.0",
+    "@mui/styles": "^5.3.0",
+>>>>>>> 2982a3e161ef3015cd9e613d28c14a58f2d22260
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
