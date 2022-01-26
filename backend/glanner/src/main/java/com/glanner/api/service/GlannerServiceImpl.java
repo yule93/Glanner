@@ -45,8 +45,9 @@ public class GlannerServiceImpl implements GlannerService{
 
     @Override
     public void deleteGlanner(DeleteGlannerReqDto reqDto) {
-        Glanner findGlanner = getGlanner(glannerQueryRepository.findById(reqDto.getGlannerId()));
+        Glanner findGlanner = getGlanner(glannerRepository.findById(reqDto.getGlannerId()));
 
+        glannerQueryRepository.deleteAllWorksById(findGlanner.getId());
         glannerRepository.delete(findGlanner);
     }
 

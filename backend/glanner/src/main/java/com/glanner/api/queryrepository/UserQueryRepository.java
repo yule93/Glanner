@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface UserQueryRepository {
     public Optional<User> findByEmail(String email);
+    public void deleteAllWorksByScheduleId(Long scheduleId);
 }

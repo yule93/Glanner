@@ -6,6 +6,7 @@ import com.glanner.core.domain.glanner.QGlanner;
 import com.glanner.core.domain.glanner.QGlannerBoard;
 import com.glanner.core.domain.glanner.QUserGlanner;
 import com.glanner.core.domain.user.QUser;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -50,4 +51,32 @@ public class GlannerQueryRepositoryImpl implements GlannerQueryRepository{
                 .where(glanner.host.id.eq(hostId))
                 .fetchFirst());
     }
+
+    @Override
+    public void deleteAllWorksById(Long id) {
+        query
+                .delete(dailyWorkGlanner)
+                .where(dailyWorkGlanner.in(
+                        JPAExpressions
+                                .select(dailyWorkGlanner)
+                                .from(dailyWorkGlanner)
+                                .where(dailyWorkGlanner.glanner.id.eq(id))
+                ))
+                .execute();
+    }
+
+    @Override
+    public void deleteAllUserGlannerById(Long id) {
+        query
+                .delete(userGlanner)
+                .where(userGlanner.in(
+                        JPAExpressions
+                                .select(userGlanner)
+                                .from(userGlanner)
+                                .where(userGlanner.glanner.id.eq(id))
+                ))
+                .execute();
+    }
+
+
 }

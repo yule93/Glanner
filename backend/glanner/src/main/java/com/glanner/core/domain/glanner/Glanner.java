@@ -32,13 +32,13 @@ public class Glanner extends BaseTimeEntity {
     @JoinColumn
     private User host;
 
-    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<UserGlanner> userGlanners = new ArrayList<>();
 
-    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<DailyWorkGlanner> works = new ArrayList<>();
 
-    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<GlannerBoard> glannerBoards = new ArrayList<>();
 
     public void addUserGlanner(UserGlanner userGlanner){

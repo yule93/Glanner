@@ -40,12 +40,12 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private UserRoleStatus role;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
     private String interests;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     List<UserGlanner> userGlanners = new ArrayList<>();
 
 
