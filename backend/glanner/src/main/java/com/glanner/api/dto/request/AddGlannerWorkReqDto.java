@@ -3,6 +3,7 @@ package com.glanner.api.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,4 +32,13 @@ public class AddGlannerWorkReqDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMddHHmmss")
     LocalDateTime endTime;
 
+    public DailyWorkGlanner toEntity(){
+        return DailyWorkGlanner
+                .builder()
+                .title(title)
+                .content(content)
+                .startDate(startTime)
+                .endDate(endTime)
+                .build();
+    }
 }

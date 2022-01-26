@@ -83,12 +83,7 @@ public class GlannerServiceImpl implements GlannerService{
     @Override
     public void addDailyWork(AddGlannerWorkReqDto reqDto) {
         Glanner glanner = getGlanner(glannerQueryRepository.findById(reqDto.getGlannerId()));
-        glanner.addDailyWork(DailyWorkGlanner.builder()
-                .title(reqDto.getTitle())
-                .content(reqDto.getContent())
-                .startDate(reqDto.getStartTime())
-                .endDate(reqDto.getEndTime())
-                .build());
+        glanner.addDailyWork(reqDto.toEntity());
     }
 
     @Override
