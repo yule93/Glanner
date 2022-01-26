@@ -4,9 +4,6 @@ import initialScreen from "./initial_screen.png";
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { SignupPageButton, SignupPageLink, SignupInput, SignupPageLabel, Copyright } from './SignupComponent.styles';
-import { display } from '@mui/system';
-
-
 
 const SignupComponent = () => {  
   
