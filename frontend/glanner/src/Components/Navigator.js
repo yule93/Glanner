@@ -169,7 +169,7 @@ export default function Navigator(props) {
   // ! 아래와 같은 css 방식을 inline css라고 하는데, 이는 렌더링될 때마다 스타일 객체를 다시 계산해서 전체 앱의 성능이 저하될 수 있다.
   // ! 따라서 좀 고민해야 할 방향인 것 같긴 함....
   return (
-    <Drawer variant="persistent" {...other} open="true" varient="no">
+    <Drawer variant="persistent" {...other} open={true} varient="no">
       <List disablePadding sx={{ display: "inline-block" }}>
         <ListItem
           sx={{
