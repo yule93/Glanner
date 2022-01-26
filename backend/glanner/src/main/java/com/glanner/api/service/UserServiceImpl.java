@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    @Override
     public Long saveUser(UserSaveReqDto reqDto){
         User user = reqDto.toEntity();
 
@@ -28,6 +29,14 @@ public class UserServiceImpl implements UserService{
         user.changeSchedule(schedule);
         User savedUser = userRepository.save(user);
         return savedUser.getId();
+    }
+
+    @Override
+    public void deleteUser(String email) {
+        User findUser = userRepository.findByEmail(email).orElseThrow(() -> new IllegalStateException("없는 유저 입니다."));
+        Long id = findUser.getId();
+
+        userRepository.deleteById(id);
     }
 
     private void validateDuplicateMember(User user) {

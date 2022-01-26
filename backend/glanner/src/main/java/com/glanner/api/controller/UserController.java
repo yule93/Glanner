@@ -5,10 +5,7 @@ import com.glanner.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,5 +21,14 @@ public class UserController {
 
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
+
+    // 탈퇴
+//    @GetMapping("/withdrawal")
+    @DeleteMapping("/withdrawal/{email}")
+    public ResponseEntity<String> delete(@PathVariable("email") String email) {
+        userService.deleteUser(email);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
 
 }
