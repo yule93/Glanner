@@ -1,7 +1,7 @@
 import Navigator from "./Navigator";
 import GlobalStyles from "./GlobalStyles";
-import Router from "../Components/Router";
 import styled from "styled-components";
+import Router from "../Components/Router";
 
 const MainContainer = styled.div`
   text-align: center;
@@ -15,7 +15,8 @@ const RouterContainer = styled.div`
   margin: 20px;
   white-space: normal;
   align-content: center;
-  height: 90vh;
+  min-height: 400px;
+  max-height: 
 `;
 
 function App() {
@@ -28,7 +29,6 @@ function App() {
             backgroundColor: "#f6f6f6",
             padding: "0 20px",
             display: "inline-block",
-            
           },
         }}
       />
