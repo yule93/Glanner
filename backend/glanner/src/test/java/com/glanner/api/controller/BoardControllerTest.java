@@ -119,7 +119,7 @@ class BoardControllerTest {
         BoardSaveReqDto reqDto = new BoardSaveReqDto("제목","내용");
 
         //when
-        mockMvc.perform(post("/api/board/saveFreeBoard")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/board/saveFreeBoard")
                         .content(asJsonString(reqDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -128,7 +128,7 @@ class BoardControllerTest {
                         .andExpect(status().isOk())
                         .andDo(print());
 
-        verify(boardService, times(1)).saveFreeBoard("cherish8513@naver.com", reqDto);
+        verify(boardService, times(1)).saveFreeBoard("cherish8513@naver.com", reqDto, null);
     }
 
     @Test

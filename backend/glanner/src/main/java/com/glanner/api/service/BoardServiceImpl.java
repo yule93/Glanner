@@ -26,9 +26,12 @@ public class BoardServiceImpl implements BoardService{
     private final CommentRepository commentRepository;
 
     @Override
-    public void saveFreeBoard(String userEmail, BoardSaveReqDto reqDto) {
+    public void saveFreeBoard(String userEmail, BoardSaveReqDto reqDto, List<MultipartFile> files) {
         User user = userQueryRepository.findByEmail(userEmail).orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
         FreeBoard freeBoard = reqDto.toFreeBoardEntity(user);
+
+        saveFiles(freeBoard, files);
+
         boardRepository.save(freeBoard);
     }
 
@@ -37,34 +40,8 @@ public class BoardServiceImpl implements BoardService{
         User user = userQueryRepository.findByEmail(userEmail).orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
         NoticeBoard noticeBoard = reqDto.toNoticeBoardEntity(user);
 
-        if(!files.isEmpty()){
-            String realPath = "uploads/";
-            String date = new SimpleDateFormat("yyMMdd").format(new Date());
-            String saveFolder = realPath + File.separator + date;
+        saveFiles(noticeBoard, files);
 
-            File folder = new File(saveFolder);
-
-            if(!folder.exists()) folder.mkdir();
-            List<FileInfo> fileInfos = new ArrayList<>();
-            for(MultipartFile file: files){
-                String originalFileName = file.getOriginalFilename();
-                FileInfo fileInfo = null;
-                if(!originalFileName.isEmpty()){
-                    String saveFileName = UUID.randomUUID().toString()
-                            + originalFileName.substring(originalFileName.lastIndexOf('.'));
-                    fileInfo = FileInfo.builder()
-                            .saveFolder(date)
-                            .originFile(originalFileName)
-                            .saveFile(saveFileName).build();
-                    try {
-                        file.transferTo(new File(folder, saveFileName));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                noticeBoard.addFile(fileInfo);
-            }
-        }
         boardRepository.save(noticeBoard);
     }
 
@@ -119,6 +96,37 @@ public class BoardServiceImpl implements BoardService{
             FreeBoard freeBoard = (FreeBoard) boardRepository.findById(boardId).orElseThrow(()-> new IllegalStateException("존재하지 않는 게시글입니다"));
             freeBoard.updateCount(reqDto.getCountType());
             boardRepository.save(freeBoard);
+        }
+    }
+
+    private void saveFiles(Board board, List<MultipartFile> files) {
+        if(!files.isEmpty()){
+            String realPath = "uploads/";
+            String date = new SimpleDateFormat("yyMMdd").format(new Date());
+            String saveFolder = realPath + File.separator + date;
+
+            File folder = new File(saveFolder);
+
+            if(!folder.exists()) folder.mkdir();
+            List<FileInfo> fileInfos = new ArrayList<>();
+            for(MultipartFile file: files){
+                String originalFileName = file.getOriginalFilename();
+                FileInfo fileInfo = null;
+                if(!originalFileName.isEmpty()){
+                    String saveFileName = UUID.randomUUID().toString()
+                            + originalFileName.substring(originalFileName.lastIndexOf('.'));
+                    fileInfo = FileInfo.builder()
+                            .saveFolder(date)
+                            .originFile(originalFileName)
+                            .saveFile(saveFileName).build();
+                    try {
+                        file.transferTo(new File(folder, saveFileName));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                board.addFile(fileInfo);
+            }
         }
     }
 }

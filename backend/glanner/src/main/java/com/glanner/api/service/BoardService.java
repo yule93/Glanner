@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface BoardService {
-    public void saveFreeBoard(String userEmail, BoardSaveReqDto reqDto);
+    public void saveFreeBoard(String userEmail, BoardSaveReqDto reqDto, List<MultipartFile> files);
     public void saveNoticeBoard(String userEmail, BoardSaveReqDto reqDto, List<MultipartFile> files);
     public void editBoard(Long boardId, BoardUpdateReqDto reqDto);
     public void deleteBoard(Long boardId);

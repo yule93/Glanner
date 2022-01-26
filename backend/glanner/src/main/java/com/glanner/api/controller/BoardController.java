@@ -64,14 +64,14 @@ public class BoardController {
     }
 
     @PostMapping("/saveFreeBoard")
-    public ResponseEntity<BaseResponseEntity> saveFreeBoard(@Valid BoardSaveReqDto boardSaveReqDto){
+    public ResponseEntity<BaseResponseEntity> saveFreeBoard(@RequestBody @Valid BoardSaveReqDto boardSaveReqDto, @RequestParam(value = "files", required = false) List<MultipartFile> files){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
-        boardService.saveFreeBoard(userEmail, boardSaveReqDto);
+        boardService.saveFreeBoard(userEmail, boardSaveReqDto, files);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
     @PostMapping("/saveNoticeBoard")
-    public ResponseEntity<BaseResponseEntity> saveNoticeBoard(@RequestBody @Valid BoardSaveReqDto boardSaveReqDto, @RequestParam("files") List<MultipartFile> files){
+    public ResponseEntity<BaseResponseEntity> saveNoticeBoard(@RequestBody @Valid BoardSaveReqDto boardSaveReqDto, @RequestParam(value = "files", required = false) List<MultipartFile> files){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         boardService.saveNoticeBoard(userEmail, boardSaveReqDto, files);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
