@@ -59,18 +59,18 @@ export const SignupInput = styled(TextField)({
 export const Copyright = () => {
   return (
     <>
-      <Box sx={{ mr: 10, mt: 10}}>
+      <Box sx={{ position: 'relative', top: 50, right: 10}}>
         <Grid container direction="column" alignItems="end">
           <Grid item>
             <img src={logo} alt='logo' />
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Typography variant="body2" color="text.secondary" align="center">          
               {'Copyright © '}
               {new Date().getFullYear()}
               {'.'}
             </Typography>
-          </Grid>
+          </Grid> */}
         </Grid>      
       </Box>
     </>
