@@ -35,6 +35,9 @@ export default () => (
         <Route path="/" element={<MainPage />}
         />
         <Route path="/community" element={<Board />} />
+        <Route path="/home" />
+        <Route path="/board-form"  element={<BoardForm />} />
+        <Route path="/board-detail" element={<BoardDetail />} />
       </Routes>
     </Router>
   </Paper>
