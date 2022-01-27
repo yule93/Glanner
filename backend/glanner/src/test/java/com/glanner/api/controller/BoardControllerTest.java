@@ -2,10 +2,7 @@ package com.glanner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.glanner.api.dto.request.BoardAddCommentReqDto;
-import com.glanner.api.dto.request.BoardCountReqDto;
-import com.glanner.api.dto.request.BoardSaveReqDto;
-import com.glanner.api.dto.request.BoardUpdateReqDto;
+import com.glanner.api.dto.request.*;
 import com.glanner.api.service.BoardService;
 import com.glanner.core.domain.board.FreeBoard;
 import com.glanner.core.domain.board.NoticeBoard;
@@ -122,7 +119,7 @@ class BoardControllerTest {
         BoardSaveReqDto reqDto = new BoardSaveReqDto("제목","내용");
 
         //when
-        mockMvc.perform(post("/api/board/saveFreeBoard")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/board/saveFreeBoard")
                         .content(asJsonString(reqDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -131,7 +128,7 @@ class BoardControllerTest {
                         .andExpect(status().isOk())
                         .andDo(print());
 
-        verify(boardService, times(1)).saveFreeBoard("cherish8513@naver.com", reqDto);
+        verify(boardService, times(1)).saveFreeBoard("cherish8513@naver.com", reqDto, null);
     }
 
     @Test
@@ -211,6 +208,39 @@ class BoardControllerTest {
                 .andDo(print());
 
         verify(boardService, times(1)).addComment("cherish8513@naver.com", reqDto);
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testEditComment() throws Exception{
+        //given
+        BoardUpdateCommentReqDto reqDto = new BoardUpdateCommentReqDto("댓글 수정");
+
+        //when
+        mockMvc.perform(put("/api/board/editComment/{commentId}","1")
+                        .content(asJsonString(reqDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+
+                //then
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        verify(boardService, times(1)).editComment(1L, reqDto);
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testDeleteComment() throws Exception{
+        //given
+        //when
+        mockMvc.perform(delete("/api/board/deleteComment/{commentId}","1"))
+
+                //then
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        verify(boardService, times(1)).deleteComment(1L);
     }
 
     @Test

@@ -1,9 +1,6 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.BoardAddCommentReqDto;
-import com.glanner.api.dto.request.BoardCountReqDto;
-import com.glanner.api.dto.request.BoardSaveReqDto;
-import com.glanner.api.dto.request.BoardUpdateReqDto;
+import com.glanner.api.dto.request.*;
 import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.board.*;
 import com.glanner.core.domain.user.Schedule;
@@ -15,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.Commit;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -23,10 +19,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,7 +67,7 @@ class BoardServiceTest {
     @Test
     public void testSaveFreeBoard() throws Exception{
         //given
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
         BoardSaveReqDto boardSaveReqDto = BoardSaveReqDto.builder()
                 .title("제목")
                 .content("내용")
@@ -94,7 +87,7 @@ class BoardServiceTest {
     @Test
     public void testSaveNoticeBoard() throws Exception{
         //given
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
         BoardSaveReqDto boardSaveReqDto = BoardSaveReqDto.builder()
                 .title("제목")
                 .content("내용")
@@ -148,7 +141,7 @@ class BoardServiceTest {
     @Test
     public void testUpdateBoard() throws Exception{
         //given
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
         BoardSaveReqDto boardSaveReqDto = BoardSaveReqDto.builder()
                 .title("제목")
                 .content("내용")
@@ -157,7 +150,7 @@ class BoardServiceTest {
         FreeBoard freeBoard = boardSaveReqDto.toFreeBoardEntity(user);
         freeBoardRepository.save(freeBoard);
 
-        Board board = boardRepository.findByTitleLike("%제목%").orElseThrow(()->new IllegalStateException("없는 게시물 입니다."));
+        Board board = getBoard(boardRepository.findByTitleLike("%제목%"));
         BoardUpdateReqDto boardUpdateReqDto = BoardUpdateReqDto.builder()
                 .title("제목 수정")
                 .content("내용 수정")
@@ -165,7 +158,7 @@ class BoardServiceTest {
                 .build();
 
         //when
-        Board savedBoard = boardRepository.findById(board.getId()).orElseThrow(()->new IllegalStateException("없는 게시물 입니다."));
+        Board savedBoard = getBoard(boardRepository.findById(board.getId()));
         savedBoard.changeBoard(boardUpdateReqDto.getTitle(), boardUpdateReqDto.getContent(), boardUpdateReqDto.getFileUrls());
         Board updatedBoard = boardRepository.save(savedBoard);
 
@@ -178,7 +171,7 @@ class BoardServiceTest {
     @Test
     public void testDeleteBoard() throws Exception{
         //given
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
         FreeBoard savedFreeBoard = createFreeBoard();
         Comment comment = Comment.builder()
                 .user(user)
@@ -198,7 +191,7 @@ class BoardServiceTest {
         savedFreeBoard = boardRepository.save(savedFreeBoard);
 
         //when
-        Board board = boardRepository.findById(savedFreeBoard.getId()).orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다"));
+        Board board = getBoard(boardRepository.findById(savedFreeBoard.getId()));
         boardRepository.delete(board);
 
         //then
@@ -209,7 +202,7 @@ class BoardServiceTest {
     @Test
     public void testAddComment() throws Exception{
         //given
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
         FreeBoard savedFreeBoard = createFreeBoard();
         BoardAddCommentReqDto boardAddCommentReqDto1 = BoardAddCommentReqDto.builder()
                 .content("댓글이용")
@@ -218,37 +211,82 @@ class BoardServiceTest {
                 .build();
 
         //when
-        Board board1 = boardRepository.findById(boardAddCommentReqDto1.getBoardId())
+        Board board = boardRepository.findById(boardAddCommentReqDto1.getBoardId())
                 .orElseThrow(()->new IllegalStateException("없는 게시물입니다."));
         Comment parent1 = (boardAddCommentReqDto1.getParentId() == null)?
-                null:commentRepository.findById(boardAddCommentReqDto1.getParentId()).orElseThrow(()->new IllegalStateException("없는 댓글 입니다."));
-        Comment comment1 = boardAddCommentReqDto1.toEntity(user, board1, parent1);
-        Comment savedComment1 = commentRepository.save(comment1);
+                null:getComment(commentRepository.findById(boardAddCommentReqDto1.getParentId()));
+        Comment comment1 = boardAddCommentReqDto1.toEntity(user, board, parent1);
+        board.addComment(comment1);
+        commentRepository.save(comment1);
+        boardRepository.save(board);
 
         // given: 대댓글
         BoardAddCommentReqDto boardAddCommentReqDto2 = BoardAddCommentReqDto.builder()
                 .content("대댓글이용")
-                .parentId(savedComment1.getId())
+                .parentId(comment1.getId())
                 .boardId(savedFreeBoard.getId())
                 .build();
 
         // when: 대댓글
-        Board board2 = boardRepository.findById(boardAddCommentReqDto2.getBoardId())
-                .orElseThrow(()->new IllegalStateException("없는 게시물입니다."));
         Comment parent2 = (boardAddCommentReqDto2.getParentId() == null)?
-                null:commentRepository.findById(boardAddCommentReqDto2.getParentId()).orElseThrow(()->new IllegalStateException("없는 댓글 입니다."));
-        Comment comment2 = boardAddCommentReqDto2.toEntity(user, board2, parent2);
-        Comment savedComment2 = commentRepository.save(comment2);
+                null:getComment(commentRepository.findById(boardAddCommentReqDto2.getParentId()));
+        Comment comment2 = boardAddCommentReqDto2.toEntity(user, board, parent2);
+        board.addComment(comment2);
+
+        Board savedBoard = boardRepository.save(board);
 
         //then
-        assertThat(savedComment1.getUser()).isEqualTo(user);
-        assertThat(savedComment2.getUser()).isEqualTo(savedComment1.getUser());
-        assertThat(savedComment1.getBoard()).isEqualTo(board1);
-        assertThat(savedComment2.getBoard()).isEqualTo(savedComment1.getBoard());
-        assertThat(savedComment1.getContent()).isEqualTo("댓글이용");
-        assertThat(savedComment2.getContent()).isEqualTo("대댓글이용");
-        assertThat(savedComment2.getParent()).isEqualTo(savedComment1);
+        assertThat(savedBoard.getComments().size()).isEqualTo(2);
+        assertThat(savedBoard.getComments().get(0).getContent()).isEqualTo("댓글이용");
+        assertThat(savedBoard.getComments().get(1).getContent()).isEqualTo("대댓글이용");
+        assertThat(savedBoard.getComments().get(1).getParent()).isEqualTo(savedBoard.getComments().get(0));
 
+    }
+
+    @Test
+    public void testEditComment() throws Exception{
+        //given
+        FreeBoard savedFreeBoard = createFreeBoard();
+        Comment comment = Comment.builder()
+                .content("내용내용")
+                .parent(null)
+                .board(savedFreeBoard).build();
+        savedFreeBoard.addComment(comment);
+        savedFreeBoard = freeBoardRepository.save(savedFreeBoard);
+
+        BoardUpdateCommentReqDto reqDto = new BoardUpdateCommentReqDto("내용수정수정");
+
+        //when
+        Comment savedComment = getComment(commentRepository.findById(savedFreeBoard.getComments().get(0).getId()));
+        savedComment.changeContent(reqDto.getContent());
+        commentRepository.save(comment);
+
+        //then
+        assertThat(savedComment.getContent()).isEqualTo("내용수정수정");
+        assertThat(savedComment.getBoard().getComments().get(0).getContent()).isEqualTo("내용수정수정");
+    }
+
+    @Test
+    public void testDeleteComment() throws Exception{
+        //given
+        FreeBoard savedFreeBoard = createFreeBoard();
+        Comment comment = Comment.builder()
+                .content("내용내용")
+                .parent(null)
+                .board(savedFreeBoard).build();
+        savedFreeBoard.addComment(comment);
+        savedFreeBoard = freeBoardRepository.save(savedFreeBoard);
+
+        //when
+        Comment savedComment = getComment(commentRepository.findById(savedFreeBoard.getComments().get(0).getId()));
+        Board board = savedComment.getBoard();
+        board.getComments().remove(savedComment);
+        commentRepository.delete(savedComment);
+
+        //then
+        FreeBoard updatedFreeBoard = (FreeBoard) getBoard(boardRepository.findById(savedFreeBoard.getId()));
+        assertThat(updatedFreeBoard.getComments().size()).isEqualTo(0);
+        assertThat(commentRepository.count()).isEqualTo(0);
     }
 
     @Test
@@ -262,11 +300,11 @@ class BoardServiceTest {
                 .countType("COUNT").build();
 
         // when
-        Board board = boardRepository.findById(savedFreeBoard.getId()).orElseThrow(()-> new IllegalStateException("존재하지 않는 게시글입니다"));
+        Board board = getBoard(boardRepository.findById(savedFreeBoard.getId()));
         board.updateCount();
         Board updatedBoard = boardRepository.save(board);
 
-        FreeBoard freeBoard = (FreeBoard) boardRepository.findById(savedFreeBoard.getId()).orElseThrow(()-> new IllegalStateException("존재하지 않는 게시글입니다"));
+        FreeBoard freeBoard = (FreeBoard) getBoard(boardRepository.findById(savedFreeBoard.getId()));
         freeBoard.updateCount(boardCountReqDto1.getCountType());
         FreeBoard updatedFreeBoard = boardRepository.save(freeBoard);
 
@@ -276,7 +314,7 @@ class BoardServiceTest {
     }
 
     public FreeBoard createFreeBoard(){
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
         FreeBoard freeBoard = FreeBoard.builder()
                 .title("제목이에요")
                 .content("내용입니다")
@@ -286,5 +324,18 @@ class BoardServiceTest {
                 .user(user)
                 .build();
         return boardRepository.save(freeBoard);
+    }
+
+    public Board getBoard(Optional<Board> board){
+        return board.orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다."));
+    }
+
+    public Comment getComment(Optional<Comment> comment){
+        return comment.orElseThrow(
+                ()->new IllegalStateException("존재하지 않는 댓글입니다.")
+        );
+    }
+    public User getUser(Optional<User> user){
+        return user.orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
     }
 }

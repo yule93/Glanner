@@ -45,33 +45,31 @@ public class BoardController {
 
     @GetMapping("/getFreeBoard/{boardId}")
     public ResponseEntity<FreeBoard> getFreeBoard(@PathVariable Long boardId){
-        FreeBoard freeBoard= freeBoardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 입니다."));
+        FreeBoard freeBoard= boardService.getFreeBoard(boardId);
         return ResponseEntity.status(200).body(freeBoard);
     }
 
     @GetMapping("/getNoticeBoard")
-    public ResponseEntity<List<NoticeBoard>> getNoticeBoard(){
+    public ResponseEntity<List<NoticeBoard>> getNoticeBoards(){
         List<NoticeBoard> noticeBoards= noticeBoardRepository.findAll();
         return ResponseEntity.status(200).body(noticeBoards);
     }
 
     @GetMapping("/getNoticeBoard/{boardId}")
     public ResponseEntity<NoticeBoard> getNoticeBoard(@PathVariable Long boardId){
-        NoticeBoard noticeBoard = noticeBoardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 입니다."));
+        NoticeBoard noticeBoard = boardService.getNoticeBoard(boardId);
         return ResponseEntity.status(200).body(noticeBoard);
     }
 
     @PostMapping("/saveFreeBoard")
-    public ResponseEntity<BaseResponseEntity> saveFreeBoard(@Valid BoardSaveReqDto boardSaveReqDto){
+    public ResponseEntity<BaseResponseEntity> saveFreeBoard(@RequestBody @Valid BoardSaveReqDto boardSaveReqDto, @RequestParam(value = "files", required = false) List<MultipartFile> files){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
-        boardService.saveFreeBoard(userEmail, boardSaveReqDto);
+        boardService.saveFreeBoard(userEmail, boardSaveReqDto, files);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
     @PostMapping("/saveNoticeBoard")
-    public ResponseEntity<BaseResponseEntity> saveNoticeBoard(@RequestBody @Valid BoardSaveReqDto boardSaveReqDto, @RequestParam("files") List<MultipartFile> files){
+    public ResponseEntity<BaseResponseEntity> saveNoticeBoard(@RequestBody @Valid BoardSaveReqDto boardSaveReqDto, @RequestParam(value = "files", required = false) List<MultipartFile> files){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         boardService.saveNoticeBoard(userEmail, boardSaveReqDto, files);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
@@ -93,6 +91,18 @@ public class BoardController {
     public ResponseEntity<BaseResponseEntity> addComment(@RequestBody @Valid BoardAddCommentReqDto reqDto){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         boardService.addComment(userEmail, reqDto);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
+    @PutMapping("/editComment/{commentId}")
+    public ResponseEntity<BaseResponseEntity> editComment(@PathVariable Long commentId, @RequestBody @Valid BoardUpdateCommentReqDto reqDto){
+        boardService.editComment(commentId, reqDto);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
+    @DeleteMapping("/deleteComment/{commentId}")
+    public ResponseEntity<BaseResponseEntity> deleteComment(@PathVariable Long commentId){
+        boardService.deleteComment(commentId);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
