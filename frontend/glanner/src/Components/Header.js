@@ -10,57 +10,64 @@ import { ReactComponent as CircleUser } from "../assets/circle-user-solid.svg";
 const HeaderContainer = styled.div`
   word-break: break-all;
   height: 100px;
-  max-width: 100%;
+  min-width: 100%;
   overflow: hidden;
-  border-bottom: 1px solid #f6f6f6;
   font-size: 16px;
-  align-content: center;
   color: 5f5f5f;
 `;
 
-const NotificationContainer = styled.div`
-  height: 100px;
-  float: right;
-  margin: 0 25px;
-`;
-
-export default function Header({ userName }) {
+export default function Header({ title }) {
   return (
     <HeaderContainer>
-      <Grid container spacing={3}>
-        <Grid item xs={8} sx={{ textAlign: "left", fontSize: "30px", display:'inline-block'}}>
-          <div style={{marginLeft: "20px"}}>{userName}님의 플래너</div>
+      <Grid container spacing={3} direction="row">
+        <Grid item xs={5} sx={{ textAlign: "left", fontSize: "30px" }}>
+          <div style={{ marginLeft: "20px", lineHeight: 3 }}>{title}</div>
         </Grid>
-        <Grid item xs={4}>
-          <NotificationContainer>
+        <Grid
+          container
+          item
+          xs={7}
+          sx={{ textAlign: "center" }}
+          direction="row"
+          justifyContent="right"
+          alignItems="center"
+        >
+          <Grid item xs={6} />
+          <Grid item xs={2}>
             <CalendarIcon
               style={{
                 fontSize: 30 + "px",
-                marginRight: 5 + "px",
                 color: "#5F5F5F",
+                marginRight: "3px"
               }}
             />
             오늘의 일정
+          </Grid>
+          <Grid item xs={1}>
             <FontAwesomeIcon
               icon={faBell}
               className="bell"
               style={{
                 fontSize: 30 + "px",
-                marginLeft: 5 + "px",
-                marginRight: 5 + "px",
                 color: "#5F5F5F",
+                marginRight: "3px"
               }}
             />
-            알림함 {" | "}
+            알림함
+          </Grid>
+          <Grid item xs={1} sx={{
+            //borderLeft: "1.5px solid #B5B5B5",
+            width: "40px"
+          }}>
             <CircleUser
               style={{
                 fontSize: 40 + "px",
                 color: "#5F5F5F",
                 backgroundColor: "#F2D0D9",
-                borderRadius: "50%"
+                borderRadius: "50%",
               }}
             />
-          </NotificationContainer>
+          </Grid>
         </Grid>
       </Grid>
     </HeaderContainer>
