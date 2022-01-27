@@ -45,21 +45,19 @@ public class BoardController {
 
     @GetMapping("/getFreeBoard/{boardId}")
     public ResponseEntity<FreeBoard> getFreeBoard(@PathVariable Long boardId){
-        FreeBoard freeBoard= freeBoardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 입니다."));
+        FreeBoard freeBoard= boardService.getFreeBoard(boardId);
         return ResponseEntity.status(200).body(freeBoard);
     }
 
     @GetMapping("/getNoticeBoard")
-    public ResponseEntity<List<NoticeBoard>> getNoticeBoard(){
+    public ResponseEntity<List<NoticeBoard>> getNoticeBoards(){
         List<NoticeBoard> noticeBoards= noticeBoardRepository.findAll();
         return ResponseEntity.status(200).body(noticeBoards);
     }
 
     @GetMapping("/getNoticeBoard/{boardId}")
     public ResponseEntity<NoticeBoard> getNoticeBoard(@PathVariable Long boardId){
-        NoticeBoard noticeBoard = noticeBoardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시판 입니다."));
+        NoticeBoard noticeBoard = boardService.getNoticeBoard(boardId);
         return ResponseEntity.status(200).body(noticeBoard);
     }
 

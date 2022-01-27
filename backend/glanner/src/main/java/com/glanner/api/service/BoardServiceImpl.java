@@ -13,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +23,22 @@ public class BoardServiceImpl implements BoardService{
     private final CommentRepository commentRepository;
 
     @Override
+    public FreeBoard getFreeBoard(Long boardId) {
+        FreeBoard freeBoard= (FreeBoard) getBoard(boardRepository.findById(boardId));
+        freeBoard.updateCount();
+        return freeBoard;
+    }
+
+    @Override
+    public NoticeBoard getNoticeBoard(Long boardId) {
+        NoticeBoard noticeBoard = (NoticeBoard) getBoard(boardRepository.findById(boardId));
+        noticeBoard.updateCount();
+        return noticeBoard;
+    }
+
+    @Override
     public void saveFreeBoard(String userEmail, BoardSaveReqDto reqDto, List<MultipartFile> files) {
-        User user = userQueryRepository.findByEmail(userEmail).orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail(userEmail));
         FreeBoard freeBoard = reqDto.toFreeBoardEntity(user);
 
         saveFiles(freeBoard, files);
@@ -37,7 +48,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void saveNoticeBoard(String userEmail, BoardSaveReqDto reqDto, List<MultipartFile> files) {
-        User user = userQueryRepository.findByEmail(userEmail).orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
+        User user = getUser(userQueryRepository.findByEmail(userEmail));
         NoticeBoard noticeBoard = reqDto.toNoticeBoardEntity(user);
 
         saveFiles(noticeBoard, files);
@@ -47,39 +58,35 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void editBoard(Long boardId, BoardUpdateReqDto reqDto) {
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다."));
+        Board board = getBoard(boardRepository.findById(boardId));
         board.changeBoard(reqDto.getTitle(), reqDto.getContent(), reqDto.getFileUrls());
-        boardRepository.save(board);
     }
 
     @Override
     public void deleteBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다"));
+        Board board = getBoard(boardRepository.findById(boardId));
         boardRepository.delete(board);
     }
 
     @Override
     public void addComment(String userEmail, BoardAddCommentReqDto reqDto) {
-        User user = userQueryRepository.findByEmail(userEmail).orElseThrow(()->new IllegalStateException("존재하지 않는 회원입니다."));
-        Board board = boardRepository.findById(reqDto.getBoardId()).orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다."));
+        User user = getUser(userQueryRepository.findByEmail(userEmail));
+        Board board = getBoard(boardRepository.findById(reqDto.getBoardId()));
         Comment parent = (reqDto.getParentId() == null)?
-                null:commentRepository.findById(reqDto.getParentId()).orElseThrow(()->new IllegalStateException("존재하지 않는 댓글입니다."));
+                null:getComment(commentRepository.findById(reqDto.getParentId()));
         board.addComment(reqDto.toEntity(user, board, parent));
         boardRepository.save(board);
     }
 
     @Override
     public void editComment(Long commentId, BoardUpdateCommentReqDto reqDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new IllegalStateException("존재하지 않는 댓글입니다."));
+        Comment comment = getComment(commentRepository.findById(commentId));
         comment.changeContent(reqDto.getContent());
-        commentRepository.save(comment);
     }
 
     @Override
     public void deleteComment(Long commentId) {
-        Comment savedComment = commentRepository.findById(commentId).orElseThrow(
-                ()->new IllegalStateException("존재하지 않는 댓글입니다.")
-        );
+        Comment savedComment = getComment(commentRepository.findById(commentId));
         Board board = savedComment.getBoard();
         board.getComments().remove(savedComment);
         commentRepository.delete(savedComment);
@@ -88,12 +95,12 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void updateCount(Long boardId, BoardCountReqDto reqDto) {
         if(reqDto.getCountType().equals("COUNT")){
-            Board board = boardRepository.findById(boardId).orElseThrow(()-> new IllegalStateException("존재하지 않는 게시글입니다"));
+            Board board = getBoard(boardRepository.findById(boardId));
             board.updateCount();
             boardRepository.save(board);
         }
         else{
-            FreeBoard freeBoard = (FreeBoard) boardRepository.findById(boardId).orElseThrow(()-> new IllegalStateException("존재하지 않는 게시글입니다"));
+            FreeBoard freeBoard = (FreeBoard) getBoard(boardRepository.findById(boardId));
             freeBoard.updateCount(reqDto.getCountType());
             boardRepository.save(freeBoard);
         }
@@ -128,5 +135,18 @@ public class BoardServiceImpl implements BoardService{
                 board.addFile(fileInfo);
             }
         }
+    }
+
+    public Board getBoard(Optional<Board> board){
+        return board.orElseThrow(()->new IllegalStateException("존재하지 않는 게시물입니다."));
+    }
+
+    public Comment getComment(Optional<Comment> comment){
+        return comment.orElseThrow(
+                ()->new IllegalStateException("존재하지 않는 댓글입니다.")
+        );
+    }
+    public User getUser(Optional<User> user){
+        return user.orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
     }
 }
