@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @QueryEntity
@@ -15,8 +16,10 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NoticeBoard extends Board {
     @Builder
-    public NoticeBoard(String title, String content, String fileUrls, int count, User user) {
-        super(title, content, fileUrls, count, user);
+    public NoticeBoard(String title, String content, int count, User user) {
+        super(title, content, count, user);
     }
+
+
 }
 

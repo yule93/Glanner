@@ -34,7 +34,7 @@ public class BoardUpdateTest {
         );
 
         // when
-        noticeBoard.changeContent("내용 업데이트");
+        noticeBoard.changeBoard("공지","내용 업데이트",null);
         em.flush();
         NoticeBoard updatedNoticeBoard = noticeBoardRepository.findByTitleLike("%공지%").orElseThrow(
                 () -> new IllegalStateException("없는 게시물 입니다.")
@@ -52,7 +52,7 @@ public class BoardUpdateTest {
         );
 
         // when
-        freeBoard.changeContent("내용 업데이트");
+        freeBoard.changeBoard("재목","내용 업데이트",null);
         em.flush();
         FreeBoard updatedFreeBoard = freeBoardRepository.findByTitleLike("%제목%").orElseThrow(
                 () -> new IllegalStateException("없는 게시물 입니다.")

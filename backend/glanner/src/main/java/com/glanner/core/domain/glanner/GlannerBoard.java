@@ -18,8 +18,8 @@ import javax.persistence.*;
 public class GlannerBoard extends Board {
 
     @Builder
-    public GlannerBoard(User user, Glanner glanner, String title, String content, String fileUrls, int count) {
-        super(title, content, fileUrls, count, user);
+    public GlannerBoard(User user, Glanner glanner, String title, String content, int count) {
+        super(title, content, count, user);
         this.glanner = glanner;
     }
 

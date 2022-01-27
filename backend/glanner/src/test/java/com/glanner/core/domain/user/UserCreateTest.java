@@ -1,6 +1,5 @@
 package com.glanner.core.domain.user;
 
-import com.glanner.core.repository.LogRepository;
 import com.glanner.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@Commit
 class UserCreateTest {
 
     @Autowired
