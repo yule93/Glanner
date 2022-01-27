@@ -5,6 +5,7 @@ import Header from "./Header";
 import Paper from "@mui/material/Paper";
 import { BoardForm } from "../Routes/Community/BoardForm";
 import { BoardDetail } from "../Routes/Community/BoardDetail";
+import { BoardList } from "../Routes/Community/BoardList";
 
 export default () => (
   <Paper variant="outlined" sx={{width: "1200px"}} elevation={3}>
@@ -15,7 +16,8 @@ export default () => (
         />
         <Route path="/home" />
         <Route path="/board-form"  element={<BoardForm />} />
-        <Route path="/board-detail" element={<BoardDetail />} />
+        <Route path="/board/:id" element={<BoardDetail />} />
+        <Route path="/board" element={<BoardList />} />
       </Routes>
     </Router>
   </Paper>
