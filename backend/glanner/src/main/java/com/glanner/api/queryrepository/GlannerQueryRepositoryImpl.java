@@ -27,32 +27,6 @@ public class GlannerQueryRepositoryImpl implements GlannerQueryRepository{
     QDailyWorkGlanner dailyWorkGlanner = new QDailyWorkGlanner("dailyWorkGlanner1");
 
     @Override
-    public Optional<Glanner> findById(Long id) {
-        return Optional.ofNullable(query
-                .select(glanner)
-                .from(glanner)
-                .leftJoin(glanner.host, user).fetchJoin()
-                .leftJoin(glanner.userGlanners, userGlanner)
-                .leftJoin(glanner.glannerBoards, glannerBoard)
-                .leftJoin(glanner.works, dailyWorkGlanner)
-                .where(glanner.id.eq(id))
-                .fetchFirst());
-    }
-
-    @Override
-    public Optional<Glanner> findByHostId(Long hostId) {
-        return Optional.ofNullable(query
-                .select(glanner)
-                .from(glanner)
-                .leftJoin(glanner.host, user).fetchJoin()
-                .leftJoin(glanner.userGlanners, userGlanner)
-                .leftJoin(glanner.glannerBoards, glannerBoard)
-                .leftJoin(glanner.works, dailyWorkGlanner)
-                .where(glanner.host.id.eq(hostId))
-                .fetchFirst());
-    }
-
-    @Override
     public void deleteAllWorksById(Long id) {
         query
                 .delete(dailyWorkGlanner)

@@ -1,6 +1,6 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.UserSaveReqDto;
+import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.core.domain.user.DailyWorkSchedule;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
@@ -18,7 +18,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -41,7 +40,7 @@ class UserServiceImplTest {
     @Test
     public void testJoin() throws Exception{
         //given
-        UserSaveReqDto reqDto = UserSaveReqDto.builder()
+        SaveUserReqDto reqDto = SaveUserReqDto.builder()
                 .email("cherish8513@naver.com")
                 .name("싸피")
                 .password("1234")
@@ -75,7 +74,6 @@ class UserServiceImplTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
                 .build();

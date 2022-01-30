@@ -1,6 +1,6 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.UserSaveReqDto;
+import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.UserRepository;
@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Transactional
-    public Long saveUser(UserSaveReqDto reqDto){
+    public Long saveUser(SaveUserReqDto reqDto){
         User user = reqDto.toEntity();
 
         validateDuplicateMember(user);

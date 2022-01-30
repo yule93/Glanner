@@ -9,6 +9,7 @@ import com.glanner.api.queryrepository.GlannerQueryRepository;
 import com.glanner.api.service.GlannerService;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.user.User;
+import com.glanner.core.repository.GlannerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -46,7 +47,7 @@ public class GlannerControllerTest {
     @MockBean
     private GlannerService glannerService;
     @MockBean
-    private GlannerQueryRepository glannerQueryRepository;
+    private GlannerRepository glannerRepository;
     @MockBean
     private DailyWorkGlannerQueryRepository dailyWorkQueryRepository;
 
@@ -67,42 +68,34 @@ public class GlannerControllerTest {
     @WithUserDetails("cherish8513@naver.com")
     public void testDeleteGlanner() throws Exception{
         //given
-        DeleteGlannerReqDto reqDto = new DeleteGlannerReqDto(1L);
 
         //when
-        mockMvc.perform(delete("/api/glanner/delete")
-                .content(asJsonString(reqDto))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/api/glanner/delete/{id}", 1))
 
         //then
                 .andExpect(status().isOk());
-        verify(glannerService, times(1)).deleteGlanner(any(DeleteGlannerReqDto.class));
+        verify(glannerService, times(1)).deleteGlanner(any(Long.class));
     }
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
     public void testFindHost() throws Exception{
         //given
-        FindGlannerHostReqDto reqDto = new FindGlannerHostReqDto(1L);
         User user = User.builder()
                 .build();
         Glanner glanner = Glanner.builder()
                 .host(user)
                 .build();
-        when(glannerQueryRepository.findById(reqDto.getGlannerId())).thenReturn(Optional.of(glanner));
+        when(glannerRepository.findRealById(1L)).thenReturn(Optional.of(glanner));
 
         //when
-        mockMvc.perform(get("/api/glanner/get-host-id")
-                .content(asJsonString(reqDto))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/glanner/get-host/{id}",1L))
 
         //then
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        verify(glannerQueryRepository, times(1)).findById(reqDto.getGlannerId());
+        verify(glannerRepository, times(1)).findRealById(anyLong());
     }
 
     @Test
@@ -127,18 +120,14 @@ public class GlannerControllerTest {
     @WithUserDetails("cherish8513@naver.com")
     public void testDeleteUser() throws Exception{
         //given
-        DeleteUserFromGlannerReqDto reqDto = new DeleteUserFromGlannerReqDto("cherish8514@naver.com", 1L);
 
         //when
-        mockMvc.perform(delete("/api/glanner/delete-user")
-                        .content(asJsonString(reqDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/api/glanner/delete-user/{glannerId}/{userId}", 1, 2))
 
         //then
                         .andExpect(status().isOk())
                         .andDo(print());
-        verify(glannerService, times(1)).deleteUser(reqDto);
+        verify(glannerService, times(1)).deleteUser(anyLong(), anyLong());
     }
 
     @Test
@@ -167,7 +156,6 @@ public class GlannerControllerTest {
         //given
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime ldt = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute());
-        FindGlannerWorkReqDto reqDto = new FindGlannerWorkReqDto(1L, ldt, ldt);
 
         List<FindGlannerWorkResDto> response = new ArrayList<>();
         response.add(new FindGlannerWorkResDto("title", "content", ldt, ldt));
@@ -176,10 +164,7 @@ public class GlannerControllerTest {
 
         //when
         when(dailyWorkQueryRepository.findByGlannerIdWithDate(1L, ldt, ldt)).thenReturn(response);
-        mockMvc.perform(get("/api/glanner/find-work")
-                    .content(asJsonString(reqDto))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/glanner/find-work/{glannerId}/{startTime}/{endTime}", 1L, ldt, ldt))
 
         //then
                     .andExpect(status().isOk())

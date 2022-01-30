@@ -15,9 +15,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NoticeBoard extends Board {
-    @Builder
-    public NoticeBoard(String title, String content, int count, User user) {
-        super(title, content, count, user);
+    @Builder(builderMethodName = "boardBuilder")
+    public NoticeBoard(String title, String content, User user) {
+        super(title, content, user);
     }
 
 

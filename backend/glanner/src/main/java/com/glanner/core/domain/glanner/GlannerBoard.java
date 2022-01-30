@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 
+
 @Entity
 @QueryEntity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GlannerBoard extends Board {
 
-    @Builder
-    public GlannerBoard(User user, Glanner glanner, String title, String content, int count) {
-        super(title, content, count, user);
-        this.glanner = glanner;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "glanner_id")
     private Glanner glanner;
 
+    @Builder(builderMethodName = "boardBuilder")
+    public GlannerBoard(String title, String content, User user, Glanner glanner) {
+        super(title, content, user);
+        this.glanner = glanner;
+    }
 }

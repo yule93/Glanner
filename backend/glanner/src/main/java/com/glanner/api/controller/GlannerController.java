@@ -10,13 +10,17 @@ import com.glanner.api.queryrepository.GlannerQueryRepository;
 import com.glanner.api.service.GlannerService;
 import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import com.glanner.core.domain.glanner.Glanner;
+import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.GlannerRepository;
 import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GlannerController {
     private final GlannerService glannerService;
-    private final GlannerQueryRepository glannerQueryRepository;
+    private final GlannerRepository glannerRepository;
     private final DailyWorkGlannerQueryRepository dailyWorkQueryRepository;
 
     @PostMapping("/save")
@@ -35,18 +39,18 @@ public class GlannerController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<BaseResponseEntity> deleteGlanner(@RequestBody @Valid DeleteGlannerReqDto reqDto){
-        glannerService.deleteGlanner(reqDto);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<BaseResponseEntity> deleteGlanner(@PathVariable Long id){
+        glannerService.deleteGlanner(id);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @GetMapping("/get-host-id")
-    public ResponseEntity<BaseResponseEntity> findHost(@RequestBody @Valid FindGlannerHostReqDto reqDto){
-        Glanner findGlanner = glannerQueryRepository.findById(reqDto.getGlannerId())
+    @GetMapping("/get-host/{id}")
+    public ResponseEntity<BaseResponseEntity> findHost(@PathVariable Long id){
+        Glanner findGlanner = glannerRepository.findRealById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글래너 입니다."));
-        FindGlannerHostResDto responseDto = new FindGlannerHostResDto(200, "Success", findGlanner.getHost().getId());
-        return ResponseEntity.status(200).body(responseDto);
+        User host = findGlanner.getHost();
+        return ResponseEntity.status(200).body(new FindGlannerHostResDto(host.getId(), host.getName(), host.getEmail()));
     }
 
     @PostMapping("/add-user")
@@ -56,9 +60,9 @@ public class GlannerController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete-user")
-    public ResponseEntity<BaseResponseEntity> deleteUser(@RequestBody @Valid DeleteUserFromGlannerReqDto reqDto){
-        glannerService.deleteUser(reqDto);
+    @DeleteMapping("/delete-user/{glannerId}/{userId}")
+    public ResponseEntity<BaseResponseEntity> deleteUser(@PathVariable Long glannerId, @PathVariable Long userId){
+        glannerService.deleteUser(glannerId, userId);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
@@ -68,9 +72,9 @@ public class GlannerController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete-work")
-    public ResponseEntity<BaseResponseEntity> deleteWork(@RequestBody @Valid DeleteGlannerWorkReqDto reqDto){
-        glannerService.deleteDailyWork(reqDto);
+    @DeleteMapping("/delete-work/{glannerId}/{workId}")
+    public ResponseEntity<BaseResponseEntity> deleteWork(@PathVariable Long glannerId, @PathVariable Long workId){
+        glannerService.deleteDailyWork(glannerId, workId);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
@@ -80,12 +84,13 @@ public class GlannerController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @GetMapping("/find-work")
-    public ResponseEntity<List<FindGlannerWorkResDto>> findWork(@RequestBody @Valid FindGlannerWorkReqDto reqDto){
-        List<FindGlannerWorkResDto> findGlannerWorkResDtos = dailyWorkQueryRepository.findByGlannerIdWithDate(
-                reqDto.getGlannerId(),
-                reqDto.getStartTime(),
-                reqDto.getEndTime());
+    @GetMapping("/find-work/{glannerId}/{startTime}/{endTime}")
+    public ResponseEntity<List<FindGlannerWorkResDto>> findWork(@PathVariable  Long glannerId,
+                                                                @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
+                                                                @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm") LocalDateTime endTime){
+
+        List<FindGlannerWorkResDto> findGlannerWorkResDtos =
+                dailyWorkQueryRepository.findByGlannerIdWithDate(glannerId, startTime, endTime);
         return ResponseEntity.status(200).body(findGlannerWorkResDtos);
     }
 

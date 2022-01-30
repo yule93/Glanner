@@ -1,6 +1,6 @@
 package com.glanner.api.controller;
 
-import com.glanner.api.dto.request.UserSaveReqDto;
+import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.BaseResponseEntity;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.UserQueryRepository;
@@ -25,9 +25,9 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping("/join")
-    public ResponseEntity<BaseResponseEntity> join(@RequestBody UserSaveReqDto userSaveReqDto) {
+    public ResponseEntity<BaseResponseEntity> join(@RequestBody SaveUserReqDto requestDto) {
 
-        userService.saveUser(userSaveReqDto);
+        userService.saveUser(requestDto);
 
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
@@ -36,7 +36,7 @@ public class UserController {
     @DeleteMapping("/withdraw")
     public ResponseEntity<BaseResponseEntity> delete() {
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
-        User findUser = getUser(userQueryRepository.findByEmail(userEmail));
+        User findUser = getUser(userRepository.findByEmail(userEmail));
         userQueryRepository.deleteAllWorksByScheduleId(findUser.getSchedule().getId());
         userRepository.delete(findUser);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));

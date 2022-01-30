@@ -4,7 +4,6 @@ import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
-import com.glanner.core.repository.CommentRepository;
 import com.glanner.core.repository.FreeBoardRepository;
 import com.glanner.core.repository.NoticeBoardRepository;
 import com.glanner.core.repository.UserRepository;
@@ -27,8 +26,6 @@ public class BoardCreateTest {
     private FreeBoardRepository freeBoardRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserQueryRepository userQueryRepository;
 
     @BeforeEach
     public void createUser(){
@@ -36,7 +33,6 @@ public class BoardCreateTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
                 .build();
@@ -49,12 +45,11 @@ public class BoardCreateTest {
 
     @Test
     public void testCreateNoticeBoard() throws Exception{
-        User findUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
+        User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
         // given
-        NoticeBoard noticeBoard = NoticeBoard.builder()
+        NoticeBoard noticeBoard = NoticeBoard.boardBuilder()
             .title("공지사항이요")
             .content("이거 꼭 읽어야합니다. 공지사항이니까요.")
-            .count(0)
             .user(findUser)
             .build();
 
@@ -70,12 +65,9 @@ public class BoardCreateTest {
     @Test
     public void testCreateFreeBoard() throws Exception{
         // given
-        FreeBoard freeBoard = FreeBoard.builder()
+        FreeBoard freeBoard = FreeBoard.boardBuilder()
                 .title("제목이에요")
                 .content("내용입니다")
-                .likeCount(0)
-                .disLikeCount(0)
-                .count(0)
                 .user(null)
                 .build();
 
@@ -86,19 +78,16 @@ public class BoardCreateTest {
         assertThat(savedFreeBoard.getTitle()).isEqualTo("제목이에요");
         assertThat(savedFreeBoard.getContent()).isEqualTo("내용입니다");
         assertThat(savedFreeBoard.getLikeCount()).isEqualTo(0);
-        assertThat(savedFreeBoard.getDisLikeCount()).isEqualTo(0);
+        assertThat(savedFreeBoard.getDislikeCount()).isEqualTo(0);
         assertThat(savedFreeBoard.getCount()).isEqualTo(0);
     }
 
     @Test
     public void testCreateComment() throws Exception{
         //given
-        FreeBoard freeBoard = FreeBoard.builder()
+        FreeBoard freeBoard = FreeBoard.boardBuilder()
                 .title("제목이에요")
                 .content("내용입니다")
-                .likeCount(0)
-                .disLikeCount(0)
-                .count(0)
                 .user(null)
                 .build();
 

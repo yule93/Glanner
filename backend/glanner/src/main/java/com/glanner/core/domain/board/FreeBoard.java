@@ -14,18 +14,19 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FreeBoard extends Board {
-    @Builder
-    public FreeBoard(String title, String content, int likeCount, int disLikeCount, int count, User user) {
-        super(title, content, count, user);
-        this.likeCount = likeCount;
-        this.disLikeCount = disLikeCount;
-    }
 
     private int likeCount;
-    private int disLikeCount;
+    private int dislikeCount;
+
+    @Builder(builderMethodName = "boardBuilder")
+    public FreeBoard(String title, String content, int count, User user) {
+        super(title, content, user);
+        this.likeCount = 0;
+        this.dislikeCount = 0;
+    }
 
     public void updateCount(String type){
         if(type.equals("LIKE")) this.likeCount++;
-        else if(type.equals("DISLIKE")) this.disLikeCount++;
+        else if(type.equals("DISLIKE")) this.dislikeCount++;
     }
 }

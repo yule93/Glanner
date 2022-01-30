@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,9 +18,11 @@ public class QFileInfo extends EntityPathBase<FileInfo> {
 
     private static final long serialVersionUID = -860903457L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QFileInfo fileInfo = new QFileInfo("fileInfo");
 
-    public final SimplePath<Board> board = createSimple("board", Board.class);
+    public final QBoard board;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -30,15 +33,24 @@ public class QFileInfo extends EntityPathBase<FileInfo> {
     public final StringPath saveFolder = createString("saveFolder");
 
     public QFileInfo(String variable) {
-        super(FileInfo.class, forVariable(variable));
+        this(FileInfo.class, forVariable(variable), INITS);
     }
 
     public QFileInfo(Path<? extends FileInfo> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QFileInfo(PathMetadata metadata) {
-        super(FileInfo.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QFileInfo(PathMetadata metadata, PathInits inits) {
+        this(FileInfo.class, metadata, inits);
+    }
+
+    public QFileInfo(Class<? extends FileInfo> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
     }
 
 }

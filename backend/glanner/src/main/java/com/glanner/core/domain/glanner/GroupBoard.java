@@ -16,12 +16,12 @@ import javax.persistence.Entity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GroupBoard extends Board {
 
-    @Builder
-    public GroupBoard(User user, String title, String content, String interests, int count) {
-        super(title, content, count, user);
+    private String interests;
+    @Builder(builderMethodName = "boardBuilder")
+    public GroupBoard(User user, String title, String content, String interests) {
+        super(title, content, user);
         this.interests = interests;
     }
-    private String interests;
 
     public void changeGroupBoard(String title, String content, String interests, String fileUrls){
         this.interests = interests;

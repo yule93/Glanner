@@ -2,7 +2,7 @@ package com.glanner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.glanner.api.dto.request.UserSaveReqDto;
+import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +36,7 @@ class UserControllerTest {
     @Test
     public void testJoin() throws Exception{
         //given
-        UserSaveReqDto reqDto = UserSaveReqDto.builder()
+        SaveUserReqDto reqDto = SaveUserReqDto.builder()
                 .email("cherish8514@naver.com")
                 .name("싸피")
                 .password("1234")
@@ -52,7 +52,7 @@ class UserControllerTest {
 
         //then
                 .andExpect(status().isOk());
-        verify(userService, times(1)).saveUser(any(UserSaveReqDto.class));
+        verify(userService, times(1)).saveUser(any(SaveUserReqDto.class));
     }
 
     public static String asJsonString(final Object obj) {

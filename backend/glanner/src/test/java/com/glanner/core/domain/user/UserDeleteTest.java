@@ -29,9 +29,7 @@ public class UserDeleteTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .role(UserRoleStatus.ROLE_USER)
-                .schedule(null)
                 .build();
 
         DailyWorkSchedule work = createWork("something1");
@@ -86,7 +84,7 @@ public class UserDeleteTest {
     @Test
     public void testQueryDeleteUserAllInfo() throws Exception{
         //given
-        User findUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
         Long scheduleId = findUser.getSchedule().getId();
 
         //when

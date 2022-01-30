@@ -8,32 +8,27 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserSaveReqDto {
-
+public class SaveUserReqDto {
     private String name;
     private String email;
     private String password;
     private String phoneNumber;
-    private UserRoleStatus role  = UserRoleStatus.ROLE_USER;
-    private String interests;
 
     @Builder
-    public UserSaveReqDto(String name, String email, String password, String phoneNumber, String interests) {
+    public SaveUserReqDto(String name, String email, String password, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.interests = interests;
     }
 
-    public User toEntity() {
+    public User toEntity(){
         return User.builder()
                 .name(name)
                 .email(email)
                 .password(password)
                 .phoneNumber(phoneNumber)
-                .role(role)
-                .interests(interests)
+                .role(UserRoleStatus.ROLE_USER)
                 .build();
     }
 }

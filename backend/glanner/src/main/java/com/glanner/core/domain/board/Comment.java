@@ -20,13 +20,6 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseTimeEntity {
 
-    @Builder
-    public Comment(String content, User user, Comment parent, Board board) {
-        this.content = content;
-        this.user = user;
-        this.parent = parent;
-        this.board = board;
-    }
 
     @Id
     @GeneratedValue
@@ -46,6 +39,14 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    @Builder
+    public Comment(String content, User user, Comment parent, Board board) {
+        this.content = content;
+        this.user = user;
+        this.parent = parent;
+        this.board = board;
+    }
 
     public void changeContent(String content) {
         this.content = content;

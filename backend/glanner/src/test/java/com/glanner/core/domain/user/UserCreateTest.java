@@ -30,10 +30,8 @@ class UserCreateTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
-                .schedule(null)
                 .build();
         //when
         User savedUser = userRepository.save(user);
@@ -42,7 +40,6 @@ class UserCreateTest {
         assertThat(savedUser.getPhoneNumber()).isEqualTo("010-6575-2938");
         assertThat(savedUser.getEmail()).isEqualTo("cherish8513@naver.com");
         assertThat(savedUser.getName()).isEqualTo("JeongJooHeon");
-        assertThat(savedUser.getInterests()).isEqualTo("#난그게재밌더라강식당다시보기#");
         assertThat(savedUser.getPassword()).isEqualTo("1234");
         assertThat(savedUser.getRole()).isEqualTo(UserRoleStatus.ROLE_USER);
     }
@@ -54,10 +51,8 @@ class UserCreateTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
-                .schedule(null)
                 .build();
 
         Schedule schedule = Schedule.builder()
@@ -80,10 +75,8 @@ class UserCreateTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password(passwordEncoder.encode("1234"))
                 .role(UserRoleStatus.ROLE_USER)
-                .schedule(null)
                 .build();
 
         DailyWorkSchedule work = createWork("something1");

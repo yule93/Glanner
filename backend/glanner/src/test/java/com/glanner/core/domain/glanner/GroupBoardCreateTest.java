@@ -35,7 +35,6 @@ class GroupBoardCreateTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
                 .build();
@@ -48,12 +47,11 @@ class GroupBoardCreateTest {
     @Test
     public void testCreateGroupBoard() throws Exception{
         //given
-        User findUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
+        User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
 
-        GroupBoard groupBoard = GroupBoard.builder()
+        GroupBoard groupBoard = GroupBoard.boardBuilder()
                 .content("group board test")
                 .title("king")
-                .count(0)
                 .user(findUser)
                 .build();
 

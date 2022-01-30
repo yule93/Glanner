@@ -1,8 +1,6 @@
 package com.glanner.api.service;
 
 import com.glanner.api.dto.request.AddUserToGlannerReqDto;
-import com.glanner.api.dto.request.DeleteGlannerWorkReqDto;
-import com.glanner.api.dto.request.DeleteUserFromGlannerReqDto;
 import com.glanner.api.dto.request.UpdateGlannerWorkReqDto;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.GlannerQueryRepository;
@@ -16,19 +14,15 @@ import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
 import com.glanner.core.repository.DailyWorkGlannerRepository;
 import com.glanner.core.repository.GlannerRepository;
-import com.glanner.core.repository.UserGlannerRepository;
 import com.glanner.core.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -60,7 +54,7 @@ public class GlannerServiceTest {
     @Test
     public void testCreateGlanner() throws Exception{
         //given
-       User findUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
+       User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
 
 
         //when
@@ -84,7 +78,7 @@ public class GlannerServiceTest {
     @Test
     public void testDeleteGlanner() throws Exception{
         //given
-        User findUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -98,22 +92,22 @@ public class GlannerServiceTest {
         Glanner savedGlanner = glannerRepository.save(glanner);
 
         //when
-        Glanner findGlanner = getGlanner(glannerQueryRepository.findById(savedGlanner.getId()));
+        Glanner findGlanner = getGlanner(glannerRepository.findRealById(savedGlanner.getId()));
 
         glannerRepository.delete(findGlanner);
 
         //then
-        User afterDeleteFindUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
+        User afterDeleteFindUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
         assertThat(afterDeleteFindUser.getUserGlanners().size()).isEqualTo(0);
         assertThatThrownBy(() -> {
-            getGlanner(glannerQueryRepository.findById(savedGlanner.getId()));
+            getGlanner(glannerRepository.findRealById(savedGlanner.getId()));
         }).isInstanceOf(IllegalArgumentException.class).hasMessage("글래너가 존재하지 않습니다.");
     }
 
     @Test
     public void testAddUser() throws Exception{
         //given
-        User findUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -140,9 +134,9 @@ public class GlannerServiceTest {
         AddUserToGlannerReqDto reqDto = new AddUserToGlannerReqDto("cherish8514@naver.com");
 
         //when
-        findUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
-        User findAnotherUser = getUser(userQueryRepository.findByEmail(reqDto.getEmail()));
-        Glanner findGlanner = getGlanner(glannerQueryRepository.findByHostId(findUser.getId()));
+        findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
+        User findAnotherUser = getUser(userRepository.findByEmail(reqDto.getEmail()));
+        Glanner findGlanner = getGlanner(glannerRepository.findRealById(findUser.getId()));
         if (findGlanner.getUserGlanners().size() >= size){
             throw new IllegalStateException("회원 수가 가득 찼습니다.");
         }
@@ -160,7 +154,7 @@ public class GlannerServiceTest {
     public void testDeleteUser() throws Exception{
         //given
         //== glanner 생성 ==//
-        User findUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -192,13 +186,11 @@ public class GlannerServiceTest {
         glanner.addUserGlanner(userGlanner1);
         Glanner savedGlanner = glannerRepository.save(glanner);
 
-        DeleteUserFromGlannerReqDto reqDto = new DeleteUserFromGlannerReqDto("cherish8514@naver.com", savedGlanner.getId());
-
         //when
         //== 글래너에 호스트와 유저 1명이 있는 상황 ==//
         //== 유저 1명이 가지고 있는 글래너는 1개 ==//
-        User attendingUser = getUser(userQueryRepository.findByEmail(reqDto.getEmail()));
-        Glanner findGlanner = getGlanner(glannerQueryRepository.findById(reqDto.getGlannerId()));
+        User attendingUser = getUser(userRepository.findByEmail("cherish8514@naver.com"));
+        Glanner findGlanner = getGlanner(glannerRepository.findRealById(savedGlanner.getId()));
         int size = findGlanner.getUserGlanners().size();
         for (int i = 0; i < size; i++) {
             if(findGlanner.getUserGlanners().get(i).getUser().getId().equals(attendingUser.getId())){
@@ -208,14 +200,14 @@ public class GlannerServiceTest {
         }
 
         //then
-        User deleteAfterUser = getUser(userQueryRepository.findByEmail(reqDto.getEmail()));
+        User deleteAfterUser = getUser(userRepository.findByEmail("cherish8514@naver.com"));
         assertThat(deleteAfterUser.getUserGlanners().size()).isEqualTo(0);
     }
 
     @Test
     public void deleteDailyWork() throws Exception{
         //given
-        User findUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -229,11 +221,10 @@ public class GlannerServiceTest {
 
         Glanner savedGlanner = glannerRepository.save(glanner);
         Long workId = savedGlanner.getWorks().get(0).getId();
-        DeleteGlannerWorkReqDto reqDto = new DeleteGlannerWorkReqDto(savedGlanner.getId(), workId);
 
         //when
-        Glanner findGlanner = getGlanner(glannerQueryRepository.findById(reqDto.getGlannerId()));
-        DailyWorkGlanner deleteWork = dailyWorkGlannerRepository.findById(reqDto.getWorkId()).orElseThrow(IllegalArgumentException::new);
+        Glanner findGlanner = getGlanner(glannerRepository.findRealById(savedGlanner.getId()));
+        DailyWorkGlanner deleteWork = dailyWorkGlannerRepository.findById(workId).orElseThrow(IllegalArgumentException::new);
         findGlanner.getWorks().remove(deleteWork);
 
         //then
@@ -243,7 +234,7 @@ public class GlannerServiceTest {
     @Test
     public void updateDailyWork() throws Exception{
         //given
-        User findUser = getUser(userQueryRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -272,7 +263,6 @@ public class GlannerServiceTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
                 .build();

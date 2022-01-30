@@ -1,20 +1,17 @@
 package com.glanner.api.dto.request;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@Data
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DeleteUserFromGlannerReqDto {
-
+@NoArgsConstructor
+@Getter
+public class UpdateCommentReqDto {
     @NotNull
-    public String email;
-
+    private Long commentId;
     @NotNull
-    public Long glannerId;
+    private String content;
 }

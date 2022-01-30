@@ -39,8 +39,6 @@ class GlannerDeleteTest {
     private GlannerRepository glannerRepository;
     @Autowired
     private GlannerQueryRepository glannerQueryRepository;
-    @Autowired
-    private DailyWorkGlannerQueryRepository dailyWorkGlannerQueryRepository;
 
     @Autowired
     private EntityManager em;
@@ -55,7 +53,7 @@ class GlannerDeleteTest {
     @Test
     public void glannerDeleteTest() throws Exception{
         //given
-        User findUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
         Glanner glanner = findUser.getUserGlanners().get(0).getGlanner();
         Long glannerId = glanner.getId();
 
@@ -68,7 +66,7 @@ class GlannerDeleteTest {
         assertThatThrownBy(() -> {
             glannerRepository.findById(glannerId).orElseThrow(IllegalArgumentException::new);
         }).isInstanceOf(IllegalArgumentException.class);
-        User deleteAfterUser = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        User deleteAfterUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
         assertThat(deleteAfterUser.getUserGlanners().size()).isEqualTo(0);
     }
 
@@ -77,7 +75,6 @@ class GlannerDeleteTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
                 .build();

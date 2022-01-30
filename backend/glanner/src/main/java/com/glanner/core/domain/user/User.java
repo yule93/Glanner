@@ -19,14 +19,12 @@ import java.util.List;
 public class User extends BaseTimeEntity {
 
     @Builder
-    public User(String name, String email, String password, String phoneNumber, UserRoleStatus role, Schedule schedule, String interests) {
+    public User(String name, String email, String password, String phoneNumber, UserRoleStatus role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
-        this.interests = interests;
-        this.schedule = schedule;
     }
 
     @Id @GeneratedValue
@@ -43,7 +41,6 @@ public class User extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
-    private String interests;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     List<UserGlanner> userGlanners = new ArrayList<>();

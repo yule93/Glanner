@@ -3,6 +3,7 @@ package com.glanner.core.domain.board;
 import com.glanner.core.domain.base.BaseTimeEntity;
 import com.glanner.core.domain.user.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,12 +17,6 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 public class Board extends BaseTimeEntity {
-    public Board(String title, String content, int count, User user) {
-        this.title = title;
-        this.content = content;
-        this.count = count;
-        this.user = user;
-    }
 
     @Id
     @GeneratedValue
@@ -41,21 +36,35 @@ public class Board extends BaseTimeEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "board", cascade = CascadeType.ALL)
     private List<FileInfo> fileInfos = new ArrayList<>();
 
-    public void changeBoard(String title, String content, String fileUrls) {
+    @Builder
+    public Board(String title, String content, User user) {
         this.title = title;
         this.content = content;
+        this.user = user;
+        this.count = 0;
+    }
+
+
+    public void changeBoard(String title, String content, List<FileInfo> fileInfos) {
+        this.title = title;
+        this.content = content;
+        changeFileInfo(fileInfos);
     }
 
     public void addComment(Comment comment){
         comments.add(comment);
     }
 
-    public void updateCount(){
+    public void deleteComment(Comment comment){
+        comments.remove(comment);
+    }
+
+    public void addCount(){
         this.count++;
     }
 
-    public void addFile(FileInfo fileInfo) {
-       this.fileInfos.add(fileInfo);
+    public void changeFileInfo(List<FileInfo> fileInfos) {
+       this.fileInfos = fileInfos;
     }
 }
 

@@ -31,7 +31,6 @@ public class UserFindTest {
                 .phoneNumber("010-6575-2938")
                 .email("cherish8513@naver.com")
                 .name("JeongJooHeon")
-                .interests("#난그게재밌더라강식당다시보기#")
                 .password("1234")
                 .role(UserRoleStatus.ROLE_USER)
                 .build();
@@ -66,7 +65,7 @@ public class UserFindTest {
         //given
 
         //when
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
+        User user = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
 
         //then
         assertThat(user.getSchedule().getUser()).isEqualTo(user);
@@ -80,7 +79,7 @@ public class UserFindTest {
         //given
 
         //when
-        User user = userQueryRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
+        User user = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
 
         //then
         assertThat(user.getSchedule().getWorks().get(0).getContent()).isEqualTo("hard");
