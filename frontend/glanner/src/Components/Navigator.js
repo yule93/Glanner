@@ -119,7 +119,7 @@ const boards = [
             style={{ width: 15 + "px" }}
           />
         ),
-        type: "",
+        type: "free",
       },
       {
         id: "공지사항",
@@ -271,6 +271,7 @@ function Navigator(props) {
             </ListItem>
             {children.map(({ id: childId, icon, type }) => (
               <ListItem key={childId} sx={{ py: 0, px: "5px" }}>
+                {/* 게시판 종류에 따라 링크 나뉘는 분기 부분 */}
                 <Link to={`/community/${type}`}>
                   <ListItemButton sx={groupItem}>
                     <ListItemText>
