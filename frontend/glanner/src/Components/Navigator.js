@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -34,7 +35,6 @@ const GroupPlannerList = styled.div`
 `;
 
 const myPlanners = ["글래너님의 플래너", "개인 플래너1"]; // useState, useRedux 들어갈 자리
-const myPlan = new Map();
 const groupPlanners = [
   "알고리즘 스터디",
   "스프링 스터디",
@@ -55,7 +55,15 @@ const categories = [
         active: false,
       },
       {
-        id: myPlanners[1],
+        id: "개인 플래너2",
+        active: false,
+      },
+      {
+        id: "개인 플래너3",
+        active: false,
+      },
+      {
+        id: "개인 플래너4",
         active: false,
       },
     ],
@@ -79,6 +87,10 @@ const categories = [
         id: groupPlanners[3],
         active: false,
       },
+      {
+        id: "축구",
+        active: false,
+      },
     ],
   },
 ];
@@ -96,6 +108,7 @@ const boards = [
             style={{ width: 15 + "px" }}
           />
         ),
+        type: "group",
       },
       {
         id: "자유 게시판",
@@ -106,6 +119,7 @@ const boards = [
             style={{ width: 15 + "px" }}
           />
         ),
+        type: "",
       },
       {
         id: "공지사항",
@@ -116,6 +130,7 @@ const boards = [
             style={{ width: 15 + "px" }}
           />
         ),
+        type: "notice",
       },
     ],
   },
@@ -161,15 +176,13 @@ const settingItem = {
   fontSize: "16px",
 };
 
-export default function Navigator(props) {
+function Navigator(props) {
   const { ...other } = props;
-
-  console.log(myPlan);
 
   // ! 아래와 같은 css 방식을 inline css라고 하는데, 이는 렌더링될 때마다 스타일 객체를 다시 계산해서 전체 앱의 성능이 저하될 수 있다.
   // ! 따라서 좀 고민해야 할 방향인 것 같긴 함....
   return (
-    <Drawer variant="persistent" {...other} open="true" varient="no">
+    <Drawer variant="persistent" {...other} open={true} varient="no">
       <List disablePadding sx={{ display: "inline-block" }}>
         <ListItem
           sx={{
@@ -187,9 +200,6 @@ export default function Navigator(props) {
             key={id}
             sx={{
               maxHeight: "240px",
-              "&::-webkit-scrollbar": {
-                display: 'none' 
-              },
             }}
           >
             <ListItem sx={{ pb: 0, px: 2, mt: 2 }}>
@@ -197,44 +207,59 @@ export default function Navigator(props) {
                 {id}
               </ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
-              <ListItem key={childId} sx={{ pb: 0 }}>
-                <GroupPlannerList>
-                  <ListItemButton selected={active} sx={item}>
-                    <ListItemText>
-                      {id === "그룹 플래너" ? (
-                        <FontAwesomeIcon
-                          icon={faCircle}
-                          className="circle"
-                          style={{ width: 12 + "px", color: "#ABC3FF" }}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={faCircle}
-                          className="circle"
-                          style={{ width: 12 + "px", color: "#FFABAB" }}
-                        />
-                      )}
-                      {"  "}
-                      {childId}
-                      {active ? (
-                        <FontAwesomeIcon
-                          icon={faAngleRight}
-                          className="arrowRight"
-                          style={{
-                            width: 15 + "px",
-                            color: "#959595",
-                            marginLeft: 10 + "px",
-                          }}
-                        />
-                      ) : (
-                        ""
-                      )}
-                    </ListItemText>
-                  </ListItemButton>
-                </GroupPlannerList>
-              </ListItem>
-            ))}
+            <Box
+              sx={{
+                maxHeight: "200px",
+                overflow: "scroll",
+              }}
+            >
+              {children.map(({ id: childId, active }) => (
+                <ListItem key={childId} sx={{ pb: 0 }}>
+                  <GroupPlannerList>
+                    <ListItemButton
+                      selected={active}
+                      sx={item}
+                      onClick={() => {
+                        console.log(
+                          categories[id == "내 플래너" ? 0 : 1].children
+                        );
+                      }}
+                    >
+                      <ListItemText>
+                        {id === "그룹 플래너" ? (
+                          <FontAwesomeIcon
+                            icon={faCircle}
+                            className="circle"
+                            style={{ width: 12 + "px", color: "#ABC3FF" }}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faCircle}
+                            className="circle"
+                            style={{ width: 12 + "px", color: "#FFABAB" }}
+                          />
+                        )}
+                        {"  "}
+                        {childId}
+                        {active ? (
+                          <FontAwesomeIcon
+                            icon={faAngleRight}
+                            className="arrowRight"
+                            style={{
+                              width: 15 + "px",
+                              color: "#959595",
+                              marginLeft: 10 + "px",
+                            }}
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </ListItemText>
+                    </ListItemButton>
+                  </GroupPlannerList>
+                </ListItem>
+              ))}
+            </Box>
           </Box>
         ))}
 
@@ -244,20 +269,28 @@ export default function Navigator(props) {
             <ListItem>
               <ListItemText sx={{ color: "#959595" }}>{id}</ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon }) => (
+            {children.map(({ id: childId, icon, type }) => (
               <ListItem key={childId} sx={{ py: 0, px: "5px" }}>
-                <ListItemButton sx={groupItem}>
-                  <ListItemText>
-                    {icon}
-                    {"  "}
-                    {childId}
-                  </ListItemText>
-                </ListItemButton>
+                <Link to={`/community/${type}`}>
+                  <ListItemButton sx={groupItem}>
+                    <ListItemText>
+                      {icon}
+                      {"  "}
+                      {childId}
+                    </ListItemText>
+                  </ListItemButton>
+                </Link>
               </ListItem>
             ))}
           </Box>
         ))}
-        <div style={{maxHeight: "200px", minHeight: "20px", width: "auto", content: ''}}></div>
+        <div
+          style={{
+            minHeight: "60px",
+            width: "auto",
+            content: "",
+          }}
+        ></div>
         {/* ! 설정&로그아웃 부분 */}
         {settings.map(({ id, children }) => (
           <Box key={id} sx={settingItem}>
@@ -276,3 +309,5 @@ export default function Navigator(props) {
     </Drawer>
   );
 }
+
+export default Navigator;
