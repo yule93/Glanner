@@ -1,14 +1,13 @@
 import React from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { Menu, MenuItem, Divider, IconButton } from '@mui/material';
+import { Menu, MenuItem, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlagIcon from '@mui/icons-material/Flag';
 import { MoreVert } from '@material-ui/icons';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 const StyledMenu = styled((props) => (
@@ -25,7 +24,7 @@ const StyledMenu = styled((props) => (
     {...props}
   />
 ))(({ theme }) => ({
-  '& .MuiPaper-root': {
+  '& .MuiPaper-root': {    
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
@@ -52,7 +51,10 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function MoreBtn() {
+
+
+export default function MoreBtn({ editData, type, comments, setComments, setOpenForm, setContent, setUpdateFlag}) {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -60,7 +62,52 @@ export default function MoreBtn() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+    // setOpen(false)
   };
+// 게시글 && 댓글 삭제
+  const deleteItem = (id, type) => {
+    const ok = window.confirm('삭제하겠습니까?')
+    if (ok) {
+      // 게시글인 경우
+      if (type === 'body') {
+        axios({
+          url: `http://localhost:8000/boardList/${id}`,
+          method: 'DELETE'})
+          .then(res => {        
+            alert('삭제되었습니다.')
+            navigate('/community')
+          })
+          .catch(err => {
+            alert('삭제할 수 없습니다.')
+          })
+      // 댓글인 경우
+      } else {
+        axios({
+          url: `http://localhost:8000/comments/${id}`,
+          method: 'DELETE'})
+          .then(res => {        
+            // alert('삭제되었습니다.')
+            const newComments = comments.filter(comment => {
+              return comment.id !== id
+            })
+            setComments(newComments)            
+          })
+          .catch(err => {
+            alert('삭제할 수 없습니다.')
+          })
+      }
+    }    
+  }
+// 게시글 수정
+  const updateItem = (item, type) => {    
+    if (type === 'body') {
+      navigate(`/board-form`, {state: editData})
+    } else {
+      setOpenForm(true);
+      if (setUpdateFlag) setUpdateFlag(true);
+      setContent(item.content);
+    }
+  }
 
   return (
     <div>
@@ -77,6 +124,7 @@ export default function MoreBtn() {
         <MoreVert />
       </IconButton>
       <StyledMenu
+        
         id="demo-customized-menu"
         MenuListProps={{
           'aria-labelledby': 'demo-customized-button',
@@ -84,12 +132,12 @@ export default function MoreBtn() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose} disableRipple>
+      >        
+        <MenuItem onClick={() => updateItem(editData, type, comments, setComments)} disableRipple>
           <EditIcon />
           수정
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
+        </MenuItem>        
+        <MenuItem onClick={() => deleteItem(editData.id, type)} disableRipple>
           <DeleteIcon />
           삭제
         </MenuItem>
@@ -97,15 +145,6 @@ export default function MoreBtn() {
           <FlagIcon />
           신고
         </MenuItem>        
-        {/* <Divider sx={{ my: 0.5 }} />
-        <MenuItem onClick={handleClose} disableRipple>
-          <ArchiveIcon />
-          Archive
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          <MoreHorizIcon />
-          More
-        </MenuItem> */}
       </StyledMenu>
     </div>
   );
