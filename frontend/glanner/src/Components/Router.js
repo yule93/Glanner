@@ -2,14 +2,14 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import MainPage from "../Routes/MainPage";
-import Board from "../Routes/Board";
 import Header from "./Header";
 import Navigator from "./Navigator";
-import { BoardForm } from "../Routes/Community/BoardForm";
-import { BoardDetail } from "../Routes/Community/BoardDetail";
-import { BoardList } from "../Routes/Community/BoardList";
+
 import Paper from "@mui/material/Paper";
 import styled from 'styled-components';
+import BoardDetail from "../Routes/Community/BoardDetail";
+import BoardList from "../Routes/Community/BoardList";
+import BoardForm from "../Routes/Community/BoardForm";
 
 const HeaderDiv = styled.div`
   border-bottom: 2px solid #e5e5e5;
@@ -36,11 +36,11 @@ export default () => (
         <Route path="*" element={<MainPage />}/>
         <Route path="/" element={<MainPage />}
         />
-        <Route path="/community" element={<Board />} />
+        <Route path="/community" element={<BoardList />} />
         <Route path="/home" />
         <Route path="/board-form"  element={<BoardForm />} />
         <Route path="/board/:id" element={<BoardDetail />} />
-        <Route path="/board" element={<BoardList />} />
+
       </Routes>
     </Router>
   </Paper>
