@@ -74,10 +74,12 @@ export const boardStyles = {
     
   },
   card: {
-    width: 'auto',
-    height: '2000px',    
+    // width: 'auto',
+    height: '100%',    
     padding: '50px 100px',
-    textAlign: 'start'
+    textAlign: 'start',    
+    minWidth: '100%',
+    overflow: 'hidden', 
   },
   title: {
     fontFamily: 'Noto Sans CJK KR',
@@ -171,8 +173,8 @@ export const boardStyles = {
     }
   },
   nestedComment: {
-    width: '97%',
-    marginLeft: '3%'
+    width: '94%',
+    marginLeft: '6%'    
   },
   replyIcon: {
     fontFamily: 'Roboto',
@@ -184,5 +186,11 @@ export const boardStyles = {
     alignItems: 'center',
     letterSpacing: '0.05em',
     color: '#808080'
+  },
+  textField: {
+    '& .MuiListItemText-root': {
+      whiteSpace: 'nowrap', 
+      overflow: 'hidden'
+    }
   }
 };
