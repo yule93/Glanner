@@ -14,51 +14,109 @@ const HeaderContainer = styled.div`
   overflow: hidden;
   font-size: 16px;
   color: 5f5f5f;
+  width: 100%;
 `;
 
 export default function Header({ title }) {
   return (
     <HeaderContainer>
-      <Grid container spacing={3} direction="row">
-        <Grid item xs={5} sx={{ textAlign: "left", fontSize: "30px" }}>
+      <div
+        style={{
+          marginLeft: "20px",
+          lineHeight: 3,
+          textAlign: "left",
+          fontSize: "30px",
+          width: "300px"
+        }}
+      >
+        {title}
+      </div>
+      <div
+        style={{
+          marginRight: "20px",
+          lineHeight: 3,
+          textAlign: "right",
+          minWidth: "430px",
+        }}
+      >
+        <CalendarIcon
+          style={{
+            fontSize: 30 + "px",
+            color: "#5F5F5F",
+            marginRight: "3px",
+          }}
+        />
+        오늘의 일정
+        <FontAwesomeIcon
+          icon={faBell}
+          className="bell"
+          style={{
+            fontSize: 30 + "px",
+            color: "#5F5F5F",
+            marginRight: "3px",
+          }}
+        />
+        알림함
+        <CircleUser
+          style={{
+            fontSize: 40 + "px",
+            color: "#5F5F5F",
+            backgroundColor: "#F2D0D9",
+            borderRadius: "50%",
+          }}
+        />
+      </div>
+    </HeaderContainer>
+  );
+}
+
+function Header2({ title }) {
+  return (
+    <HeaderContainer>
+      <Grid container spacing={2} direction="row">
+        <Grid item xs={4} sx={{ textAlign: "left", fontSize: "30px" }}>
           <div style={{ marginLeft: "20px", lineHeight: 3 }}>{title}</div>
         </Grid>
         <Grid
           container
           item
-          xs={7}
+          xs={8}
           sx={{ textAlign: "center" }}
           direction="row"
           justifyContent="right"
           alignItems="center"
         >
-          <Grid item xs={6} />
+          <Grid xs={7} />
           <Grid item xs={2}>
             <CalendarIcon
               style={{
                 fontSize: 30 + "px",
                 color: "#5F5F5F",
-                marginRight: "3px"
+                marginRight: "3px",
               }}
             />
             오늘의 일정
           </Grid>
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <FontAwesomeIcon
               icon={faBell}
               className="bell"
               style={{
                 fontSize: 30 + "px",
                 color: "#5F5F5F",
-                marginRight: "3px"
+                marginRight: "3px",
               }}
             />
             알림함
           </Grid>
-          <Grid item xs={1} sx={{
-            //borderLeft: "1.5px solid #B5B5B5",
-            width: "40px"
-          }}>
+          <Grid
+            item
+            xs={1}
+            sx={{
+              //borderLeft: "1.5px solid #B5B5B5",
+              width: "40px",
+            }}
+          >
             <CircleUser
               style={{
                 fontSize: 40 + "px",
@@ -68,6 +126,7 @@ export default function Header({ title }) {
               }}
             />
           </Grid>
+          <Grid xs={1} />
         </Grid>
       </Grid>
     </HeaderContainer>

@@ -2,14 +2,15 @@ import React from "react";
 import Helmet from "react-helmet";
 import styled from "styled-components";
 import BigCalendar from "./BigCalendar/BigCalendar";
+import Calendar from "./FullCalendar/FullCalendarPage";
 
 const MainPageContainer = styled.div`
   width: 100%;
-  border-top: 1px solid #e5e5e5;
   overflow: hidden;
-  height: 90%;
+  height: 100%;
+  margin: auto;
+  text-align: center;
 `;
-
 
 export default function MainPagePresenter() {
   return (
@@ -18,7 +19,7 @@ export default function MainPagePresenter() {
         <title>Glanner | 메인 플래너</title>
       </Helmet>
       <MainPageContainer>
-        <BigCalendar />
+        <Calendar />
       </MainPageContainer>
     </>
   );

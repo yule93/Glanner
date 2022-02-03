@@ -1,8 +1,9 @@
 import React from "react";
+import { useParams } from "react-router";
+
 import styled from "styled-components";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
@@ -16,7 +17,11 @@ import {
   ListItemText,
   ListItem,
   List,
+  Input,
+  Grid,
 } from "@mui/material";
+
+const groupSearchList = [];
 
 const latestNoticeList = [
   {
@@ -67,7 +72,8 @@ const WriteButton = St(Button)({
   },
 });
 
-export default function BoardPageContainer({ type }) {
+export default function BoardPageContainer() {
+  const { type } = useParams();
   return (
     <>
       <Box
@@ -78,8 +84,9 @@ export default function BoardPageContainer({ type }) {
       >
         <FormControl sx={{ m: 1, width: "25ch" }} size="small">
           <InputLabel htmlFor="search-board">이름, 제목</InputLabel>
-          <OutlinedInput
+          <Input
             id="search-board"
+            variant="filled"
             endAdornment={
               <InputAdornment position="end">
                 <IconButton aria-label="search-button" onClick={""} edge="end">
@@ -91,56 +98,105 @@ export default function BoardPageContainer({ type }) {
           />
         </FormControl>
       </Box>
-      <Box sx={{ textAlign: "center", minHeight: "100%" }}>
-        <List
-          sx={{
-            width: "90%",
-            bgcolor: "background.paper",
-            margin: "0 auto",
-            minHeight: "100%",
-            borderTop: "2px solid #e5e5e5",
-          }}
-        >
-          {latestNoticeList.map(({ id, title, writer, date }) => (
-            <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }}>
-              <ListItem
-                key={id}
-                disableGutters
-                sx={{ height: "35px", textAlign: "center", color: "#DB1111" }}
-              >
-                <ListItemText primary={"[공지]"} />
-                <ListItemText>{title}</ListItemText>
-                <ListItemText>{writer}</ListItemText>
-                <ListItemText>{date}</ListItemText>
-              </ListItem>
-            </Paper>
-          ))}
-        </List>
-        <List
-          sx={{
-            width: "90%",
-            bgcolor: "background.paper",
-            margin: "0 auto",
-            borderBottom: "2px solid #E5E5E5",
-            minHeight: "100%",
-          }}
-        >
-          {boardList.map(({ id, title, writer, date }) => (
-            <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }}>
-              <ListItem
-                key={id}
-                disableGutters
-                sx={{ height: "35px", textAlign: "center" }}
-              >
-                <ListItemText primary={type == "공지" ? "[공지]" : "[자유]"} />
-                <ListItemText>{title}</ListItemText>
-                <ListItemText>{writer}</ListItemText>
-                <ListItemText>{date}</ListItemText>
-              </ListItem>
-            </Paper>
-          ))}
-        </List>
-      </Box>
+      {type == "group" ? (
+        <>
+          <Box
+            sx={{ textAlign: "center", minHeight: "100%", maxHeight: "100%" }}
+          >
+            <List
+              sx={{
+                width: "90%",
+                bgcolor: "background.paper",
+                margin: "0 auto",
+                borderTop: "2px solid #e5e5e5",
+                borderBottom: "2px solid #e5e5e5",
+                minHeight: "100%",
+              }}
+            >
+              {groupSearchList.length == 0 ? (
+                <>
+                  <ListItem />
+                  <ListItem
+                    sx={{
+                      textAlign: "center",
+                      margin: "0 auto",
+                      color: "#262626",
+                    }}
+                  >
+                    <ListItemText>게시판에 글이 없습니다.</ListItemText>
+                  </ListItem>
+                  <ListItem />
+                </>
+              ) : (
+                <></>
+              )}
+            </List>
+          </Box>
+        </>
+      ) : (
+        <>
+          <Box sx={{ textAlign: "center", minHeight: "100%" }}>
+            <List
+              sx={{
+                width: "90%",
+                bgcolor: "background.paper",
+                margin: "0 auto",
+                minHeight: "100%",
+                borderTop: "2px solid #e5e5e5",
+              }}
+            >
+              {latestNoticeList.map(({ id, title, writer, date }) => (
+                <Paper
+                  sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }}
+                >
+                  <ListItem
+                    key={id}
+                    disableGutters
+                    sx={{
+                      height: "35px",
+                      textAlign: "center",
+                      color: "#DB1111",
+                    }}
+                  >
+                    <ListItemText primary={"[공지]"} />
+                    <ListItemText>{title}</ListItemText>
+                    <ListItemText>{writer}</ListItemText>
+                    <ListItemText>{date}</ListItemText>
+                  </ListItem>
+                </Paper>
+              ))}
+            </List>
+            <List
+              sx={{
+                width: "90%",
+                bgcolor: "background.paper",
+                margin: "0 auto",
+                borderBottom: "2px solid #E5E5E5",
+                minHeight: "100%",
+              }}
+            >
+              {boardList.map(({ id, title, writer, date }) => (
+                <Paper
+                  sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }}
+                >
+                  <ListItem
+                    key={id}
+                    disableGutters
+                    sx={{ height: "35px", textAlign: "center" }}
+                  >
+                    <ListItemText
+                      primary={type == "notice" ? "[공지]" : "[자유]"}
+                    />
+                    <ListItemText>{title}</ListItemText>
+                    <ListItemText>{writer}</ListItemText>
+                    <ListItemText>{date}</ListItemText>
+                  </ListItem>
+                </Paper>
+              ))}
+            </List>
+          </Box>
+        </>
+      )}
       <div style={{ width: "95%", textAlign: "right", marginTop: "12px" }}>
         <WriteButton variant="">글쓰기</WriteButton>
       </div>
