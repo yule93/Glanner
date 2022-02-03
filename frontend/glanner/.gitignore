@@ -10,7 +10,6 @@
 
 # production
 /build
-/src/assets
 .env
 
 # misc
