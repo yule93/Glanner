@@ -24,7 +24,7 @@ public class UserController {
     private final UserQueryRepository userQueryRepository;
     private final UserRepository userRepository;
 
-    @PostMapping("/join")
+    @PostMapping
     public ResponseEntity<BaseResponseEntity> join(@RequestBody SaveUserReqDto requestDto) {
 
         userService.saveUser(requestDto);
@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @Transactional
-    @DeleteMapping("/withdraw")
+    @DeleteMapping
     public ResponseEntity<BaseResponseEntity> delete() {
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         User findUser = getUser(userRepository.findByEmail(userEmail));

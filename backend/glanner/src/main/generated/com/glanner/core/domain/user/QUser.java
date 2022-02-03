@@ -30,7 +30,7 @@ public class QUser extends EntityPathBase<User> {
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-    
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 

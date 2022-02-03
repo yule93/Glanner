@@ -32,20 +32,20 @@ public class GlannerController {
     private final GlannerRepository glannerRepository;
     private final DailyWorkGlannerQueryRepository dailyWorkQueryRepository;
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<BaseResponseEntity> createGlanner(){
         String hostEmail = getUsername(SecurityUtils.getCurrentUsername());
         glannerService.saveGlanner(hostEmail);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponseEntity> deleteGlanner(@PathVariable Long id){
         glannerService.deleteGlanner(id);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @GetMapping("/get-host/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<BaseResponseEntity> findHost(@PathVariable Long id){
         Glanner findGlanner = glannerRepository.findRealById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글래너 입니다."));
@@ -53,38 +53,38 @@ public class GlannerController {
         return ResponseEntity.status(200).body(new FindGlannerHostResDto(host.getId(), host.getName(), host.getEmail()));
     }
 
-    @PostMapping("/add-user")
+    @PostMapping("/user")
     public ResponseEntity<BaseResponseEntity> addUser(@RequestBody @Valid AddUserToGlannerReqDto reqDto){
         String hostEmail = getUsername(SecurityUtils.getCurrentUsername());
         glannerService.addUser(reqDto, hostEmail);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete-user/{glannerId}/{userId}")
+    @DeleteMapping("/user/{glannerId}/{userId}")
     public ResponseEntity<BaseResponseEntity> deleteUser(@PathVariable Long glannerId, @PathVariable Long userId){
         glannerService.deleteUser(glannerId, userId);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PostMapping("/add-work")
+    @PostMapping("/work")
     public ResponseEntity<BaseResponseEntity> addWork(@RequestBody @Valid AddGlannerWorkReqDto reqDto){
         glannerService.addDailyWork(reqDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete-work/{glannerId}/{workId}")
+    @DeleteMapping("/work/{glannerId}/{workId}")
     public ResponseEntity<BaseResponseEntity> deleteWork(@PathVariable Long glannerId, @PathVariable Long workId){
         glannerService.deleteDailyWork(glannerId, workId);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PutMapping("/update-work")
+    @PutMapping("/work")
     public ResponseEntity<BaseResponseEntity> updateWork(@RequestBody @Valid UpdateGlannerWorkReqDto reqDto){
         glannerService.updateDailyWork(reqDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @GetMapping("/find-work/{glannerId}/{startTime}/{endTime}")
+    @GetMapping("/work/{glannerId}/{startTime}/{endTime}")
     public ResponseEntity<List<FindGlannerWorkResDto>> findWork(@PathVariable  Long glannerId,
                                                                 @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
                                                                 @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm") LocalDateTime endTime){

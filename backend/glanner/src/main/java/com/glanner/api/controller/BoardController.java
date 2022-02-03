@@ -21,39 +21,39 @@ import java.util.*;
 public class BoardController<Q extends SaveBoardReqDto> {
     private final BoardService boardService;
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<BaseResponseEntity> saveBoard(@RequestBody @Valid Q requestDto){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         boardService.saveBoard(userEmail, requestDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PutMapping("/modify/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BaseResponseEntity> modifyBoard(@PathVariable Long id, @RequestBody @Valid Q requestDto){
         boardService.modifyBoard(id, requestDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponseEntity> deleteBoard(@PathVariable Long id){
         boardService.deleteBoard(id);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PostMapping("/add-comment")
+    @PostMapping("/comment")
     public ResponseEntity<BaseResponseEntity> addComment(@RequestBody @Valid AddCommentReqDto reqDto){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         boardService.addComment(userEmail, reqDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PutMapping("/modify-comment")
+    @PutMapping("/comment")
     public ResponseEntity<BaseResponseEntity> modifyComment(@RequestBody @Valid UpdateCommentReqDto reqDto){
         boardService.modifyComment(reqDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete-comment/{commentId}")
+    @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<BaseResponseEntity> deleteComment(@PathVariable Long commentId){
         boardService.deleteComment(commentId);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));

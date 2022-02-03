@@ -26,7 +26,7 @@ public class GlannerBoardController extends BoardController<SaveGlannerBoardReqD
     }
 
     @Override
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<BaseResponseEntity> saveBoard(@RequestBody @Valid SaveGlannerBoardReqDto requestDto) {
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         glannerBoardService.saveGlannerBoard(userEmail, requestDto);

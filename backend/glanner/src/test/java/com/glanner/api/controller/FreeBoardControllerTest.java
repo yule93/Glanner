@@ -43,7 +43,7 @@ public class FreeBoardControllerTest {
         SaveFreeBoardReqDto saveFreeBoardReqDto = new SaveFreeBoardReqDto("title", "content", null);
 
         //when
-        mockMvc.perform(post("/api/free-board/save")
+        mockMvc.perform(post("/api/free-board")
                 .content(asJsonString(saveFreeBoardReqDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

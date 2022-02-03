@@ -57,7 +57,7 @@ public class GlannerControllerTest {
         //given
 
         //when
-        mockMvc.perform(post("/api/glanner/save"))
+        mockMvc.perform(post("/api/glanner"))
 
         //then
                 .andExpect(status().isOk());
@@ -70,7 +70,7 @@ public class GlannerControllerTest {
         //given
 
         //when
-        mockMvc.perform(delete("/api/glanner/delete/{id}", 1))
+        mockMvc.perform(delete("/api/glanner/{id}", 1))
 
         //then
                 .andExpect(status().isOk());
@@ -89,7 +89,7 @@ public class GlannerControllerTest {
         when(glannerRepository.findRealById(1L)).thenReturn(Optional.of(glanner));
 
         //when
-        mockMvc.perform(get("/api/glanner/get-host/{id}",1L))
+        mockMvc.perform(get("/api/glanner/{id}",1L))
 
         //then
                 .andExpect(status().isOk())
@@ -105,7 +105,7 @@ public class GlannerControllerTest {
         AddUserToGlannerReqDto reqDto = new AddUserToGlannerReqDto("cherish8514@naver.com");
 
         //when
-        mockMvc.perform(post("/api/glanner/add-user")
+        mockMvc.perform(post("/api/glanner/user")
                         .content(asJsonString(reqDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -122,7 +122,7 @@ public class GlannerControllerTest {
         //given
 
         //when
-        mockMvc.perform(delete("/api/glanner/delete-user/{glannerId}/{userId}", 1, 2))
+        mockMvc.perform(delete("/api/glanner/user/{glannerId}/{userId}", 1, 2))
 
         //then
                         .andExpect(status().isOk())
@@ -139,7 +139,7 @@ public class GlannerControllerTest {
         AddGlannerWorkReqDto reqDto = new AddGlannerWorkReqDto(1L, "title", "content", ldt, ldt);
 
         //when
-        mockMvc.perform(post("/api/glanner/add-work")
+        mockMvc.perform(post("/api/glanner/work")
                         .content(asJsonString(reqDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -164,7 +164,7 @@ public class GlannerControllerTest {
 
         //when
         when(dailyWorkQueryRepository.findByGlannerIdWithDate(1L, ldt, ldt)).thenReturn(response);
-        mockMvc.perform(get("/api/glanner/find-work/{glannerId}/{startTime}/{endTime}", 1L, ldt, ldt))
+        mockMvc.perform(get("/api/glanner/work/{glannerId}/{startTime}/{endTime}", 1L, ldt, ldt))
 
         //then
                     .andExpect(status().isOk())

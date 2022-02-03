@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,17 +47,33 @@ public class GlannerBoardControllerTest {
         SaveGlannerBoardReqDto reqDto = new SaveGlannerBoardReqDto("title", "content", null, 1L);
 
         //when
-        mockMvc.perform(post("/api/glanner-board/save")
+        mockMvc.perform(post("/api/glanner-board")
                         .content(asJsonString(reqDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
 
-                //then
+        //then
                 .andExpect(status().isOk());
         verify(glannerBoardService, times(1))
                 .saveGlannerBoard(eq("cherish8513@naver.com"), any(SaveGlannerBoardReqDto.class));
         verify(boardService, times(0)).saveBoard(anyString(), any(SaveGlannerBoardReqDto.class));
     }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testDeleteGlannerBoard() throws Exception{
+        //given
+        Long deleteId = 1L;
+
+        //when
+        mockMvc.perform(delete("/api/glanner-board/{id}", deleteId))
+
+        //then
+                .andExpect(status().isOk());
+        verify(boardService, times(1))
+                .deleteBoard(eq(deleteId));
+    }
+
 
     public static String asJsonString(final Object obj) {
         try {

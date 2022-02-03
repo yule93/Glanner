@@ -45,7 +45,7 @@ class UserControllerTest {
 
 
         //when
-        mockMvc.perform(post("/user/join")
+        mockMvc.perform(post("/user")
                 .content(asJsonString(reqDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

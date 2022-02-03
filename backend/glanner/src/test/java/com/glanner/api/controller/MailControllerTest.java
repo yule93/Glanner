@@ -33,7 +33,7 @@ class MailControllerTest {
         SendMailReqDto reqDto = new SendMailReqDto("aldlswjddma@naver.com","title","content");
 
         //when
-        mockMvc.perform(post("/api/mail/send")
+        mockMvc.perform(post("/api/mail")
                 .content(asJsonString(reqDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
