@@ -193,7 +193,9 @@ function Navigator(props) {
             fontFamily: "Rozha One",
           }}
         >
-          <img src={logo} style={{ height: 40 + "px" }} />
+          <Link to = {``}>
+            <img src={logo} style={{ height: 40 + "px" }} />
+          </Link>
         </ListItem>
         {categories.map(({ id, children }) => (
           <Box
