@@ -36,7 +36,7 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate;
 
-    public final NumberPath<Integer> disLikeCount = createNumber("disLikeCount", Integer.class);
+    public final NumberPath<Integer> dislikeCount = createNumber("dislikeCount", Integer.class);
 
     //inherited
     public final ListPath<FileInfo, QFileInfo> fileInfos;

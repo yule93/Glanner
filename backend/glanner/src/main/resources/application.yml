@@ -18,6 +18,18 @@ spring:
         default_batch_fetch_size: 100
         use_sql_comments: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: glanner.ssafy@gmail.com
+    password: glanner123!
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
