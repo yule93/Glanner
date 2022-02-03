@@ -4,8 +4,8 @@ import styled from "styled-components";
 
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import * as dates from "../../../utils/dates";
-import events from "../../../store/events";
+import * as dates from "../../../../utils/dates";
+import events from "../../../../store/events";
 
 let allViews = Object.keys(Views).map((k) => Views[k]);
 const localizer = momentLocalizer(moment);
