@@ -11,7 +11,5 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class UpdateCommentReqDto {
     @NotNull
-    private Long commentId;
-    @NotNull
     private String content;
 }

@@ -70,8 +70,8 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void modifyComment(UpdateCommentReqDto requestDto) {
-        Comment comment = commentRepository.findById(requestDto.getCommentId()).orElseThrow(IllegalArgumentException::new);
+    public void modifyComment(Long commentId, UpdateCommentReqDto requestDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new);
         comment.changeContent(requestDto.getContent());
     }
 

@@ -10,6 +10,6 @@ public interface BoardService {
     public void modifyBoard(Long boardId, SaveBoardReqDto requestDto);
     public void deleteBoard(Long boardId);
     public void addComment(String userEmail, AddCommentReqDto requestDto);
-    public void modifyComment(UpdateCommentReqDto requestDto);
+    public void modifyComment(Long commentId, UpdateCommentReqDto requestDto);
     public void deleteComment(Long commentId);
 }

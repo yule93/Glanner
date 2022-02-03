@@ -2,6 +2,7 @@ package com.glanner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.glanner.api.dto.request.SaveBoardReqDto;
 import com.glanner.api.dto.request.SaveFreeBoardReqDto;
 import com.glanner.api.dto.request.SaveGlannerBoardReqDto;
 import com.glanner.api.service.BoardService;
@@ -20,8 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -74,6 +74,22 @@ public class GlannerBoardControllerTest {
                 .deleteBoard(eq(deleteId));
     }
 
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testModifyGlannerBoard() throws Exception{
+        //given
+        SaveGlannerBoardReqDto reqDto = new SaveGlannerBoardReqDto("title", "comment", null, 1L);
+
+        //when
+        mockMvc.perform(put("/api/glanner-board/{id}", 1L)
+                .content(asJsonString(reqDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+
+                //then
+                .andExpect(status().isOk());
+        verify(boardService, times(1)).modifyBoard(eq(1L), any(SaveGlannerBoardReqDto.class));
+    }
 
     public static String asJsonString(final Object obj) {
         try {
