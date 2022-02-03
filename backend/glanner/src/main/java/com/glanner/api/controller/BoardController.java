@@ -47,9 +47,9 @@ public class BoardController<Q extends SaveBoardReqDto> {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PutMapping("/comment")
-    public ResponseEntity<BaseResponseEntity> modifyComment(@RequestBody @Valid UpdateCommentReqDto reqDto){
-        boardService.modifyComment(reqDto);
+    @PutMapping("/comment/{id}")
+    public ResponseEntity<BaseResponseEntity> modifyComment(@PathVariable Long commentId, @RequestBody @Valid UpdateCommentReqDto reqDto){
+        boardService.modifyComment(commentId, reqDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
