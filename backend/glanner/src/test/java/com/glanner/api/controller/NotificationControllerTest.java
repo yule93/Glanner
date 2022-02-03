@@ -3,7 +3,7 @@ package com.glanner.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.glanner.api.dto.request.SendMailReqDto;
-import com.glanner.api.service.MailService;
+import com.glanner.api.service.NotificationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-class MailControllerTest {
+class NotificationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private MailService mailService;
+    private NotificationService notificationService;
 
     @Test
     public void testSendMail() throws Exception{
