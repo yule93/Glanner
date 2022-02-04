@@ -2,7 +2,7 @@ package com.glanner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.glanner.api.dto.request.SaveGlannerBoardReqDto;
+import com.glanner.api.dto.request.AddCommentReqDto;
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
 import com.glanner.api.service.BoardService;
 import com.glanner.api.service.GroupBoardService;
@@ -90,6 +90,26 @@ public class GroupBoardControllerTest {
                 .andExpect(status().isOk());
         verify(groupBoardService, times(1)).modifyGroupBoard(eq(1L), any(SaveGroupBoardReqDto.class));
     }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testAddComment() throws Exception{
+        //given
+        AddCommentReqDto reqDto = new AddCommentReqDto(1L, "content", null);
+
+        //when
+        mockMvc.perform(post("/api/group-board/comment")
+                .content(asJsonString(reqDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+
+        //then
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(boardService, times(1)).addComment(eq("cherish8513@naver.com"), any(AddCommentReqDto.class));
+    }
+
+
 
     public static String asJsonString(final Object obj) {
         try {
