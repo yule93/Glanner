@@ -39,6 +39,8 @@ public class QGroupBoard extends EntityPathBase<GroupBoard> {
     //inherited
     public final ListPath<com.glanner.core.domain.board.FileInfo, com.glanner.core.domain.board.QFileInfo> fileInfos;
 
+    public final QGlanner glanner;
+
     //inherited
     public final NumberPath<Long> id;
 
@@ -77,6 +79,7 @@ public class QGroupBoard extends EntityPathBase<GroupBoard> {
         this.count = _super.count;
         this.createdDate = _super.createdDate;
         this.fileInfos = _super.fileInfos;
+        this.glanner = inits.isInitialized("glanner") ? new QGlanner(forProperty("glanner"), inits.get("glanner")) : null;
         this.id = _super.id;
         this.modifiedDate = _super.modifiedDate;
         this.title = _super.title;
