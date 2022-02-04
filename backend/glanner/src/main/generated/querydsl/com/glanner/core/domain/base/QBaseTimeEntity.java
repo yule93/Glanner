@@ -12,8 +12,8 @@ import com.querydsl.core.types.Path;
 /**
  * QBaseTimeEntity is a Querydsl query type for BaseTimeEntity
  */
-@Generated("com.querydsl.codegen.DefaultEmbeddableSerializer")
-public class QBaseTimeEntity extends BeanPath<BaseTimeEntity> {
+@Generated("com.querydsl.codegen.DefaultSupertypeSerializer")
+public class QBaseTimeEntity extends EntityPathBase<BaseTimeEntity> {
 
     private static final long serialVersionUID = 992204369L;
 

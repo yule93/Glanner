@@ -1,7 +1,6 @@
 package com.glanner.api.queryrepository;
 
 import com.glanner.api.dto.response.FindFreeBoardResDto;
-import com.glanner.core.domain.board.QFreeBoard;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

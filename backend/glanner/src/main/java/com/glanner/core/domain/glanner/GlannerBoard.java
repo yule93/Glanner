@@ -27,4 +27,8 @@ public class GlannerBoard extends Board {
         super(title, content, user);
         this.glanner = glanner;
     }
+
+    public void changeGlanner(Glanner glanner){
+        this.glanner = glanner;
+    }
 }

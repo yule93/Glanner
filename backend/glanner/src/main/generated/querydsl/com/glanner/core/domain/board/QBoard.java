@@ -13,8 +13,8 @@ import com.querydsl.core.types.dsl.PathInits;
 /**
  * QBoard is a Querydsl query type for Board
  */
-@Generated("com.querydsl.codegen.DefaultEmbeddableSerializer")
-public class QBoard extends BeanPath<Board> {
+@Generated("com.querydsl.codegen.DefaultEntitySerializer")
+public class QBoard extends EntityPathBase<Board> {
 
     private static final long serialVersionUID = 1438721905L;
 

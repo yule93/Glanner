@@ -1,7 +1,6 @@
 package com.glanner.api.queryrepository;
 
 import com.glanner.api.dto.response.FindGlannerWorkResDto;
-import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import com.glanner.core.domain.glanner.QDailyWorkGlanner;
 import com.glanner.core.domain.glanner.QGlanner;
 import com.glanner.core.domain.user.QUser;

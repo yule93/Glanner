@@ -50,5 +50,10 @@ public class Glanner extends BaseTimeEntity {
         works.add(work);
         work.changeGlanner(this);
     }
+
+    public void addGlannerBoard(GlannerBoard glannerBoard){
+        glannerBoards.add(glannerBoard);
+        glannerBoard.changeGlanner(this);
+    }
 }
 
