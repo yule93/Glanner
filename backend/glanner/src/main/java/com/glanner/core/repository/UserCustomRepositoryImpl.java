@@ -1,10 +1,6 @@
 package com.glanner.core.repository;
 
-import com.glanner.api.queryrepository.UserQueryRepository;
-import com.glanner.core.domain.glanner.QUserGlanner;
-import com.glanner.core.domain.user.QDailyWorkSchedule;
-import com.glanner.core.domain.user.QSchedule;
-import com.glanner.core.domain.user.QUser;
+
 import com.glanner.core.domain.user.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,16 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.glanner.core.domain.glanner.QUserGlanner.*;
+import static com.glanner.core.domain.user.QSchedule.*;
+import static com.glanner.core.domain.user.QUser.*;
+
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserCustomRepositoryImpl implements UserCustomRepository {
     private final JPAQueryFactory query;
-
-    private QUser user = new QUser("user1");
-    private QSchedule schedule = new QSchedule("schedule1");
-    private QUserGlanner userGlanner = new QUserGlanner("userGlanner1");
-    private QDailyWorkSchedule dailyWorkSchedule = new QDailyWorkSchedule("dailyWorkSchedule1");
 
     @Override
     public Optional<User> findByEmail(String email) {

@@ -1,8 +1,6 @@
 package com.glanner.core.domain.board;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
-import com.glanner.core.domain.glanner.GlannerBoard;
-import com.glanner.core.domain.glanner.GroupBoard;
 import com.glanner.core.domain.user.User;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;

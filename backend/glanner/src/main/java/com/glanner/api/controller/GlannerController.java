@@ -6,9 +6,7 @@ import com.glanner.api.dto.response.FindGlannerHostResDto;
 import com.glanner.api.dto.response.FindGlannerWorkResDto;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.DailyWorkGlannerQueryRepository;
-import com.glanner.api.queryrepository.GlannerQueryRepository;
 import com.glanner.api.service.GlannerService;
-import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.GlannerRepository;
@@ -16,7 +14,6 @@ import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

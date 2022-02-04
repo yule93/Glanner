@@ -4,13 +4,11 @@ import com.glanner.api.dto.request.AddCommentReqDto;
 import com.glanner.api.dto.request.SaveBoardReqDto;
 import com.glanner.api.dto.request.UpdateCommentReqDto;
 import com.glanner.api.dto.response.BaseResponseEntity;
-import com.glanner.api.dto.response.FindBoardResDto;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.service.BoardService;
 import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

@@ -1,16 +1,13 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.SaveBoardReqDto;
 import com.glanner.api.dto.request.SaveGlannerBoardReqDto;
 import com.glanner.api.exception.UserNotFoundException;
-import com.glanner.core.domain.board.Board;
 import com.glanner.core.domain.board.FileInfo;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.glanner.GlannerBoard;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
