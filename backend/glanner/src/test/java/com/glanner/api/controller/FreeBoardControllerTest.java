@@ -17,10 +17,11 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,6 +62,23 @@ public class FreeBoardControllerTest {
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
+    public void testFindBoardOne() throws Exception{
+        //given
+        Long boardId = 1L;
+        FindFreeBoardResDto findFreeBoardResDto =
+                new FindFreeBoardResDto("title", "content", 0, 0, 0);
+
+        //when
+        when(freeBoardQueryRepository.findById(boardId)).thenReturn(Optional.of(findFreeBoardResDto));
+        mockMvc.perform(get("/api/free-board/{id}", boardId))
+
+                //then
+                .andExpect(status().isOk());
+        verify(freeBoardQueryRepository, times(1)).findById(boardId);
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
     public void testFindBoardsPage() throws Exception{
         //given
         int page = 1;
@@ -73,6 +91,8 @@ public class FreeBoardControllerTest {
                 .andExpect(status().isOk());
         verify(freeBoardQueryRepository, times(1)).findPage(page, limit);
     }
+
+
 
     public static String asJsonString(final Object obj) {
         try {
