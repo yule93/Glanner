@@ -2,10 +2,8 @@ package com.glanner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.glanner.api.dto.request.SaveFreeBoardReqDto;
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
-import com.glanner.api.dto.response.FindNoticeBoardResDto;
-import com.glanner.api.queryrepository.NoticeBoardQueryRepository;
+import com.glanner.api.service.BoardService;
 import com.glanner.api.service.GroupBoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,10 +17,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,6 +36,8 @@ public class GroupBoardControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private GroupBoardService groupBoardService;
+    @MockBean
+    private BoardService boardService;
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
@@ -56,6 +55,20 @@ public class GroupBoardControllerTest {
                 .andExpect(status().isOk());
         verify(groupBoardService, times(1))
                 .saveGroupBoard(eq("cherish8513@naver.com"), any(SaveGroupBoardReqDto.class));
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testDeleteGroupBoard() throws Exception{
+        //given
+        Long deleteId = 1L;
+
+        //when
+        mockMvc.perform(delete("/api/group-board/{id}", deleteId))
+
+        //then
+                .andExpect(status().isOk());
+        verify(boardService, times(1)).deleteBoard(eq(deleteId));
     }
 
     public static String asJsonString(final Object obj) {
