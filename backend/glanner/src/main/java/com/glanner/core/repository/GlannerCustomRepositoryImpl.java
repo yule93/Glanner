@@ -1,7 +1,6 @@
 package com.glanner.core.repository;
 
 import com.glanner.core.domain.glanner.*;
-import com.glanner.core.domain.user.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,17 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.glanner.core.domain.glanner.QDailyWorkGlanner.*;
+import static com.glanner.core.domain.glanner.QGlanner.glanner;
+import static com.glanner.core.domain.glanner.QGlannerBoard.*;
+import static com.glanner.core.domain.glanner.QUserGlanner.*;
+import static com.glanner.core.domain.user.QUser.*;
+
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GlannerCustomRepositoryImpl implements GlannerCustomRepository{
 
     private final JPAQueryFactory query;
-    QUser user = new QUser("user1");
-    QGlanner glanner = new QGlanner("glanner1");
-    QUserGlanner userGlanner = new QUserGlanner("userGlanner1");
-    QGlannerBoard glannerBoard = new QGlannerBoard("glannerBoard1");
-    QDailyWorkGlanner dailyWorkGlanner = new QDailyWorkGlanner("dailyWorkGlanner1");
 
     @Override
     public Optional<Glanner> findRealById(Long id) {

@@ -1,18 +1,14 @@
 package com.glanner.api.queryrepository;
 
-import com.glanner.core.domain.glanner.*;
-import com.glanner.core.domain.glanner.QDailyWorkGlanner;
-import com.glanner.core.domain.glanner.QGlanner;
-import com.glanner.core.domain.glanner.QGlannerBoard;
-import com.glanner.core.domain.glanner.QUserGlanner;
-import com.glanner.core.domain.user.QUser;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+
+import static com.glanner.core.domain.glanner.QDailyWorkGlanner.dailyWorkGlanner;
+import static com.glanner.core.domain.glanner.QUserGlanner.userGlanner;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,11 +16,6 @@ import java.util.Optional;
 public class GlannerQueryRepositoryImpl implements GlannerQueryRepository{
 
     private final JPAQueryFactory query;
-    QUser user = new QUser("user1");
-    QGlanner glanner = new QGlanner("glanner1");
-    QUserGlanner userGlanner = new QUserGlanner("userGlanner1");
-    QGlannerBoard glannerBoard = new QGlannerBoard("glannerBoard1");
-    QDailyWorkGlanner dailyWorkGlanner = new QDailyWorkGlanner("dailyWorkGlanner1");
 
     @Override
     public void deleteAllWorksById(Long id) {

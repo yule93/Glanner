@@ -1,10 +1,5 @@
 package com.glanner.api.queryrepository;
 
-import com.glanner.core.domain.glanner.QUserGlanner;
-import com.glanner.core.domain.user.QDailyWorkSchedule;
-import com.glanner.core.domain.user.QSchedule;
-import com.glanner.core.domain.user.QUser;
-import com.glanner.core.domain.user.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import static com.glanner.core.domain.user.QDailyWorkSchedule.dailyWorkSchedule;
+import static com.glanner.core.domain.user.QUser.user;
 
 
 @Repository
@@ -20,11 +16,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserQueryRepositoryImpl implements UserQueryRepository{
     private final JPAQueryFactory query;
-
-    private QUser user = new QUser("user1");
-    private QSchedule schedule = new QSchedule("schedule1");
-    private QUserGlanner userGlanner = new QUserGlanner("userGlanner1");
-    private QDailyWorkSchedule dailyWorkSchedule = new QDailyWorkSchedule("dailyWorkSchedule1");
 
     @Override
     public void deleteAllWorksByScheduleId(Long scheduleId){

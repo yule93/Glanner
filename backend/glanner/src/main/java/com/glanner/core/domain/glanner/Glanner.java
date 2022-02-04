@@ -29,7 +29,7 @@ public class Glanner extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User host;
 
     @OneToMany(mappedBy = "glanner", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

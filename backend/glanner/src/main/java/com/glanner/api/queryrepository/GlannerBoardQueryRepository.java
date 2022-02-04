@@ -1,6 +1,5 @@
 package com.glanner.api.queryrepository;
 
-import com.glanner.api.dto.response.FindFreeBoardResDto;
 import com.glanner.api.dto.response.FindGlannerBoardResDto;
 
 import java.util.List;

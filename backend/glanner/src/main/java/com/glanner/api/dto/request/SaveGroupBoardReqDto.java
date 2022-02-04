@@ -1,4 +1,32 @@
 package com.glanner.api.dto.request;
 
-public class SaveGroupBoardReqDto {
+import com.glanner.core.domain.glanner.GroupBoard;
+import com.glanner.core.domain.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class SaveGroupBoardReqDto extends SaveBoardReqDto {
+    public String interests;
+
+    public SaveGroupBoardReqDto(String title, String content, List<MultipartFile> files) {
+        super(title, content, files);
+    }
+
+    @Override
+    public GroupBoard toEntity(User user){
+        return GroupBoard.boardBuilder()
+                .title(title)
+                .content(content)
+                .interests(interests)
+                .user(user)
+                .build();
+    }
 }

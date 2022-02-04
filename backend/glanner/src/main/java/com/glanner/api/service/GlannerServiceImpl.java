@@ -2,7 +2,6 @@ package com.glanner.api.service;
 
 import com.glanner.api.dto.request.*;
 import com.glanner.api.queryrepository.GlannerQueryRepository;
-import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.glanner.UserGlanner;

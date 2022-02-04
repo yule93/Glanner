@@ -1,7 +1,6 @@
 package com.glanner.core.domain.glanner;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
-import com.glanner.core.domain.user.Schedule;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
 import lombok.Builder;

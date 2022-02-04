@@ -1,9 +1,7 @@
 package com.glanner.api.service;
 
 import com.glanner.api.dto.request.*;
-import com.glanner.api.dto.response.FindBoardResDto;
 
-import java.util.List;
 
 public interface BoardService {
     public void saveBoard(String userEmail, SaveBoardReqDto requestDto);

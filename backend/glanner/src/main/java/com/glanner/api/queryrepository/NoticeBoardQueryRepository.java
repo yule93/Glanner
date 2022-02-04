@@ -1,6 +1,5 @@
 package com.glanner.api.queryrepository;
 
-import com.glanner.api.dto.response.FindFreeBoardResDto;
 import com.glanner.api.dto.response.FindNoticeBoardResDto;
 
 import java.util.List;
