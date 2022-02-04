@@ -71,6 +71,32 @@ public class GroupBoardServiceTest {
         assertThat(savedGroupBoard.getGlanner().getId()).isEqualTo(savedGlanner.getId());
     }
 
+    @Test
+    public void testModifyGroupBoard() throws Exception{
+        //given
+        User user = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        GroupBoard groupBoard = GroupBoard.boardBuilder()
+                .interests("#공부#")
+                .user(user)
+                .title("title")
+                .content("content")
+                .build();
+        GroupBoard savedGroupBoard = groupBoardRepository.save(groupBoard);
+        Long groupBoardId = savedGroupBoard.getId();
+        SaveGroupBoardReqDto reqDto = new SaveGroupBoardReqDto("t", "c", new ArrayList<>(), "#휴식#");
+
+        //when
+        GroupBoard board = groupBoardRepository.findById(groupBoardId).orElseThrow(IllegalArgumentException::new);
+        board.changeBoard(reqDto.getTitle(), reqDto.getContent(), getFileInfos(reqDto.getFiles()));
+        board.changeInterests(reqDto.getInterests());
+        em.flush();
+        em.clear();
+
+        //then
+        GroupBoard findBoard = groupBoardRepository.findById(groupBoardId).orElseThrow(IllegalArgumentException::new);
+        assertThat(findBoard.getTitle()).isEqualTo("t");
+    }
+
     public void createUser(){
         User user = User.builder()
                 .phoneNumber("010-6575-2938")

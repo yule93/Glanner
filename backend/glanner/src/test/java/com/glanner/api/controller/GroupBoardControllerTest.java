@@ -2,6 +2,7 @@ package com.glanner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.glanner.api.dto.request.SaveGlannerBoardReqDto;
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
 import com.glanner.api.service.BoardService;
 import com.glanner.api.service.GroupBoardService;
@@ -19,8 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -47,11 +48,12 @@ public class GroupBoardControllerTest {
 
         //when
         mockMvc.perform(post("/api/group-board")
-                        .content(asJsonString(reqDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
+                .content(asJsonString(reqDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
 
         //then
+                .andDo(print())
                 .andExpect(status().isOk());
         verify(groupBoardService, times(1))
                 .saveGroupBoard(eq("cherish8513@naver.com"), any(SaveGroupBoardReqDto.class));
@@ -69,6 +71,24 @@ public class GroupBoardControllerTest {
         //then
                 .andExpect(status().isOk());
         verify(boardService, times(1)).deleteBoard(eq(deleteId));
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testModifyGroupBoard() throws Exception{
+        //given
+        SaveGroupBoardReqDto reqDto = new SaveGroupBoardReqDto("title", "content", new ArrayList<>(), "#휴식#");
+
+        //when
+        mockMvc.perform(put("/api/group-board/{id}", 1L)
+                .content(asJsonString(reqDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+
+        //then
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(groupBoardService, times(1)).modifyGroupBoard(eq(1L), any(SaveGroupBoardReqDto.class));
     }
 
     public static String asJsonString(final Object obj) {

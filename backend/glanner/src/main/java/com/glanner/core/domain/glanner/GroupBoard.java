@@ -34,6 +34,10 @@ public class GroupBoard extends Board {
         this.interests = interests;
     }
 
+    public void changeInterests(String interests){
+        this.interests = interests;
+    }
+
     public void changeGlanner(Glanner glanner){
         this.glanner = glanner;
     }

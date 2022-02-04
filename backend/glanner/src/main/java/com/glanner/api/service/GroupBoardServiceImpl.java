@@ -2,6 +2,7 @@ package com.glanner.api.service;
 
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
 import com.glanner.api.exception.UserNotFoundException;
+import com.glanner.core.domain.board.Board;
 import com.glanner.core.domain.board.FileInfo;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.glanner.GroupBoard;
@@ -44,6 +45,13 @@ public class GroupBoardServiceImpl implements GroupBoardService {
 
         groupBoard.changeGlanner(glanner);
         groupBoardRepository.save(groupBoard);
+    }
+
+    @Override
+    public void modifyGroupBoard(Long boardId, SaveGroupBoardReqDto reqDto) {
+        GroupBoard board = groupBoardRepository.findById(boardId).orElseThrow(IllegalArgumentException::new);
+        board.changeBoard(reqDto.getTitle(), reqDto.getContent(), getFileInfos(reqDto.getFiles()));
+        board.changeInterests(reqDto.getInterests());
     }
 
     private List<FileInfo> getFileInfos(List<MultipartFile> files) {

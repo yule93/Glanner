@@ -10,11 +10,9 @@ import com.glanner.api.service.GroupBoardService;
 import com.glanner.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,9 +29,17 @@ public class GroupBoardController extends BoardController<SaveGroupBoardReqDto> 
     }
 
     @Override
-    public ResponseEntity<BaseResponseEntity> saveBoard(SaveGroupBoardReqDto requestDto) {
+    @PostMapping
+    public ResponseEntity<BaseResponseEntity> saveBoard(@RequestBody @Valid SaveGroupBoardReqDto requestDto) {
         String userEmail = SecurityUtils.getCurrentUsername().orElseThrow(UserNotFoundException::new);
         groupBoardService.saveGroupBoard(userEmail, requestDto);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
+    @Override
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponseEntity> modifyBoard(@PathVariable Long id, @RequestBody @Valid SaveGroupBoardReqDto requestDto) {
+        groupBoardService.modifyGroupBoard(id, requestDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
