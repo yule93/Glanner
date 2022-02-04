@@ -5,6 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.glanner.api.dto.request.SaveBoardReqDto;
 import com.glanner.api.dto.request.SaveFreeBoardReqDto;
 import com.glanner.api.dto.request.SaveGlannerBoardReqDto;
+import com.glanner.api.dto.response.FindGlannerBoardResDto;
+import com.glanner.api.queryrepository.GlannerBoardQueryRepository;
 import com.glanner.api.service.BoardService;
 import com.glanner.api.service.GlannerBoardService;
 import org.junit.jupiter.api.Test;
@@ -18,9 +20,10 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,6 +42,8 @@ public class GlannerBoardControllerTest {
     private GlannerBoardService glannerBoardService;
     @MockBean
     private BoardService boardService;
+    @MockBean
+    private GlannerBoardQueryRepository queryRepository;
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
@@ -89,6 +94,37 @@ public class GlannerBoardControllerTest {
                 //then
                 .andExpect(status().isOk());
         verify(boardService, times(1)).modifyBoard(eq(1L), any(SaveGlannerBoardReqDto.class));
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testFindBoardsPage() throws Exception{
+        //given
+        Long glannerId = 1L;
+        int page = 0;
+        int limit = 25;
+
+        //when
+        mockMvc.perform(get("/api/glanner-board/{id}/{page}/{limit}", glannerId, page, limit))
+
+                //then
+                .andExpect(status().isOk());
+        verify(queryRepository, times(1)).findPage(glannerId, page, limit);
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testFindBoard() throws Exception{
+        //given
+        Long glannerBoardId = 1L;
+        FindGlannerBoardResDto resDto = new FindGlannerBoardResDto("title", "content", 1);
+        //when
+        when(queryRepository.findById(glannerBoardId)).thenReturn(Optional.of(resDto));
+        mockMvc.perform(get("/api/glanner-board/{id}", glannerBoardId))
+
+                //then
+                .andExpect(status().isOk());
+        verify(queryRepository, times(1)).findById(glannerBoardId);
     }
 
     public static String asJsonString(final Object obj) {

@@ -83,6 +83,11 @@ public class GlannerBoardQueryRepositoryTest {
         assertThat(results.get(0).getTitle()).isEqualTo("title10");
     }
 
+    /**
+     *
+     * 생성된 시간 순서로 offset과 limit으로 게시판 페이지를 가져오는 서비스
+     */
+
     public void createUser(){
         User user = User.builder()
                 .phoneNumber("010-6575-2938")
