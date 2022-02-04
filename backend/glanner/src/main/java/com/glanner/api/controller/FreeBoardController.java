@@ -31,7 +31,7 @@ public class FreeBoardController extends BoardController<SaveFreeBoardReqDto> {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindFreeBoardResDto> getFreeBoard(@PathVariable Long id){
+    public ResponseEntity<FindFreeBoardResDto> getBoard(@PathVariable Long id){
         FindFreeBoardResDto responseDto = freeBoardQueryRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return ResponseEntity.status(200).body(responseDto);
     }
