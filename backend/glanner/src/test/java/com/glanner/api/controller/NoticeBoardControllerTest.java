@@ -58,6 +58,21 @@ public class NoticeBoardControllerTest {
         verify(queryRepository, times(1)).findById(boardId);
     }
 
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testFindBoardsPage() throws Exception{
+        //given
+        int page = 0;
+        int limit = 25;
+
+        //when
+        mockMvc.perform(get("/api/notice/{page}/{limit}", page, limit))
+
+                //then
+                .andExpect(status().isOk());
+        verify(queryRepository, times(1)).findPage(page, limit);
+    }
+
     public static String asJsonString(final Object obj) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
