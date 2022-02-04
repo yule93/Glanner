@@ -33,7 +33,7 @@ class NotificationControllerTest {
         SendMailReqDto reqDto = new SendMailReqDto("aldlswjddma@naver.com","title","content");
 
         //when
-        mockMvc.perform(post("/api/mail")
+        mockMvc.perform(post("/api/notification/mail")
                 .content(asJsonString(reqDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

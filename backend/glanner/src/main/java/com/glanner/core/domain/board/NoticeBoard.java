@@ -20,6 +20,5 @@ public class NoticeBoard extends Board {
         super(title, content, user);
     }
 
-
 }
 

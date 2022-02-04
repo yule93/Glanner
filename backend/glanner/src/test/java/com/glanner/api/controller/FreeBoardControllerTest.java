@@ -3,6 +3,8 @@ package com.glanner.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.glanner.api.dto.request.SaveFreeBoardReqDto;
+import com.glanner.api.dto.response.FindFreeBoardResDto;
+import com.glanner.api.queryrepository.FreeBoardQueryRepository;
 import com.glanner.api.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +38,8 @@ public class FreeBoardControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private BoardService boardService;
+    @MockBean
+    private FreeBoardQueryRepository freeBoardQueryRepository;
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
@@ -52,6 +57,21 @@ public class FreeBoardControllerTest {
                 .andExpect(status().isOk());
         verify(boardService, times(1))
                 .saveBoard(eq("cherish8513@naver.com"), any(SaveFreeBoardReqDto.class));
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testFindBoardsPage() throws Exception{
+        //given
+        int page = 1;
+        int limit = 25;
+
+        //when
+        mockMvc.perform(get("/api/free-board/{page}/{limit}", page, limit))
+
+        //then
+                .andExpect(status().isOk());
+        verify(freeBoardQueryRepository, times(1)).findPage(page, limit);
     }
 
     public static String asJsonString(final Object obj) {
