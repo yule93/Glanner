@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.glanner.api.dto.request.AddCommentReqDto;
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
+import com.glanner.api.dto.response.FindGroupBoardResDto;
+import com.glanner.api.dto.response.FindNoticeBoardResDto;
 import com.glanner.api.queryrepository.GroupBoardQueryRepository;
 import com.glanner.api.service.BoardService;
 import com.glanner.api.service.GroupBoardService;
@@ -19,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -114,6 +117,23 @@ public class GroupBoardControllerTest {
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
+    public void testFindBoardOne() throws Exception{
+        //given
+        Long boardId = 1L;
+        FindGroupBoardResDto groupBoardResDto = new FindGroupBoardResDto("title", "content", 0, "#휴식#");
+
+        //when
+        when(queryRepository.findById(boardId)).thenReturn(Optional.of(groupBoardResDto));
+        mockMvc.perform(get("/api/group-board/{id}", boardId))
+
+        //then
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(queryRepository, times(1)).findById(boardId);
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
     public void testFindBoardsPage() throws Exception{
         //given
         int page = 0;
@@ -123,7 +143,8 @@ public class GroupBoardControllerTest {
         mockMvc.perform(get("/api/group-board/{page}/{limit}", page, limit))
 
         //then
-               .andExpect(status().isOk());
+                .andDo(print())
+                .andExpect(status().isOk());
         verify(queryRepository, times(1)).findPage(page, limit);
     }
 
