@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.glanner.api.dto.request.AddCommentReqDto;
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
+import com.glanner.api.queryrepository.GroupBoardQueryRepository;
 import com.glanner.api.service.BoardService;
 import com.glanner.api.service.GroupBoardService;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,8 @@ public class GroupBoardControllerTest {
     private GroupBoardService groupBoardService;
     @MockBean
     private BoardService boardService;
+    @MockBean
+    private GroupBoardQueryRepository queryRepository;
 
     @Test
     @WithUserDetails("cherish8513@naver.com")
@@ -107,6 +110,21 @@ public class GroupBoardControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
         verify(boardService, times(1)).addComment(eq("cherish8513@naver.com"), any(AddCommentReqDto.class));
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testFindBoardsPage() throws Exception{
+        //given
+        int page = 0;
+        int limit = 25;
+
+        //when
+        mockMvc.perform(get("/api/group-board/{page}/{limit}", page, limit))
+
+        //then
+               .andExpect(status().isOk());
+        verify(queryRepository, times(1)).findPage(page, limit);
     }
 
 
