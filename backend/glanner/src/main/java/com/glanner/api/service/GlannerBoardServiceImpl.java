@@ -27,12 +27,11 @@ import java.util.UUID;
 public class GlannerBoardServiceImpl implements GlannerBoardService{
 
     private final UserRepository userRepository;
-    private final BoardRepository boardRepository;
     private final GlannerRepository glannerRepository;
 
     public void saveGlannerBoard(String userEmail, SaveGlannerBoardReqDto requestDto) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
-        Glanner glanner = glannerRepository.findById(requestDto.getGlannerId()).orElseThrow(IllegalArgumentException::new);
+        Glanner glanner = glannerRepository.findRealById(requestDto.getGlannerId()).orElseThrow(IllegalArgumentException::new);
         List<FileInfo> fileInfos = getFileInfos(requestDto.getFiles());
 
         GlannerBoard board = GlannerBoard
@@ -45,7 +44,7 @@ public class GlannerBoardServiceImpl implements GlannerBoardService{
 
         board.changeFileInfo(fileInfos);
 
-        boardRepository.save(board);
+        glanner.addGlannerBoard(board);
     }
 
     protected List<FileInfo> getFileInfos(List<MultipartFile> files) {
