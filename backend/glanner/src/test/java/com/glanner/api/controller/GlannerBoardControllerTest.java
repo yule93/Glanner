@@ -25,6 +25,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -123,6 +124,7 @@ public class GlannerBoardControllerTest {
         mockMvc.perform(get("/api/glanner-board/{id}", glannerBoardId))
 
                 //then
+                .andDo(print())
                 .andExpect(status().isOk());
         verify(queryRepository, times(1)).findById(glannerBoardId);
     }
