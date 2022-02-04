@@ -2,6 +2,8 @@ package com.glanner.api.repository;
 
 import com.glanner.api.dto.request.SaveFreeBoardReqDto;
 import com.glanner.api.dto.response.FindFreeBoardResDto;
+import com.glanner.api.dto.response.FindGlannerBoardResDto;
+import com.glanner.api.queryrepository.GlannerBoardQueryRepository;
 import com.glanner.core.domain.board.FreeBoard;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.glanner.GlannerBoard;
@@ -12,6 +14,7 @@ import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
 import com.glanner.core.repository.GlannerRepository;
 import com.glanner.core.repository.UserRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +27,11 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-@Commit
 public class GlannerBoardQueryRepositoryTest {
 
     @Autowired
@@ -40,10 +43,15 @@ public class GlannerBoardQueryRepositoryTest {
     @Autowired
     private GlannerRepository glannerRepository;
 
+    @Autowired
+    private GlannerBoardQueryRepository queryRepository;
+
+    private Long glannerId;
+
     @BeforeEach
     public void init(){
         createUser();
-        Long glannerId = createGlanner();
+        glannerId = createGlanner();
         createGlannerBoard(glannerId, "title1");
         createGlannerBoard(glannerId, "title2");
         createGlannerBoard(glannerId, "title3");
@@ -64,10 +72,15 @@ public class GlannerBoardQueryRepositoryTest {
     @Test
     public void testFindBoards() throws Exception{
         //given
+        int offset = 0;
+        int limit = 5;
 
         //when
+        List<FindGlannerBoardResDto> results = queryRepository.findPage(glannerId, offset, limit);
 
         //then
+        assertThat(results.size()).isEqualTo(5);
+        assertThat(results.get(0).getTitle()).isEqualTo("title10");
     }
 
     public void createUser(){
