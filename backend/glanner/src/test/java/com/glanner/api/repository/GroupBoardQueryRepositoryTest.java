@@ -2,6 +2,7 @@ package com.glanner.api.repository;
 
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
 import com.glanner.api.dto.response.FindGlannerBoardResDto;
+import com.glanner.api.dto.response.FindGroupBoardResDto;
 import com.glanner.api.queryrepository.GroupBoardQueryRepository;
 import com.glanner.api.service.GroupBoardService;
 import com.glanner.core.domain.user.DailyWorkSchedule;
@@ -57,10 +58,15 @@ public class GroupBoardQueryRepositoryTest {
     @Test
     public void testFindBoards() throws Exception{
         //given
+        int page = 0;
+        int limit = 5;
 
         //when
+        List<FindGroupBoardResDto> boardPage = queryRepository.findPage(page, limit);
 
         //then
+        assertThat(boardPage.size()).isEqualTo(5);
+        assertThat(boardPage.get(0).getTitle()).isEqualTo("title9");
     }
 
     public void createUser(){
