@@ -8,6 +8,7 @@ import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.api.service.UserService;
 import com.glanner.core.domain.user.User;
+import com.glanner.core.repository.DailyWorkScheduleRepository;
 import com.glanner.core.repository.UserRepository;
 import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class UserController {
     private final UserService userService;
     private final UserQueryRepository userQueryRepository;
     private final UserRepository userRepository;
+    private final DailyWorkScheduleRepository dailyWorkScheduleRepository;
 
     @PostMapping
     public ResponseEntity<BaseResponseEntity> join(@RequestBody SaveUserReqDto requestDto) {
@@ -57,6 +59,12 @@ public class UserController {
     public ResponseEntity<FindPlannerWorkResDto> getWork(@PathVariable Long id) {
         FindPlannerWorkResDto responseDto = userQueryRepository.findDailyWork(id).orElseThrow(IllegalArgumentException::new);
         return ResponseEntity.status(200).body(responseDto);
+    }
+
+    @DeleteMapping("/planner/work/{id}")
+    public ResponseEntity<BaseResponseEntity> deleteWork(@PathVariable Long id) {
+        dailyWorkScheduleRepository.deleteById(id);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
     @GetMapping("/planner/{date}")
