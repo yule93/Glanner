@@ -1,8 +1,6 @@
 package com.glanner.core.domain.glanner;
 
-import com.glanner.api.dto.response.FindGlannerWorkResDto;
 import com.glanner.api.exception.UserNotFoundException;
-import com.glanner.api.queryrepository.DailyWorkGlannerQueryRepository;
 import com.glanner.api.queryrepository.GlannerQueryRepository;
 import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.user.DailyWorkSchedule;
@@ -16,12 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

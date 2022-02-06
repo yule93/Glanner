@@ -1,6 +1,5 @@
 package com.glanner.core.domain.user;
 
-import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.repository.LogRepository;
 import com.glanner.core.repository.UserRepository;
 import org.assertj.core.api.Assertions;
