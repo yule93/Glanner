@@ -4,10 +4,10 @@ import com.glanner.api.dto.request.*;
 
 
 public interface BoardService {
-    public void saveBoard(String userEmail, SaveBoardReqDto requestDto);
-    public void modifyBoard(Long boardId, SaveBoardReqDto requestDto);
-    public void deleteBoard(Long boardId);
-    public void addComment(String userEmail, AddCommentReqDto requestDto);
-    public void modifyComment(Long commentId, UpdateCommentReqDto requestDto);
-    public void deleteComment(Long commentId);
+    void saveBoard(String userEmail, SaveBoardReqDto requestDto);
+    void modifyBoard(Long boardId, SaveBoardReqDto requestDto);
+    void deleteBoard(Long boardId);
+    void addComment(String userEmail, AddCommentReqDto requestDto);
+    void modifyComment(Long commentId, UpdateCommentReqDto requestDto);
+    void deleteComment(Long commentId);
 }

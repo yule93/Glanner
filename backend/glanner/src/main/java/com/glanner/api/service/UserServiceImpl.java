@@ -1,5 +1,6 @@
 package com.glanner.api.service;
 
+import com.glanner.api.dto.request.AddPlannerWorkReqDto;
 import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.FindPlannerWorkResDto;
 import com.glanner.api.exception.UserNotFoundException;
@@ -45,6 +46,12 @@ public class UserServiceImpl implements UserService{
     public List<FindPlannerWorkResDto> getWorks(String userEmail, LocalDateTime month) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         return userQueryRepository.findDailyWorks(user.getSchedule().getId(), month);
+    }
+
+    @Override
+    public void addWork(String userEmail, AddPlannerWorkReqDto requestDto) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        user.getSchedule().addDailyWork(requestDto.toEntity());
     }
 
     private void validateDuplicateMember(User user) {

@@ -1,5 +1,6 @@
 package com.glanner.api.controller;
 
+import com.glanner.api.dto.request.AddPlannerWorkReqDto;
 import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.BaseResponseEntity;
 import com.glanner.api.dto.response.FindPlannerWorkResDto;
@@ -42,6 +43,13 @@ public class UserController {
         User findUser = getUser(userRepository.findByEmail(userEmail));
         userQueryRepository.deleteAllWorksByScheduleId(findUser.getSchedule().getId());
         userRepository.delete(findUser);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
+    @PostMapping("/planner/work")
+    public ResponseEntity<BaseResponseEntity> addWork(@RequestBody AddPlannerWorkReqDto requestDto) {
+        String userEmail = getUsername(SecurityUtils.getCurrentUsername());
+        userService.addWork(userEmail, requestDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
