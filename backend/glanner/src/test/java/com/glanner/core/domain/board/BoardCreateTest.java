@@ -1,6 +1,5 @@
 package com.glanner.core.domain.board;
 
-import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;

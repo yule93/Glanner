@@ -2,6 +2,7 @@ package com.glanner.api.controller;
 
 import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.BaseResponseEntity;
+import com.glanner.api.dto.response.FindPlannerWorkResDto;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.api.service.UserService;
@@ -9,10 +10,14 @@ import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.UserRepository;
 import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,9 +31,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<BaseResponseEntity> join(@RequestBody SaveUserReqDto requestDto) {
-
         userService.saveUser(requestDto);
-
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
@@ -42,10 +45,18 @@ public class UserController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
+    @GetMapping("/planner/{date}")
+    public ResponseEntity<List<FindPlannerWorkResDto>> getWorks(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
+        LocalDateTime dateTime = date.atStartOfDay();
+        String userEmail = getUsername(SecurityUtils.getCurrentUsername());
+        List<FindPlannerWorkResDto> responseDto = userService.getWorks(userEmail, dateTime);
+        return ResponseEntity.status(200).body(responseDto);
+    }
+
     public String getUsername(Optional<String> username){
         return username.orElseThrow(UserNotFoundException::new);
     }
     public User getUser(Optional<User> user){
-        return user.orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+        return user.orElseThrow(UserNotFoundException::new);
     }
 }
