@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.glanner.core.domain.user.QDailyWorkSchedule.dailyWorkSchedule;
 import static com.glanner.core.domain.user.QUser.user;
@@ -47,6 +49,19 @@ public class UserQueryRepositoryImpl implements UserQueryRepository{
                 .where(dailyWorkSchedule.schedule.id.eq(scheduleId),
                         dailyWorkSchedule.startDate.after(month))
                 .fetch();
+    }
+
+    @Override
+    public Optional<FindPlannerWorkResDto> findDailyWork(Long workId) {
+        return Optional.ofNullable(query
+                .select(Projections.constructor(FindPlannerWorkResDto.class,
+                        dailyWorkSchedule.title,
+                        dailyWorkSchedule.content,
+                        dailyWorkSchedule.startDate,
+                        dailyWorkSchedule.endDate))
+                .from(dailyWorkSchedule)
+                .where(dailyWorkSchedule.id.eq(workId))
+                .fetchOne());
     }
 
     private BooleanExpression userEmailEq(String userEmail) {

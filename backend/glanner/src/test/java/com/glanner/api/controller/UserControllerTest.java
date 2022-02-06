@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.FindPlannerWorkResDto;
+import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.api.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,11 +23,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,6 +45,9 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private UserQueryRepository userQueryRepository;
 
     @Test
     public void testJoin() throws Exception{
@@ -77,12 +83,29 @@ class UserControllerTest {
 
         //when
         when(userService.getWorks("cherish8513@naver.com", dateTime)).thenReturn(response);
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/planner/{date}", date))
+        mockMvc.perform(get("/user/planner/{date}", date))
 
         //then
                 .andDo(print())
                 .andExpect(status().isOk());
         verify(userService, times(1)).getWorks("cherish8513@naver.com", dateTime);
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testFindWork() throws Exception{
+        //given
+        Long workId = 1L;
+        FindPlannerWorkResDto success = new FindPlannerWorkResDto("title", "content", LocalDateTime.now(), LocalDateTime.now().plusDays(3));
+
+        //when
+        when(userQueryRepository.findDailyWork(workId)).thenReturn(Optional.of(success));
+        mockMvc.perform(get("/user/planner/work/{id}", workId))
+
+                //then
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(userQueryRepository, times(1)).findDailyWork(workId);
     }
 
     public static String asJsonString(final Object obj) {
