@@ -67,6 +67,13 @@ public class UserController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
+    @PutMapping("/planner/work/{id}")
+    public ResponseEntity<BaseResponseEntity> modifyWork(@PathVariable Long id, @RequestBody AddPlannerWorkReqDto requestDto) {
+        String userEmail = getUsername(SecurityUtils.getCurrentUsername());
+        userService.modifyWork(id, requestDto);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
     @GetMapping("/planner/{date}")
     public ResponseEntity<List<FindPlannerWorkResDto>> getWorks(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
         LocalDateTime dateTime = date.atStartOfDay();

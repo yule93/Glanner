@@ -5,8 +5,10 @@ import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.FindPlannerWorkResDto;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.UserQueryRepository;
+import com.glanner.core.domain.user.DailyWorkSchedule;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
+import com.glanner.core.repository.DailyWorkScheduleRepository;
 import com.glanner.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserQueryRepository userQueryRepository;
+    private final DailyWorkScheduleRepository dailyWorkScheduleRepository;
 
     @Transactional
     public Long saveUser(SaveUserReqDto reqDto){
@@ -52,6 +55,17 @@ public class UserServiceImpl implements UserService{
     public void addWork(String userEmail, AddPlannerWorkReqDto requestDto) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         user.getSchedule().addDailyWork(requestDto.toEntity());
+    }
+
+    @Override
+    public void modifyWork(Long id, AddPlannerWorkReqDto requestDto) {
+        DailyWorkSchedule workSchedule = dailyWorkScheduleRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        workSchedule.changeDailyWork(
+                requestDto.getStartTime(),
+                requestDto.getEndTime(),
+                requestDto.getTitle(),
+                requestDto.getContent()
+        );
     }
 
     private void validateDuplicateMember(User user) {
