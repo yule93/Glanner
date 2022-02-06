@@ -45,6 +45,12 @@ public class UserController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
+    @GetMapping("/planner/work/{id}")
+    public ResponseEntity<FindPlannerWorkResDto> getWork(@PathVariable Long id) {
+        FindPlannerWorkResDto responseDto = userQueryRepository.findDailyWork(id).orElseThrow(IllegalArgumentException::new);
+        return ResponseEntity.status(200).body(responseDto);
+    }
+
     @GetMapping("/planner/{date}")
     public ResponseEntity<List<FindPlannerWorkResDto>> getWorks(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
         LocalDateTime dateTime = date.atStartOfDay();

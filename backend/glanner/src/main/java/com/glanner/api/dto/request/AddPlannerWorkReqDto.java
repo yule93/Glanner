@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.glanner.core.domain.glanner.DailyWorkGlanner;
+import com.glanner.core.domain.user.DailyWorkSchedule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +16,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AddGlannerWorkReqDto {
+public class AddPlannerWorkReqDto {
     @NotNull
-    Long glannerId;
+    Long scheduleId;
     @NotNull
     String title;
     String content;
@@ -32,8 +33,8 @@ public class AddGlannerWorkReqDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH-mm")
     LocalDateTime endTime;
 
-    public DailyWorkGlanner toEntity(){
-        return DailyWorkGlanner
+    public DailyWorkSchedule toEntity(){
+        return DailyWorkSchedule
                 .builder()
                 .title(title)
                 .content(content)
