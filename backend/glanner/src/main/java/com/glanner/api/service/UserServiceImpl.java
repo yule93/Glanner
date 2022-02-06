@@ -1,6 +1,7 @@
 package com.glanner.api.service;
 
 import com.glanner.api.dto.request.AddPlannerWorkReqDto;
+import com.glanner.api.dto.request.ChangePasswordReqDto;
 import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.FindPlannerWorkResDto;
 import com.glanner.api.exception.UserNotFoundException;
@@ -10,6 +11,7 @@ import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.DailyWorkScheduleRepository;
 import com.glanner.core.repository.UserRepository;
+import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,19 @@ public class UserServiceImpl implements UserService{
         user.changeSchedule(schedule);
         User savedUser = userRepository.save(user);
         return savedUser.getId();
+    }
+
+    @Override
+    public void delete(String userEmail) {
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        userQueryRepository.deleteAllWorksByScheduleId(findUser.getSchedule().getId());
+        userRepository.delete(findUser);
+    }
+
+    @Override
+    public void changePassword(String userEmail, ChangePasswordReqDto requestDto) {
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        findUser.changePassword(passwordEncoder.encode(requestDto.getPassword()));
     }
 
     @Override

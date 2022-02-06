@@ -1,6 +1,7 @@
 package com.glanner.api.controller;
 
 import com.glanner.api.dto.request.AddPlannerWorkReqDto;
+import com.glanner.api.dto.request.ChangePasswordReqDto;
 import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.BaseResponseEntity;
 import com.glanner.api.dto.response.FindPlannerWorkResDto;
@@ -14,6 +15,7 @@ import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +31,6 @@ public class UserController {
 
     private final UserService userService;
     private final UserQueryRepository userQueryRepository;
-    private final UserRepository userRepository;
     private final DailyWorkScheduleRepository dailyWorkScheduleRepository;
 
     @PostMapping
@@ -38,13 +39,17 @@ public class UserController {
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @Transactional
     @DeleteMapping
     public ResponseEntity<BaseResponseEntity> delete() {
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
-        User findUser = getUser(userRepository.findByEmail(userEmail));
-        userQueryRepository.deleteAllWorksByScheduleId(findUser.getSchedule().getId());
-        userRepository.delete(findUser);
+        userService.delete(userEmail);
+        return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<BaseResponseEntity> changePassword(@RequestBody ChangePasswordReqDto requestDto) {
+        String userEmail = getUsername(SecurityUtils.getCurrentUsername());
+        userService.changePassword(userEmail, requestDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
