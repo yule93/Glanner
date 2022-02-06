@@ -11,4 +11,5 @@ public interface UserService {
     Long saveUser(SaveUserReqDto reqDto);
     List<FindPlannerWorkResDto> getWorks(String userEmail, LocalDateTime month);
     void addWork(String userEmail, AddPlannerWorkReqDto requestDto);
+    void modifyWork(Long id, AddPlannerWorkReqDto requestDto);
 }
