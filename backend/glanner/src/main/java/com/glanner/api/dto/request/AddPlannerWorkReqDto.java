@@ -18,8 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AddPlannerWorkReqDto {
     @NotNull
-    Long scheduleId;
-    @NotNull
     String title;
     String content;
 

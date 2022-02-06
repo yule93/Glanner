@@ -2,6 +2,7 @@ package com.glanner.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.glanner.api.dto.request.AddPlannerWorkReqDto;
 import com.glanner.api.dto.request.SaveUserReqDto;
 import com.glanner.api.dto.response.FindPlannerWorkResDto;
 import com.glanner.api.queryrepository.UserQueryRepository;
@@ -106,6 +107,26 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
         verify(userQueryRepository, times(1)).findDailyWork(workId);
+    }
+
+    @Test
+    @WithUserDetails("cherish8513@naver.com")
+    public void testAddWork() throws Exception{
+        //given
+        LocalDateTime now = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        AddPlannerWorkReqDto reqDto = new AddPlannerWorkReqDto("title", "content", now, now.plusDays(3));
+
+        //when
+        mockMvc.perform(post("/user/planner/work")
+                .content(asJsonString(reqDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+
+                //then
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(userService, times(1)).addWork("cherish8513@naver.com", reqDto);
     }
 
     public static String asJsonString(final Object obj) {

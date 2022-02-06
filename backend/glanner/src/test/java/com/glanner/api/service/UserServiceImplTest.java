@@ -1,6 +1,8 @@
 package com.glanner.api.service;
 
+import com.glanner.api.dto.request.AddPlannerWorkReqDto;
 import com.glanner.api.dto.request.SaveUserReqDto;
+import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.core.domain.user.DailyWorkSchedule;
 import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
@@ -61,6 +63,25 @@ class UserServiceImplTest {
 
         //then
         assertThat(savedUser.getSchedule()).isEqualTo(schedule);
+    }
+
+    @Test
+    public void testAddWork() throws Exception{
+        //given
+        LocalDateTime now = LocalDateTime.now();
+        AddPlannerWorkReqDto reqDto = new AddPlannerWorkReqDto("title", "content", now, now.plusDays(3));
+
+        //when
+        User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        int workSize = findUser.getSchedule().getWorks().size();
+        findUser.getSchedule().addDailyWork(reqDto.toEntity());
+
+        //then
+        assertThat(findUser.getSchedule().getWorks().size()).isEqualTo(workSize + 1);
+        assertThat(findUser.getSchedule().getWorks().get(workSize).getTitle()).isEqualTo("title");
+        assertThat(findUser.getSchedule().getWorks().get(workSize).getContent()).isEqualTo("content");
+        assertThat(findUser.getSchedule().getWorks().get(workSize).getStartDate()).isEqualTo(now);
+
     }
 
     private void validateDuplicateMember(User user) {
