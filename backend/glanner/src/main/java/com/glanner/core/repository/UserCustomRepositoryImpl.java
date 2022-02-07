@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.glanner.core.domain.glanner.QUserGlanner.*;
-import static com.glanner.core.domain.user.QSchedule.*;
-import static com.glanner.core.domain.user.QUser.*;
+import static com.glanner.core.domain.glanner.QUserGlanner.userGlanner;
+import static com.glanner.core.domain.user.QSchedule.schedule;
+import static com.glanner.core.domain.user.QUser.user;
 
 @Repository
 @RequiredArgsConstructor

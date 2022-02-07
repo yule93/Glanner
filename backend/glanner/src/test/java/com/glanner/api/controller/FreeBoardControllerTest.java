@@ -6,6 +6,7 @@ import com.glanner.api.dto.request.SaveFreeBoardReqDto;
 import com.glanner.api.dto.response.FindFreeBoardResDto;
 import com.glanner.api.queryrepository.FreeBoardQueryRepository;
 import com.glanner.api.service.BoardService;
+import com.glanner.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,13 +29,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * DB에 cherish8513@naver.com 유저가 있는 상황에서
+ * DB에 cherish8514@naver.com 유저가 있는 상황에서
  * FreeBoard 컨트롤러 접근 테스트
  */
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@WithUserDetails("cherish8514@naver.com")
 public class FreeBoardControllerTest {
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    EntityManager em;
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,8 +51,9 @@ public class FreeBoardControllerTest {
     @MockBean
     private FreeBoardQueryRepository freeBoardQueryRepository;
 
+    private final String userEmail = "cherish8514@naver.com";
+
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testSaveFreeBoard() throws Exception{
         //given
         SaveFreeBoardReqDto saveFreeBoardReqDto = new SaveFreeBoardReqDto("title", "content", null);
@@ -57,11 +67,10 @@ public class FreeBoardControllerTest {
         //then
                 .andExpect(status().isOk());
         verify(boardService, times(1))
-                .saveBoard(eq("cherish8513@naver.com"), any(SaveFreeBoardReqDto.class));
+                .saveBoard(eq(userEmail), any(SaveFreeBoardReqDto.class));
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testFindBoardOne() throws Exception{
         //given
         Long boardId = 1L;
@@ -78,7 +87,6 @@ public class FreeBoardControllerTest {
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testFindBoardsPage() throws Exception{
         //given
         int page = 1;

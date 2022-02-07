@@ -10,13 +10,10 @@ import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.api.service.UserService;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.DailyWorkScheduleRepository;
-import com.glanner.core.repository.UserRepository;
 import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -81,9 +78,10 @@ public class UserController {
 
     @GetMapping("/planner/{date}")
     public ResponseEntity<List<FindPlannerWorkResDto>> getWorks(@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date) {
-        LocalDateTime dateTime = date.atStartOfDay();
+        LocalDateTime dateTimeStart = date.atStartOfDay();
+        LocalDateTime dateTimeEnd = dateTimeStart.plusMonths(1);
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
-        List<FindPlannerWorkResDto> responseDto = userService.getWorks(userEmail, dateTime);
+        List<FindPlannerWorkResDto> responseDto = userService.getWorks(userEmail, dateTimeStart, dateTimeEnd);
         return ResponseEntity.status(200).body(responseDto);
     }
 

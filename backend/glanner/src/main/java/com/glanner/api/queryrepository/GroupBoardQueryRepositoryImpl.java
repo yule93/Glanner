@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.glanner.core.domain.glanner.QGroupBoard.*;
+import static com.glanner.core.domain.glanner.QGroupBoard.groupBoard;
 
 @Repository
 @RequiredArgsConstructor

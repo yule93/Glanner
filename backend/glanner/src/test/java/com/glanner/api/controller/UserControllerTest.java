@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@WithUserDetails("cherish8513@naver.com")
+@WithUserDetails("cherish8514@naver.com")
 class UserControllerTest {
 
     @Autowired
@@ -49,6 +48,8 @@ class UserControllerTest {
 
     @MockBean
     private UserQueryRepository userQueryRepository;
+
+    private final String userEmail = "cherish8514@naver.com";
 
     @Test
     public void testJoin() throws Exception{
@@ -73,31 +74,30 @@ class UserControllerTest {
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testFindWorksList() throws Exception{
         //given
         String date = "2022-02-01";
-        LocalDateTime dateTime = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
-        FindPlannerWorkResDto success = new FindPlannerWorkResDto("title", "content", LocalDateTime.now(), LocalDateTime.now().plusDays(3));
+        LocalDateTime dateTimeStart = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
+        LocalDateTime dateTimeEnd = dateTimeStart.plusMonths(1);
+        FindPlannerWorkResDto success = new FindPlannerWorkResDto(1L,"title", "content", LocalDateTime.now(), LocalDateTime.now().plusDays(3));
         List<FindPlannerWorkResDto> response = new ArrayList<>();
         response.add(success);
 
         //when
-        when(userService.getWorks("cherish8513@naver.com", dateTime)).thenReturn(response);
+        when(userService.getWorks("cherish8513@naver.com", dateTimeStart, dateTimeEnd)).thenReturn(response);
         mockMvc.perform(get("/user/planner/{date}", date))
 
         //then
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(userService, times(1)).getWorks("cherish8513@naver.com", dateTime);
+        verify(userService, times(1)).getWorks(userEmail, dateTimeStart, dateTimeEnd);
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testFindWork() throws Exception{
         //given
         Long workId = 1L;
-        FindPlannerWorkResDto success = new FindPlannerWorkResDto("title", "content", LocalDateTime.now(), LocalDateTime.now().plusDays(3));
+        FindPlannerWorkResDto success = new FindPlannerWorkResDto(workId, "title", "content", LocalDateTime.now(), LocalDateTime.now().plusDays(3));
 
         //when
         when(userQueryRepository.findDailyWork(workId)).thenReturn(Optional.of(success));
@@ -110,7 +110,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testAddWork() throws Exception{
         //given
         LocalDateTime now = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")),
@@ -126,7 +125,7 @@ class UserControllerTest {
                 //then
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(userService, times(1)).addWork("cherish8513@naver.com", reqDto);
+        verify(userService, times(1)).addWork(userEmail, reqDto);
     }
 
     public static String asJsonString(final Object obj) {

@@ -2,7 +2,6 @@ package com.glanner.api.service;
 
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
 import com.glanner.api.exception.UserNotFoundException;
-import com.glanner.core.domain.board.Board;
 import com.glanner.core.domain.board.FileInfo;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.glanner.GroupBoard;

@@ -1,6 +1,11 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.*;
+import com.glanner.api.dto.request.AddGlannerWorkReqDto;
+import com.glanner.api.dto.request.AddUserToGlannerReqDto;
+import com.glanner.api.dto.request.UpdateGlannerWorkReqDto;
+import com.glanner.api.dto.response.FindAttendedGlannerResDto;
+import com.glanner.api.dto.response.FindGlannerResDto;
+import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.GlannerQueryRepository;
 import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import com.glanner.core.domain.glanner.Glanner;
@@ -8,11 +13,13 @@ import com.glanner.core.domain.glanner.UserGlanner;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.DailyWorkGlannerRepository;
 import com.glanner.core.repository.GlannerRepository;
+import com.glanner.core.repository.UserGlannerRepository;
 import com.glanner.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +30,7 @@ public class GlannerServiceImpl implements GlannerService{
     private final GlannerRepository glannerRepository;
     private final GlannerQueryRepository glannerQueryRepository;
     private final DailyWorkGlannerRepository dailyWorkGlannerRepository;
+    private final UserGlannerRepository userGlannerRepository;
 
     private static final int MAX_PERSONNEL_SIZE = 5;
 
@@ -47,17 +55,30 @@ public class GlannerServiceImpl implements GlannerService{
     public void deleteGlanner(Long id) {
         Glanner findGlanner = getGlanner(glannerRepository.findById(id));
 
-        glannerQueryRepository.deleteAllWorksById(findGlanner.getId());
-        glannerQueryRepository.deleteAllUserGlannerById(findGlanner.getId());
+        glannerRepository.deleteAllWorksById(findGlanner.getId());
+        glannerRepository.deleteAllUserGlannerById(findGlanner.getId());
         glannerRepository.delete(findGlanner);
     }
 
     @Override
-    public void addUser(AddUserToGlannerReqDto reqDto, String hostEmail) {
+    @Transactional(readOnly = true)
+    public List<FindAttendedGlannerResDto> findAttendedGlanners(String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        return glannerQueryRepository.findAttendedGlannersDtoByUserId(user.getId());
+    }
 
-        User host = getUser(userRepository.findByEmail(hostEmail));
+    @Override
+    public FindGlannerResDto findGlannerDetail(Long id) {
+        Glanner findGlanner = glannerRepository.findRealById(id).orElseThrow(IllegalArgumentException::new);
+        List<UserGlanner> findUserGlanners = userGlannerRepository.findByGlannerId(id);
+        return new FindGlannerResDto(findGlanner, findUserGlanners);
+    }
+
+    @Override
+    public void addUser(AddUserToGlannerReqDto reqDto) {
+
         User attendingUser = getUser(userRepository.findByEmail(reqDto.getEmail()));
-        Glanner findGlanner = getGlanner(glannerRepository.findById(host.getId()));
+        Glanner findGlanner = getGlanner(glannerRepository.findRealById(reqDto.getGlannerId()));
         if (findGlanner.getUserGlanners().size() >= MAX_PERSONNEL_SIZE){
             throw new IllegalStateException("회원 수가 가득 찼습니다.");
         }

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.glanner.core.domain.board.QNoticeBoard.*;
+import static com.glanner.core.domain.board.QNoticeBoard.noticeBoard;
 
 @Repository
 @RequiredArgsConstructor

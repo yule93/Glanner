@@ -1,7 +1,6 @@
 package com.glanner.api.repository;
 
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
-import com.glanner.api.dto.response.FindGlannerBoardResDto;
 import com.glanner.api.dto.response.FindGroupBoardResDto;
 import com.glanner.api.queryrepository.GroupBoardQueryRepository;
 import com.glanner.api.service.GroupBoardService;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;

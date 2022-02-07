@@ -12,7 +12,7 @@ public interface UserService {
     Long saveUser(SaveUserReqDto reqDto);
     void delete(String userEmail);
     void changePassword(String userEmail, ChangePasswordReqDto requestDto);
-    List<FindPlannerWorkResDto> getWorks(String userEmail, LocalDateTime month);
+    List<FindPlannerWorkResDto> getWorks(String userEmail, LocalDateTime start, LocalDateTime end);
     void addWork(String userEmail, AddPlannerWorkReqDto requestDto);
     void modifyWork(Long id, AddPlannerWorkReqDto requestDto);
 }

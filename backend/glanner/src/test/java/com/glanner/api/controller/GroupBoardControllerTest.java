@@ -5,7 +5,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.glanner.api.dto.request.AddCommentReqDto;
 import com.glanner.api.dto.request.SaveGroupBoardReqDto;
 import com.glanner.api.dto.response.FindGroupBoardResDto;
-import com.glanner.api.dto.response.FindNoticeBoardResDto;
 import com.glanner.api.queryrepository.GroupBoardQueryRepository;
 import com.glanner.api.service.BoardService;
 import com.glanner.api.service.GroupBoardService;
@@ -35,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@WithUserDetails("cherish8514@naver.com")
 public class GroupBoardControllerTest {
 
     @Autowired
@@ -45,9 +45,9 @@ public class GroupBoardControllerTest {
     private BoardService boardService;
     @MockBean
     private GroupBoardQueryRepository queryRepository;
+    private final String userEmail = "cherish8514@naver.com";
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testSaveFreeBoard() throws Exception{
         //given
         SaveGroupBoardReqDto reqDto = new SaveGroupBoardReqDto("title", "content", new ArrayList<>(), "#공부#운동#");
@@ -62,11 +62,10 @@ public class GroupBoardControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
         verify(groupBoardService, times(1))
-                .saveGroupBoard(eq("cherish8513@naver.com"), any(SaveGroupBoardReqDto.class));
+                .saveGroupBoard(eq(userEmail), any(SaveGroupBoardReqDto.class));
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testDeleteGroupBoard() throws Exception{
         //given
         Long deleteId = 1L;
@@ -80,7 +79,6 @@ public class GroupBoardControllerTest {
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testModifyGroupBoard() throws Exception{
         //given
         SaveGroupBoardReqDto reqDto = new SaveGroupBoardReqDto("title", "content", new ArrayList<>(), "#휴식#");
@@ -98,7 +96,6 @@ public class GroupBoardControllerTest {
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testAddComment() throws Exception{
         //given
         AddCommentReqDto reqDto = new AddCommentReqDto(1L, "content", null);
@@ -112,11 +109,10 @@ public class GroupBoardControllerTest {
         //then
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(boardService, times(1)).addComment(eq("cherish8513@naver.com"), any(AddCommentReqDto.class));
+        verify(boardService, times(1)).addComment(eq(userEmail), any(AddCommentReqDto.class));
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testFindBoardOne() throws Exception{
         //given
         Long boardId = 1L;
@@ -133,7 +129,6 @@ public class GroupBoardControllerTest {
     }
 
     @Test
-    @WithUserDetails("cherish8513@naver.com")
     public void testFindBoardsPage() throws Exception{
         //given
         int page = 0;

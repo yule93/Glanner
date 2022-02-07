@@ -1,13 +1,12 @@
 package com.glanner.core.domain.glanner;
 
-import static com.querydsl.core.types.PathMetadataFactory.*;
-
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.PathMetadata;
 import com.querydsl.core.types.dsl.*;
 
-import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
+
+import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 
 
 /**
@@ -35,6 +34,8 @@ public class QGlanner extends EntityPathBase<Glanner> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
+    public final StringPath name = createString("name");
 
     public final ListPath<UserGlanner, QUserGlanner> userGlanners = this.<UserGlanner, QUserGlanner>createList("userGlanners", UserGlanner.class, QUserGlanner.class, PathInits.DIRECT2);
 

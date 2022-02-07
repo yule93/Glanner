@@ -1,7 +1,6 @@
 package com.glanner.core.domain.glanner;
 
 import com.glanner.core.domain.base.BaseTimeEntity;
-import com.glanner.core.domain.user.DailyWorkSchedule;
 import com.glanner.core.domain.user.User;
 import com.querydsl.core.annotations.QueryEntity;
 import lombok.AccessLevel;
@@ -27,6 +26,8 @@ public class Glanner extends BaseTimeEntity {
     @Id @GeneratedValue
     @Column(name = "glanner_id")
     private Long id;
+
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -54,6 +55,10 @@ public class Glanner extends BaseTimeEntity {
     public void addGlannerBoard(GlannerBoard glannerBoard){
         glannerBoards.add(glannerBoard);
         glannerBoard.changeGlanner(this);
+    }
+
+    public void changeGlannerName(String name){
+        this.name = name;
     }
 }
 

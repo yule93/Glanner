@@ -11,7 +11,6 @@ import com.glanner.core.domain.user.Schedule;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.DailyWorkScheduleRepository;
 import com.glanner.core.repository.UserRepository;
-import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,9 +60,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<FindPlannerWorkResDto> getWorks(String userEmail, LocalDateTime month) {
+    public List<FindPlannerWorkResDto> getWorks(String userEmail, LocalDateTime start, LocalDateTime end) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
-        return userQueryRepository.findDailyWorks(user.getSchedule().getId(), month);
+        return userQueryRepository.findDailyWorksWithPeriod(user.getSchedule().getId(), start, end);
     }
 
     @Override

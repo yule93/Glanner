@@ -1,6 +1,7 @@
 package com.glanner.core.repository;
 
-import com.glanner.core.domain.glanner.*;
+import com.glanner.core.domain.glanner.Glanner;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -8,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.glanner.core.domain.glanner.QDailyWorkGlanner.*;
+import static com.glanner.core.domain.glanner.QDailyWorkGlanner.dailyWorkGlanner;
 import static com.glanner.core.domain.glanner.QGlanner.glanner;
-import static com.glanner.core.domain.glanner.QGlannerBoard.*;
-import static com.glanner.core.domain.glanner.QUserGlanner.*;
-import static com.glanner.core.domain.user.QUser.*;
+import static com.glanner.core.domain.glanner.QGlannerBoard.glannerBoard;
+import static com.glanner.core.domain.glanner.QUserGlanner.userGlanner;
+import static com.glanner.core.domain.user.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,5 +33,33 @@ public class GlannerCustomRepositoryImpl implements GlannerCustomRepository{
                 .leftJoin(glanner.works, dailyWorkGlanner)
                 .where(glanner.id.eq(id))
                 .fetchFirst());
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllWorksById(Long id) {
+        query
+                .delete(dailyWorkGlanner)
+                .where(dailyWorkGlanner.in(
+                        JPAExpressions
+                                .select(dailyWorkGlanner)
+                                .from(dailyWorkGlanner)
+                                .where(dailyWorkGlanner.glanner.id.eq(id))
+                ))
+                .execute();
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllUserGlannerById(Long id) {
+        query
+                .delete(userGlanner)
+                .where(userGlanner.in(
+                        JPAExpressions
+                                .select(userGlanner)
+                                .from(userGlanner)
+                                .where(userGlanner.glanner.id.eq(id))
+                ))
+                .execute();
     }
 }

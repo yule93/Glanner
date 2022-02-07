@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FindPlannerWorkResDto {
+    Long workId;
     String title;
     String content;
     LocalDateTime startTime;

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -49,11 +48,12 @@ public class UserQueryRepositoryTest {
         //given
         String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         format += "-01";
-        LocalDateTime month = LocalDate.parse(format, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
+        LocalDateTime start = LocalDate.parse(format, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay();
+        LocalDateTime end = start.plusMonths(1);
         User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
 
         //when
-        List<FindPlannerWorkResDto> dailyWorks = userQueryRepository.findDailyWorks(findUser.getSchedule().getId(), month);
+        List<FindPlannerWorkResDto> dailyWorks = userQueryRepository.findDailyWorksWithPeriod(findUser.getSchedule().getId(), start, end);
 
         //then
         assertThat(dailyWorks.size()).isEqualTo(20);

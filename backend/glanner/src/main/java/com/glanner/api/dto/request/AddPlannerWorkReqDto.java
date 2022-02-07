@@ -3,7 +3,6 @@ package com.glanner.api.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import com.glanner.core.domain.user.DailyWorkSchedule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

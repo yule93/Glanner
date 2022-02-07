@@ -1,6 +1,8 @@
 package com.glanner.api.service;
 
-import com.glanner.api.dto.request.*;
+import com.glanner.api.dto.request.AddCommentReqDto;
+import com.glanner.api.dto.request.SaveBoardReqDto;
+import com.glanner.api.dto.request.UpdateCommentReqDto;
 
 
 public interface BoardService {

@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -38,16 +37,18 @@ public class UserQueryRepositoryImpl implements UserQueryRepository{
     }
 
     @Override
-    public List<FindPlannerWorkResDto> findDailyWorks(Long scheduleId, LocalDateTime month) {
+    public List<FindPlannerWorkResDto> findDailyWorksWithPeriod(Long scheduleId, LocalDateTime start, LocalDateTime end) {
         return query
                 .select(Projections.constructor(FindPlannerWorkResDto.class,
+                        dailyWorkSchedule.id,
                         dailyWorkSchedule.title,
                         dailyWorkSchedule.content,
                         dailyWorkSchedule.startDate,
                         dailyWorkSchedule.endDate))
                 .from(dailyWorkSchedule)
                 .where(dailyWorkSchedule.schedule.id.eq(scheduleId),
-                        dailyWorkSchedule.startDate.after(month))
+                        dailyWorkSchedule.startDate.after(start),
+                        dailyWorkSchedule.startDate.before(end))
                 .fetch();
     }
 
@@ -55,6 +56,7 @@ public class UserQueryRepositoryImpl implements UserQueryRepository{
     public Optional<FindPlannerWorkResDto> findDailyWork(Long workId) {
         return Optional.ofNullable(query
                 .select(Projections.constructor(FindPlannerWorkResDto.class,
+                        dailyWorkSchedule.id,
                         dailyWorkSchedule.title,
                         dailyWorkSchedule.content,
                         dailyWorkSchedule.startDate,

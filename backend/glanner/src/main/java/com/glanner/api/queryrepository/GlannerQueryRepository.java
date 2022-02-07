@@ -1,6 +1,12 @@
 package com.glanner.api.queryrepository;
 
+import com.glanner.api.dto.response.FindAttendedGlannerResDto;
+import com.glanner.api.dto.response.FindGlannerWorkResDto;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 public interface GlannerQueryRepository {
-    public void deleteAllWorksById(Long id);
-    public void deleteAllUserGlannerById(Long id);
+    List<FindGlannerWorkResDto> findDailyWorksDtoWithPeriod(Long id, LocalDateTime dateTimeStart, LocalDateTime dateTimeEnd);
+    List<FindAttendedGlannerResDto> findAttendedGlannersDtoByUserId(Long userId);
 }
