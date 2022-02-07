@@ -24,12 +24,11 @@ export const BoardDetailPagePresenter = ({
   return (
     <>
     {loading && <div>Loading...</div>}
-    {post &&
+    {post && comments &&
       <div className={classes.card}>
         <DetailBody post={post} addLike={addLike} />
 
-        <Divider />
-
+        <Divider />        
         <Typography component="div" variant="h5" sx={{ padding: 3}}> 댓글 {comments && comments.length}</Typography>            
         
         {/* 댓글 박스 */}       

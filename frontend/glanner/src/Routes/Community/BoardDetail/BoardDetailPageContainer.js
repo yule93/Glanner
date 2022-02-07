@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { BoardDetailPagePresenter } from "./BoardDetailPagePresenter"
 
 export const BoardDetailPageContainer = () => {
@@ -9,35 +9,41 @@ export const BoardDetailPageContainer = () => {
   const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState("");
-
-  // json-server를 이용한 CRUD 임시 API
+  const { pathname } = useLocation();
+    // json-server를 이용한 CRUD 임시 API
   // 상세페이지는 크게 본문(post)과 댓글(comments) 섹션으로 나누어져 있음. 서버에 총 2번의 요청을 보낸 후 각각의 데이터를 받아옴.
   useEffect(() => {    
-    
-    axios(`http://localhost:8000/boardList/${id}`, {method: 'GET'})
+    if (pathname.includes('/notice/')) {
+      axios(`http://localhost:8000/latestNoticeList/${id}`, {method: 'GET'})
      .then(res => {
-       
-      axios(`http://localhost:8000/boardList/${id}`, {method: 'PATCH', data: {count: res.data.count + 1}})
-      .then(res => {       
-        setPost(res.data)
-        isLoading(false)
-       })
-      .catch(err => console.log(err))
-
        setPost(() => res.data)    
        isLoading(false)
       })
-     .catch(err => console.log(err))    
-    
-    axios(`http://localhost:8000/comments?postId=${id}`, {method: 'GET'})
-    .then(res => {
-      setComments(() => res.data)
-      isLoading(false)
-    })
-    .catch(err => console.log(err))
-    
-    
-  }, [])
+     .catch(err => console.log(err))   
+    } else {
+      axios(`http://localhost:8000/boardList/${id}`, {method: 'GET'})
+       .then(res => {
+         
+        // axios(`http://localhost:8000/boardList/${id}`, {method: 'PATCH', data: {count: res.data.count + 1}})
+        // .then(res => {       
+        //   setPost(res.data)
+        //   isLoading(false)
+        //  })
+        // .catch(err => console.log(err))
+  
+         setPost(() => res.data)    
+         isLoading(false)
+        })
+       .catch(err => console.log(err))    
+      
+      axios(`http://localhost:8000/comments?postId=${id}`, {method: 'GET'})
+      .then(res => {
+        setComments(() => res.data)
+        isLoading(false)
+      })
+      .catch(err => console.log(err))
+    }   
+  }, [id, pathname])
 
   // 해당 게시글의 좋아요 + 1
   const addLike = () => {
