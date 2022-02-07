@@ -10,7 +10,9 @@ import styled from 'styled-components';
 import BoardDetail from "../Routes/Community/BoardDetail";
 import BoardList from "../Routes/Community/BoardList";
 import BoardForm from "../Routes/Community/BoardForm";
-
+import GroupForm from "../Routes/Community/GroupForm";
+import NoticeList from "../Routes/Community/NoticeList";
+import FloatingActionButtons from "../Routes/Community/BoardDetail/Sections/FloatingActionButton";
 const HeaderDiv = styled.div`
   border-bottom: 2px solid #e5e5e5;
 `;
@@ -36,12 +38,17 @@ export default () => (
         <Route path="*" element={<MainPage />}/>
         <Route path="/" element={<MainPage />}
         />
-        <Route path="/community" element={<BoardList />} />
+        <Route path="/community/free" element={<BoardList />} />
+        <Route path="/community/notice" element={<NoticeList />} />
         <Route path="/home" />
+        <Route path="/board/free/:id" element={<BoardDetail />} />
+        <Route path="/board/notice/:id" element={<BoardDetail />} />
+        <Route path="/board/group/:id" element={<BoardDetail />} />
         <Route path="/board-form"  element={<BoardForm />} />
-        <Route path="/board/:id" element={<BoardDetail />} />
-
+        <Route path="/notice-form"  element={<BoardForm />} />
+        <Route path="/group-form" element={<GroupForm />} />
       </Routes>
+      <FloatingActionButtons />
     </Router>
   </Paper>
 );
