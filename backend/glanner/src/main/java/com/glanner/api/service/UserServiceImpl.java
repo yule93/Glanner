@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService{
         workSchedule.changeDailyWork(
                 requestDto.getStartTime(),
                 requestDto.getEndTime(),
+                requestDto.getNotiTime(),
                 requestDto.getTitle(),
                 requestDto.getContent()
         );

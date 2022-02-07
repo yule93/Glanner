@@ -105,7 +105,7 @@ public class GlannerControllerTest {
         //given
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime ldt = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute());
-        AddGlannerWorkReqDto reqDto = new AddGlannerWorkReqDto(1L, "title", "content", ldt, ldt);
+        AddGlannerWorkReqDto reqDto = new AddGlannerWorkReqDto(1L, "title", "content", ldt, ldt, null);
 
         //when
         mockMvc.perform(post("/api/glanner/work")

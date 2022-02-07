@@ -10,6 +10,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public interface NotificationService {
-    void sendMail(SendMailReqDto reqDto);
-    void sendSms(SendSmsReqDto reqDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, URISyntaxException, JsonProcessingException;
+    public void sendMail(SendMailReqDto reqDto);
+    public void sendSms(SendSmsReqDto reqDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, URISyntaxException, JsonProcessingException;
+    public void sendScheduledSms();
 }

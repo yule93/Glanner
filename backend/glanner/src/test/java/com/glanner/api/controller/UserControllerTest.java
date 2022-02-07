@@ -114,7 +114,7 @@ class UserControllerTest {
         //given
         LocalDateTime now = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
-        AddPlannerWorkReqDto reqDto = new AddPlannerWorkReqDto("title", "content", now, now.plusDays(3));
+        AddPlannerWorkReqDto reqDto = new AddPlannerWorkReqDto("title", "content", now, now.plusDays(3), null);
 
         //when
         mockMvc.perform(post("/user/planner/work")
