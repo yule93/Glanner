@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { Menu, MenuItem, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FlagIcon from '@mui/icons-material/Flag';
 import { MoreVert } from '@material-ui/icons';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const StyledMenu = styled((props) => (
@@ -55,7 +55,9 @@ const StyledMenu = styled((props) => (
 
 export default function MoreBtn({ editData, type, comments, setComments, setOpenForm, setContent, setUpdateFlag}) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();  
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [path, setPath] = React.useState("");
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -64,6 +66,15 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
     setAnchorEl(null);
     // setOpen(false)
   };
+
+  useEffect(() => {
+    if (pathname.includes('/notice/')) {
+      setPath('latestNoticeList')
+    } else if (pathname.includes('/free/')) {
+      setPath('boardList')
+    } 
+  }, [pathname])
+
 // 게시글 && 댓글 삭제
   const deleteItem = (id, type) => {
     const ok = window.confirm('삭제하겠습니까?')
@@ -71,11 +82,17 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
       // 게시글인 경우
       if (type === 'body') {
         axios({
-          url: `http://localhost:8000/boardList/${id}`,
+          url: `http://localhost:8000/${path}/${id}`,
           method: 'DELETE'})
           .then(res => {        
             alert('삭제되었습니다.')
-            navigate('/community')
+            if (pathname.includes('/free/')) {
+              navigate(`/community/free`)
+            } else if (pathname.includes('/group/')) {
+              navigate(`/community/group`)
+            } else if (pathname.includes('/notice/')) {
+              navigate(`/community/notice`)
+            }
           })
           .catch(err => {
             alert('삭제할 수 없습니다.')

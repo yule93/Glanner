@@ -86,7 +86,7 @@ export const BoardFormPageContainer = () => {
         .then(res => {
           alert('작성 성공!')
           console.log(res.data)
-          navigate(`/board/${res.data.id}`)
+          navigate(`/board/free/${res.data.id}`)
         })
         .catch(err => alert('작성 실패!'))
     }
