@@ -4,9 +4,10 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { BoardFormPagePresenter } from "./BoardFormPagePresenter"
 
-export const BoardFormPageContainer = () => {
+export const BoardFormPageContainer = () => {  
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const { state, pathname } = useLocation();
+  const [path, setPath] = useState();
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -17,7 +18,7 @@ export const BoardFormPageContainer = () => {
     comments: [],
     attachment: ""
   })
-
+  
   const [titleError, setTitleError] = useState(false);
   const [contentError, setContentError] = useState(false);
   const [attachment, setAttachment] = useState("");
@@ -26,8 +27,13 @@ export const BoardFormPageContainer = () => {
   useEffect(() => {
     if (state) {
       setData(state)
-    }       
-  }, [])
+    }
+    if (pathname.includes('notice-form')) {
+      setPath('latestNoticeList')
+    } else if (pathname.includes('board-form')) {
+      setPath('boardList')
+    }
+  }, [pathname, state])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -45,7 +51,7 @@ export const BoardFormPageContainer = () => {
     if (state) {
       const today = new Date(new Date().getTime()).toISOString()
       axios({
-        url: `http://localhost:8000/boardList/${state.id}`,
+        url: `http://localhost:8000/${path}/${state.id}`,
         method: 'PUT',
         data: {
           title: data.title,
@@ -61,8 +67,16 @@ export const BoardFormPageContainer = () => {
       })
         .then(res => {
           alert('수정 성공!')
-          console.log(res.data)
-          navigate(`/board/${res.data.id}`)
+          switch (path) {
+            case 'boardList':
+              navigate(`/board/free/${res.data.id}`)
+              break
+            case 'latestNoticeList':
+              navigate(`/board/notice/${res.data.id}`)
+              break            
+            default:
+              console.log('err')
+          } 
         })
         .catch(err => alert('수정 실패!'))    
     
@@ -70,7 +84,7 @@ export const BoardFormPageContainer = () => {
       // 새로운 글 작성하는 로직
       const today = new Date(new Date().getTime()).toISOString()
       axios({
-        url: 'http://localhost:8000/boardList',
+        url: `http://localhost:8000/${path}`,
         method: 'POST',
         data: {
           title: data.title,
@@ -84,9 +98,18 @@ export const BoardFormPageContainer = () => {
         }
       })
         .then(res => {
-          alert('작성 성공!')
-          console.log(res.data)
-          navigate(`/board/free/${res.data.id}`)
+          alert('작성 성공!')          
+          switch (path) {
+            case 'boardList':
+              navigate(`/board/free/${res.data.id}`)
+              break
+            case 'latestNoticeList':
+              navigate(`/board/notice/${res.data.id}`)
+              break            
+            default:
+              console.log('err')
+          } 
+          
         })
         .catch(err => alert('작성 실패!'))
     }
