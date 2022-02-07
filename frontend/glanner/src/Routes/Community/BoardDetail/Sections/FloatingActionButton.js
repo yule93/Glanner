@@ -12,16 +12,32 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(boardStyles);
 export default function FloatingActionButtons() {
+  
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const classes = useStyles();
+  const getUrl = () => {
+    if (pathname.includes('/free/')) {
+      return 'free'
+    } else if (pathname.includes('/group')) {
+      return 'group'
+    }
+  }
   function hasNumber(myString) {
     return /\d/.test(myString);
   }
   return (
     hasNumber(pathname) &&
       <Button
-        onClick={() => navigate('/community/free/')}
+        onClick={() => {          
+          if (pathname.includes('/free/')) {
+            navigate(`/community/free/`)
+          } else if (pathname.includes('/group/')) {
+            navigate(`/community/group/`)
+          } else if (pathname.includes('/notice/')) {
+            navigate(`/community/notice/`)
+          }
+        }}
         variant="extended"
         sx={{
           margin: 0,        
