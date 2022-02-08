@@ -5,26 +5,19 @@ import axios from "axios";
 
 export default function FindGroupContainer () { 
 
-    const [loading, setLoading] = useState(true);
-    const [boardList, setBoardList] = useState([]);
-  const [latestNoticeList, setLatestNoticeList] = useState([]);
-  const [groupboardList, setgroupboardList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [groupBoardList, setGroupBoardList] = useState([]);
     
     // 임시 테스트용 API, 
     // `json-server --watch data/db.json --port 8000` 으로 서버를 켜야 데이터 받아올 수 있음
     // 백엔드 REST API 구축되면 지울 예정
-    useEffect(() => {
-      axios('http://localhost:8000/boardList', {method: 'GET'})
-      .then(res => setBoardList(res.data))
-      .catch(err => console.log(err))
-      axios('http://localhost:8000/LatestNoticeList', {method: 'GET'})
-        .then(res => {
-          setLatestNoticeList(res.data) 
-          setLoading(false)
-        })
-        .catch(err => console.log(err))
-      axios('http://localhost:8000/groupboardList', { method: 'GET' })
-      .then(res => setgroupboardList(res.data))
+    useEffect(() => {      
+      axios('http://localhost:8000/groupBoardList', { method: 'GET' })
+      .then(res => {
+        setGroupBoardList(res.data)
+        setLoading(false)
+      }
+      )
       .catch(err => console.log(err))
     }, [])
         
@@ -35,9 +28,7 @@ export default function FindGroupContainer () {
         </Helmet>
         <FindGroupPresenter
           loading={loading}
-          boardList={boardList}
-          latestNoticeList={latestNoticeList}
-          groupboardList={ groupboardList }
+          groupBoardList={groupBoardList}
         />
       </>
     );
