@@ -13,7 +13,8 @@ export const BoardFormPagePresenter = ({
   onFileChange, 
   deleteFile, 
   attachment,  
-  data}) => {
+  data
+}) => {
   const classes = useStyles();    
   return (
     // <Paper style={{ padding: "20px, 5px", width: 'auto', height: '100%'}}>
@@ -22,7 +23,7 @@ export const BoardFormPagePresenter = ({
           <Grid item xs={1.2}>
             <Typography className={classes.label}>제목</Typography>
           </Grid>
-          <Grid item xs={10}>            
+          <Grid item xs={10}>    
             <TextField
               onChange={(e) => {
                 // if (data.title) {setTitleError(false)}
@@ -58,7 +59,7 @@ export const BoardFormPagePresenter = ({
               multiline={true}
               rows={15}
               // error={contentError}
-              className={classes.field}
+              className={classes.field}              
             />
           </Grid>
         </Grid>

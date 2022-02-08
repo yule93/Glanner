@@ -143,7 +143,6 @@ export const BoardFormPageContainer = () => {
       handleSubmit={handleSubmit}
       handle={handle}
       onFileChange={onFileChange}
-      state={state}
       data={data}
       attachment={attachment}
       deleteFile={deleteFile}
