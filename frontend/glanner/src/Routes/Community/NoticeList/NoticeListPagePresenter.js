@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
   Paper,
+  styled as St,
   ListItemText,
   ListItem,
   List,
@@ -25,12 +26,64 @@ import "moment/locale/ko";
 import { boardStyles } from "../Board.styles";
 import { getListTime } from "../helper";
 
+// const latestNoticeList = [
+//   {
+//     id: 1,
+//     title: "공지 1",
+//     writer: "관리자",
+//     date: "22.01.15",
+//   }
+//   
+// ];
+// const boardList = [
+//   {
+//     id: 1,
+//     title: "예시 1",
+//     writer: "관리자",
+//     date: "22.01.20",
+//   },
+//   {
+//     id: 2,
+//     title: "예시 2",
+//     writer: "관리자",
+//     date: "22.01.20",
+//   },
+//   {
+//     id: 3,
+//     title: "예시 3",
+//     writer: "관리자",
+//     date: "22.01.20",
+//   },
+//   {
+//     id: 4,
+//     title:
+//       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+//     writer: "관리자",
+//     date: "22.01.20",
+//   },
+// ];
+
+const WriteButton = St(Button)({
+  width: '90px',
+  height: '35px',
+  border: "1px solid #8C7B80",
+  fontFamily: 'Noto Sans CJK KR',
+  fontSize: '16px',
+  fontWeight: 'medium',
+  color: "#8C7B80",
+  borderRadius: "10px",
+  "&:hover": {
+    color: "#FFFFFF",
+    backgroundColor: "#8C7B80",
+    borderColor: "#8C7B80",
+    boxShadow: "none",
+  },
+});
+
 const useStyles = makeStyles(boardStyles)
 
-export default function BoardPagePresenter({ 
-  type, 
+export default function NoticeListPagePresenter({ 
   loading, 
-  boardList, 
   latestNoticeList,  
   handleChangePage
 }) {
@@ -38,7 +91,7 @@ export default function BoardPagePresenter({
   return (
     <>
       {loading && <div>Loading...</div>}
-      {(boardList || latestNoticeList) &&
+      {latestNoticeList &&
       <>      
         <Box
           component="form"
@@ -104,7 +157,7 @@ export default function BoardPagePresenter({
                     </Grid>
                     <Grid item xs={7}>
                       <Link to={`/board/notice/${id}`}>
-                        <ListItemText sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>{title}</ListItemText>                
+                        <ListItemText sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>{title}</ListItemText>
                       </Link>
                     </Grid>
                     <Grid item xs={1.8}>
@@ -123,84 +176,11 @@ export default function BoardPagePresenter({
                 </ListItem>
               </Paper>
             ))}
-          </List>
-          <List
-            sx={{
-              width: "90%",
-              bgcolor: "background.paper",
-              margin: "0 auto",
-              borderBottom: "2px solid #E5E5E5",
-              minHeight: "100%",
-            }}
-          >
-            {boardList.map(({ id, title, writer, date, count, like }) => (
-              <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={id}>
-                <ListItem                
-                  disableGutters
-                  sx={{ 
-                    height: "35px", 
-                    textAlign: "center", 
-                    "&:hover": {
-                      color: "#FFFFFF",
-                      backgroundColor: "#8C7B80",
-                      borderColor: "#8C7B80",
-                      boxShadow: "none",
-                    }    
-                  }}
-                >
-                  <Grid container>
-                    <Grid item xs={1}>
-                      <ListItemText primary={type == 'notice' ? "[공지]" : "[자유]"} />
-                    </Grid>
-                    <Grid item xs={7}>
-                      <Link to={`/board/free/${id}`}>
-                        <ListItemText sx={{textAlign: 'start'}}>{title}</ListItemText>
-                      </Link>
-                    </Grid>
-                    <Grid item xs={1.8}>
-                      <ListItemText sx={{mx: 3}}>{writer}</ListItemText>
-                    </Grid>
-                    <Grid item xs={1}>
-                      <ListItemText>
-                        {getListTime(date)}
-                      </ListItemText>
-                    </Grid>
-                    <Grid item xs={0.6}>
-                      <ListItemText>
-                        {count}
-                      </ListItemText>
-                    </Grid>
-                    <Grid item xs={0.6}>
-                      <ListItemText>
-                        {like}
-                      </ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              </Paper>
-            ))}
-          </List>
+          </List>          
         </Box>
         <div style={{ width: "95%", textAlign: "right", marginTop: "12px" }}>
-          <Link to={'/board-form/'}>
-            <Button 
-              sx={{
-                width: '90px',
-                height: '35px',
-                border: "1px solid #8C7B80",
-                fontFamily: 'Noto Sans CJK KR',
-                fontSize: '16px',
-                fontWeight: 'medium',
-                color: "#8C7B80",
-                borderRadius: "10px",
-                "&:hover": {
-                  color: "#FFFFFF",
-                  backgroundColor: "#8C7B80",
-                  borderColor: "#8C7B80",
-                  boxShadow: "none",
-                }
-              }}
-            >글쓰기</Button>
+          <Link to={'/notice-form/'}>
+            <WriteButton WriteButton variant="">글쓰기</WriteButton>
           </Link>
         </div>
       </>}

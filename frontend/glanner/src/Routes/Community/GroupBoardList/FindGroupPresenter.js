@@ -8,292 +8,172 @@ import FormControl from "@mui/material/FormControl";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactComponent as CircleUser } from "../../../assets/circle-user-solid.svg";
-import { ReactComponent as UserFriend } from "../../../assets/user-friends.svg";
+// import { ReactComponent as UserFriend } from "../../../assets/user-friends.svg";
 import "./FindGroup.css";
 import {
   Button,
   Paper,
-  styled as St,
   Grid,
   Typography,
+  Divider,
+  Stack,
+  Chip,
+  Pagination,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import PeopleIcon from '@mui/icons-material/People';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import { Link, useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import "moment/locale/ko";
 import { boardStyles } from "../Board.styles";
-import getTime from "../helper";
-// const latestNoticeList = [
-//   {
-//     id: 1,
-//     title: "공지 1",
-//     writer: "관리자",
-//     date: "22.01.15",
-//   },
-// ];
-// const boardList = [
-//   {
-//     id: 1,
-//     title: "예시 1",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 2,
-//     title: "예시 2",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 3,
-//     title: "예시 3",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 4,
-//     title:
-//       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-// ];
-
-const WriteButton = St(Button)({
-  height: "30px",
-  border: "1px solid #8C7B80",
-  color: "#8C7B80",
-  borderRadius: "5px",
-  "&:hover": {
-    color: "#FFFFFF",
-    backgroundColor: "#8C7B80",
-    borderColor: "#8C7B80",
-    boxShadow: "none",
-  },
-});
-
-
+import { getListTime } from "../helper";
 
 const useStyles = makeStyles(boardStyles)
 
 export default function FindGroupPresenter({ 
   type, 
   loading, 
-  boardList, 
-  latestNoticeList,
-  groupboardList,
+  groupBoardList,
+  handleChangePage
 }) {
-  console.log(groupboardList);
+  const navigator = useNavigate();
   const classes = useStyles();
   return (
     <>
       {loading && <div>Loading...</div>}
-      {(boardList || latestNoticeList) &&
-      <>
+      {groupBoardList &&
+      <Box sx={{ mt: 2}}>        
         <Box
           component="form"
           noValidate
           autoComplete="off"
           sx={{ textAlign: "right", width: "95%", minHeight: "100%", m: 0 }}
         >
+          
           <FormControl sx={{ m: 1, width: "25ch" }} size="small">
             <InputLabel htmlFor="search-board">이름, 제목</InputLabel>
             <OutlinedInput
               id="search-board"
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton aria-label="search-button" onClick={""} edge="end">
+                  <IconButton aria-label="search-button" edge="end">
                     <FontAwesomeIcon icon={faSearch} className="searchIcon" />
                   </IconButton>
                 </InputAdornment>
               }
               label="Password"
             />
-          </FormControl>
+          </FormControl>          
         </Box>
-        <Box className={classes.textField} sx={{ textAlign: "left", minHeight: "100%" }}>
-          <Grid container rowSpacing={5} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {groupboardList.map(({ title, writer, date, list, full, present,tag }) => (
-            <Grid item xs={6}>
-              <Paper sx={{ p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                <Grid item xs={12} sm container>
-                  <Grid item xs container direction="column" spacing={2}>
-                    <Grid item xs>
-                      <Typography className='title' gutterBottom variant="subtitle1" component="div">
-                        {title}
-                      </Typography>
-                      <Typography className = 'membernum' variant="body2" gutterBottom>
-                      <UserFriend
-                        style={{
-                          color: "#5F5F5F",
-                        }}
-                      /> {present} / {full}
-                      </Typography>
-                      <Typography className='boardpost' variant="body2" color="text.secondary">
-                        {list}
-                      </Typography>
-                      <Typography className='boardpost' variant="body2" color="text.secondary">
-                        알고리즘 스터디 하실 분들 구합니다
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                        {tag}
-                      </Typography>
+        <Divider sx={{mb: 1, width: '88%', mx: 'auto'}} />
+        <Box className={classes.textField} sx={{ textAlign: "left", minHeight: "100%", px: 15 }}>
+          <Grid container rowSpacing={1.2} columnSpacing={{ xs: 1.5 }}>
+          {groupBoardList.map(({ id, title, writer, date, content, full, present, tags, count, comments }) => (
+            <Grid item xs={6} key={id}>
+              <Paper sx={{ p: 3, margin: 'auto' }}>
+                  <Grid container direction="column" spacing={7}>
+                      <Grid item onClick={() => navigator(`/board/group/${id}`)} sx={{cursor: 'pointer'}}>
+                        <Grid container sx={{justifyContent: 'space-between'}}>
+                          <Typography className='title' gutterBottom variant="h5" sx={{color: '#262626'}}>                          {title}
+                            
+                          </Typography>
+                          <Typography sx={{color: '#959595', fontSize: 15 }}>
+                            {getListTime(date)}
+                          </Typography>  
+                        </Grid>
+                        <Typography className = 'membernum' variant="body2" sx={{mb: 1}}>
+                        {/* <UserFriend
+                          style={{
+                            color: "#5F5F5F",
+                          }}
+                        />  */}
+                          <PeopleIcon fontSize="medium" sx={{mb: 1}} />
+                          <Box component='span' sx={{ ml: 1, fontSize: 20}}>
+                            {present} / {full}
+                          </Box>
+                        </Typography>
+                        <Typography sx={{color: '#5F5F5F', fontWeight: 800, display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, my: 2, height: 60 }} className='boardpost' variant="body2" color="text.secondary">
+                          {content}
+                        </Typography>
+
+                        {/* <Typography className='boardpost' variant="body2" color="text.secondary">
+                          
+                        </Typography> */}
                       </Grid>
-                      <Grid item>
-                      
-                      <Typography className='nickName' sx={{ cursor: 'pointer' }} variant="body2">
-                      <CircleUser
-                        style={{
-                          fontSize: 15 + "px",
-                          color: "#5F5F5F",
-                          backgroundColor: "#F2D0D9",
-                          borderRadius: "50%",
-                        }}
-                      />{writer}
-                      </Typography>
+                    <Grid item style={{paddingTop: 10}}>   
+                      <Stack spacing={1}>        
+                        <Stack direction="row" spacing={0.5}>
+                          {tags && tags.map((tag, idx) => {
+                            return <Chip label={tag} size="small" sx={{borderRadius: '5px', color: 'white', backgroundColor: "#8C7B80"}} key={idx} />                            
+                          })}
+                          
+                        </Stack>
+                      </Stack>
+                    </Grid>
+                    <Grid style={{paddingTop: 20}} item container sx={{justifyContent: 'space-between'}}>
+                      <Box>
+                        <CircleUser
+                          style={{
+                            fontSize: 25 + "px",
+                            color: "#5F5F5F",
+                            backgroundColor: "#F2D0D9",
+                            borderRadius: "50%",
+                            marginRight: 2
+                          }}
+                          /> 
+                        <Typography className='nickName' sx={{ fontSize: 20, cursor: 'pointer', mx: 0.5 }} component='span'>
+                          {writer}
+                        </Typography>
+                      </Box>
+                      <Box sx={{color: '#808080'}}>
+                        <Typography component='span' sx={{mx: 1}}>
+                          <VisibilityOutlinedIcon sx={{transform: 'scale(0.7)'}} />
+                          {count}
+                        </Typography>
+                        <Typography component='span'>
+
+                          <ChatBubbleOutlineOutlinedIcon sx={{transform: 'scale(0.7)'}} />
+                          {0}
+                        </Typography>                
+                      </Box>                      
                     </Grid>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle1" component="div">
-                      {getTime(date)}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
+
               </Paper>
           </Grid>
-          ))}
-          {/* <Grid item xs={6}>
-          <Paper sx={{ p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                <Grid item xs={12} sm container>
-                  <Grid item xs container direction="column" spacing={2}>
-                    <Grid item xs>
-                      <Typography gutterBottom variant="subtitle1" component="div">
-                        알고리즘 스터디
-                      </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        3/4
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        알고리즘 스터디 하실 분들 구합니다
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        알고리즘 스터디 하실 분들 구합니다
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                        공부 알고리즘
-                      </Typography>
-                      </Grid>
-                      <Grid item>
-                      <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                        닉네임
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle1" component="div">
-                      날짜
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={6}>
-          <Paper sx={{ p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                <Grid item xs={12} sm container>
-                  <Grid item xs container direction="column" spacing={2}>
-                    <Grid item xs>
-                      <Typography gutterBottom variant="subtitle1" component="div">
-                        알고리즘 스터디
-                      </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        3/4
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        알고리즘 스터디 하실 분들 구합니다
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        알고리즘 스터디 하실 분들 구합니다
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                        공부 알고리즘
-                      </Typography>
-                      </Grid>
-                      <Grid item>
-                      <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                        닉네임
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle1" component="div">
-                      날짜
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Paper>
-            </Grid>
-            
-            <Grid item xs={6}>
-            <Paper sx={{ p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
-                <Grid container spacing={2}>
-                <Grid item xs={12} sm container>
-                  <Grid item xs container direction="column" spacing={2}>
-                    <Grid item xs>
-                      <Typography gutterBottom variant="subtitle1" component="div">
-                        알고리즘 스터디
-                      </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        3/4
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        알고리즘 스터디 하실 분들 구합니다
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        알고리즘 스터디 하실 분들 구합니다
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                        공부 알고리즘
-                      </Typography>
-                      </Grid>
-                      <Grid item>
-                      <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                        닉네임
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle1" component="div">
-                      날짜
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid> */}
+          ))}          
         </Grid>
               
         
       </Box>
+      <Divider sx={{my: 1, width: '90%', mx: 'auto'}} />
         <div style={{ width: "95%", textAlign: "right", marginTop: "12px" }}>
-          <Link to={`/board-form`}>
-            <WriteButton WriteButton variant="">글쓰기</WriteButton>
+          <Link to={`/group-form`}>
+            <Button 
+              sx={{
+                width: '90px',
+                height: '35px',
+                border: "1px solid #8C7B80",
+                fontFamily: 'Noto Sans CJK KR',
+                fontSize: '16px',
+                fontWeight: 'medium',
+                color: "#8C7B80",
+                borderRadius: "10px",
+                "&:hover": {
+                  color: "#FFFFFF",
+                  backgroundColor: "#8C7B80",
+                  borderColor: "#8C7B80",
+                  boxShadow: "none",
+                }
+              }}
+            >글쓰기</Button>
           </Link>
         </div>
-      </>}
+      </Box>}
+    <Stack alignItems={'center'} spacing={2}>
+      <Pagination onChange={e => handleChangePage(e.target.innerText)} count={5} sx={{position: 'fixed', bottom: 50}} size="large"/>      
+    </Stack>
     </>
   );
 }

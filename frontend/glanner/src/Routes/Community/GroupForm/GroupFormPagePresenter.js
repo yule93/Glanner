@@ -1,29 +1,30 @@
 import { DeleteForever } from "@material-ui/icons";
-import { Box, Button, Divider, TextField, Grid, Typography, CardMedia, ImageListItem, ImageListItemBar, IconButton } from "@mui/material";
+import { Box, Button, Divider, TextField, Grid, Typography, CardMedia, ImageListItem, ImageListItemBar, IconButton, Autocomplete, Stack, Chip, MenuItem } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
 import { Link } from "react-router-dom";
 import { boardStyles } from "../Board.styles";
+import TagsInput from "./CustomHook";
 
 const useStyles = makeStyles(boardStyles);
 
-export const BoardFormPagePresenter = ({
+export const GroupFormPagePresenter = ({
   handle, 
   handleSubmit, 
   onFileChange, 
   deleteFile, 
   attachment,  
-  data
+  data,
+  handleSelecetedTags
 }) => {
   const classes = useStyles();    
   return (
-    // <Paper style={{ padding: "20px, 5px", width: 'auto', height: '100%'}}>
       <form noValidate onSubmit={handleSubmit} style={{ padding: '40px 60px 40px 80px'}}>            
         <Grid container>          
           <Grid item xs={1.2}>
-            <Typography className={classes.label}>제목</Typography>
+            <Typography className={classes.groupLabel}>제목</Typography>
           </Grid>
-          <Grid item xs={10}>    
+          <Grid item xs={10}>            
             <TextField
               onChange={(e) => {
                 // if (data.title) {setTitleError(false)}
@@ -41,9 +42,53 @@ export const BoardFormPagePresenter = ({
             </TextField>
           </Grid>
         </Grid>
+
+        <Grid container>          
+          <Grid item xs={1.2}>
+            <Typography className={classes.groupLabel}>인원수</Typography>
+          </Grid>
+          <Grid item xs={1.5}>            
+            <TextField
+              select
+              onChange={(e) => {
+                // if (data.title) {setTitleError(false)}
+                handle(e)
+              }}
+              value={data.full}              
+              // label="제목"
+              name="full"
+              fullWidth
+              required
+              // error={titleError}
+              className={[classes.smallInput, classes.field].join(' ')}
+              sx={{flexGrow: 2}}
+              InputProps={{maxLength: 4}}
+            >             
+              <MenuItem value={2} >2</MenuItem>
+              <MenuItem value={3} >3</MenuItem>
+              <MenuItem value={4} >4</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={1.5}>
+            <Typography className={classes.groupLabel}>카테고리</Typography>
+          </Grid>
+          <Grid item xs={7}>
+            <TagsInput
+              className={[classes.smallInput, classes.field].join(' ')}
+              onChange={(e) => handle(e)}  
+              selectedTags={handleSelecetedTags}
+              fullWidth
+              variant="outlined"
+              id="tags"
+              name="tags"
+              placeholder="Add Category"
+              // label="tags"
+            />            
+          </Grid>
+        </Grid>
         <Grid container>
           <Grid item xs={1.2}>
-            <Typography className={classes.label}>내용</Typography>
+            <Typography className={classes.groupLabel}>내용</Typography>
           </Grid>
           <Grid item xs={10}>
             <TextField 
@@ -59,13 +104,13 @@ export const BoardFormPagePresenter = ({
               multiline={true}
               rows={15}
               // error={contentError}
-              className={classes.field}              
+              className={classes.field}
             />
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid container sx={{ mt: '20px'}}>
           <Grid item xs={1.2}>
-            <Typography className={classes.label}>파일 첨부</Typography>
+            <Typography className={classes.groupLabel}>파일 첨부</Typography>
           </Grid>
           <Grid item xs={8.6}>            
             <TextField value={attachment} className={[classes.smallInput, classes.field].join(' ')} disabled fullWidth />
@@ -80,7 +125,7 @@ export const BoardFormPagePresenter = ({
                 value={data.attachment}                
               />            
             <label htmlFor="upload-photo" >  
-              <Box sx={{ mt: 2.5, 
+              <Box sx={{ mt: -0.2, 
                     ml: 1.3 }}>                                 
                 <Button component="span" className={[classes.attBtn, classes.attBtnText].join(' ')}>                  
                   첨부하기
@@ -125,7 +170,7 @@ export const BoardFormPagePresenter = ({
         <Grid container sx={{mt: 2, justifyContent: 'space-between'}}>
           {/* <Grid item xs={2}/> */}
           <Grid item>
-            <Link to={'/community/free/'}>
+            <Link to={'/community/group'}>
               <Button className={classes.btn}>
                 <Typography className={classes.btnText}>
                   목록으로
@@ -134,14 +179,13 @@ export const BoardFormPagePresenter = ({
             </Link>
           </Grid>
           <Grid item sx={{ ml: 1}}>
-            <Button className={classes.btn} type="submit">
-              <Typography className={classes.btnText}>
-                작성하기
-              </Typography>
-            </Button>
+              <Button type="submit" className={classes.btn}>
+                <Typography className={classes.btnText}>
+                  작성하기
+                </Typography>
+              </Button>
           </Grid>
         </Grid>
       </form>
-    // </Paper>
   )
 };
