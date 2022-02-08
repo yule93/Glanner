@@ -72,15 +72,18 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
       setPath('latestNoticeList')
     } else if (pathname.includes('/free/')) {
       setPath('boardList')
-    } 
+    } else if (pathname.includes('/group/')) {
+      setPath('groupBoardList')
+    }
   }, [pathname])
 
 // 게시글 && 댓글 삭제
   const deleteItem = (id, type) => {
+    console.log(type)
     const ok = window.confirm('삭제하겠습니까?')
     if (ok) {
       // 게시글인 경우
-      if (type === 'body') {
+      if (type.includes('body')) {
         axios({
           url: `http://localhost:8000/${path}/${id}`,
           method: 'DELETE'})
@@ -99,26 +102,46 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
           })
       // 댓글인 경우
       } else {
-        axios({
-          url: `http://localhost:8000/comments/${id}`,
-          method: 'DELETE'})
-          .then(res => {        
-            // alert('삭제되었습니다.')
-            const newComments = comments.filter(comment => {
-              return comment.id !== id
+        if (type === '/free/comment') {
+          axios({
+            url: `http://localhost:8000/comments/${id}`,
+            method: 'DELETE'})
+            .then(res => {        
+              // alert('삭제되었습니다.')
+              const newComments = comments.filter(comment => {
+                return comment.id !== id
+              })
+              setComments(newComments)            
             })
-            setComments(newComments)            
-          })
-          .catch(err => {
-            alert('삭제할 수 없습니다.')
-          })
+            .catch(err => {
+              alert('삭제할 수 없습니다.')
+            })
+        } else {
+          axios({
+            url: `http://localhost:8000/groupComments/${id}`,
+            method: 'DELETE'})
+            .then(res => {        
+              // alert('삭제되었습니다.')
+              const newComments = comments.filter(comment => {
+                return comment.id !== id
+              })
+              setComments(newComments)            
+            })
+            .catch(err => {
+              alert('삭제할 수 없습니다.')
+            })
+        }
       }
     }    
   }
 // 게시글 수정
   const updateItem = (item, type) => {    
-    if (type === 'body') {
+    if (type === '/free/body') {
       navigate(`/board-form`, {state: editData})
+    } else if (type === '/group/body') {
+      navigate(`/group-form`, {state: editData})
+    } else if (type === '/notice/body') {
+      navigate(`/notice-form`, {state: editData})
     } else {
       setOpenForm(true);
       if (setUpdateFlag) setUpdateFlag(true);
