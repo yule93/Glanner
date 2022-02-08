@@ -11,7 +11,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
   Paper,
-  styled as St,
   ListItemText,
   ListItem,
   List,
@@ -25,60 +24,6 @@ import { makeStyles } from "@mui/styles";
 import "moment/locale/ko";
 import { boardStyles } from "../Board.styles";
 import { getListTime } from "../helper";
-import Moment from "react-moment";
-
-// const latestNoticeList = [
-//   {
-//     id: 1,
-//     title: "공지 1",
-//     writer: "관리자",
-//     date: "22.01.15",
-//   },
-// ];
-// const boardList = [
-//   {
-//     id: 1,
-//     title: "예시 1",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 2,
-//     title: "예시 2",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 3,
-//     title: "예시 3",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 4,
-//     title:
-//       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-// ];
-
-const WriteButton = St(Button)({
-  width: '90px',
-  height: '35px',
-  border: "1px solid #8C7B80",
-  fontFamily: 'Noto Sans CJK KR',
-  fontSize: '16px',
-  fontWeight: 'medium',
-  color: "#8C7B80",
-  borderRadius: "10px",
-  "&:hover": {
-    color: "#FFFFFF",
-    backgroundColor: "#8C7B80",
-    borderColor: "#8C7B80",
-    boxShadow: "none",
-  },
-});
 
 const useStyles = makeStyles(boardStyles)
 
@@ -238,7 +183,24 @@ export default function BoardPagePresenter({
         </Box>
         <div style={{ width: "95%", textAlign: "right", marginTop: "12px" }}>
           <Link to={'/board-form/'}>
-            <WriteButton WriteButton variant="">글쓰기</WriteButton>
+            <Button 
+              sx={{
+                width: '90px',
+                height: '35px',
+                border: "1px solid #8C7B80",
+                fontFamily: 'Noto Sans CJK KR',
+                fontSize: '16px',
+                fontWeight: 'medium',
+                color: "#8C7B80",
+                borderRadius: "10px",
+                "&:hover": {
+                  color: "#FFFFFF",
+                  backgroundColor: "#8C7B80",
+                  borderColor: "#8C7B80",
+                  boxShadow: "none",
+                }
+              }}
+            >글쓰기</Button>
           </Link>
         </div>
       </>}
