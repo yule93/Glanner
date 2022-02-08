@@ -32,6 +32,10 @@ public class AddGlannerWorkReqDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH-mm")
     LocalDateTime endTime;
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH-mm")
+    LocalDateTime notiTime;
+
     public DailyWorkGlanner toEntity(){
         return DailyWorkGlanner
                 .builder()
@@ -39,6 +43,7 @@ public class AddGlannerWorkReqDto {
                 .content(content)
                 .startDate(startTime)
                 .endDate(endTime)
+                .notiDate(notiTime)
                 .build();
     }
 }

@@ -68,7 +68,7 @@ class UserServiceImplTest {
     public void testAddWork() throws Exception{
         //given
         LocalDateTime now = LocalDateTime.now();
-        AddPlannerWorkReqDto reqDto = new AddPlannerWorkReqDto("title", "content", now, now.plusDays(3));
+        AddPlannerWorkReqDto reqDto = new AddPlannerWorkReqDto("title", "content", now, now.plusDays(3), null);
 
         //when
         User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);

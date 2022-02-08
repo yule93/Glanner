@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glanner.api.dto.request.SendMailReqDto;
 import com.glanner.api.dto.request.SendSmsApiReqDto;
 import com.glanner.api.dto.request.SendSmsReqDto;
+import com.glanner.api.dto.response.FindWorkByTimeResDto;
 import com.glanner.api.dto.response.SendSmsApiResDto;
+import com.glanner.api.queryrepository.NotificationQueryRepository;
+import com.glanner.core.domain.user.DailyWorkSchedule;
+import com.glanner.core.repository.DailyWorkScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +37,8 @@ import java.util.List;
 public class NotificationServiceImpl implements NotificationService {
 
     private final JavaMailSender javaMailSender;
+    private final NotificationQueryRepository notificationQueryRepository;
+    private final DailyWorkScheduleRepository dailyWorkScheduleRepository;
 
     @Value("${sms.serviceid}")
     private String serviceId;
@@ -51,10 +57,41 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendSms(SendSmsReqDto reqDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, URISyntaxException, JsonProcessingException {
-        Long time = System.currentTimeMillis();
+    public void sendSms(SendSmsReqDto reqDto) {
         List<SendSmsReqDto> messages = new ArrayList<>();
         messages.add(reqDto);
+        try {
+            sendSmsServer(messages);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendScheduledSms() {
+        List<FindWorkByTimeResDto> resDtos = notificationQueryRepository.findWorkBySchedule();
+        resDtos.addAll(notificationQueryRepository.findWorkByGlanner());
+
+        for(FindWorkByTimeResDto resDto:resDtos){
+
+            List<SendSmsReqDto> messages = new ArrayList<>();
+            messages.add(new SendSmsReqDto(resDto.getPhoneNumber().replace("-",""), makeContent(resDto.getTitle())));
+
+            DailyWorkSchedule schedule = dailyWorkScheduleRepository.findById(resDto.getDailyWorkId()).orElseThrow(IllegalArgumentException::new);
+
+            schedule.changeNotiStatus();
+
+            try { sendSmsServer(messages); }
+            catch (Exception e) { e.printStackTrace(); }
+        }
+    }
+
+    private String makeContent(String title) {
+        return "["+title+"] 시작이 얼마 남지 않았어요! 일정을 위해 준비해 주세요 :)";
+    }
+
+    public void sendSmsServer(List<SendSmsReqDto> messages)  throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, URISyntaxException, JsonProcessingException {
+        Long time = System.currentTimeMillis();
 
         SendSmsApiReqDto smsRequest = new SendSmsApiReqDto("SMS", "COMM", "82", "01034033122", "테스트", messages);
         ObjectMapper objectMapper = new ObjectMapper();

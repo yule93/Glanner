@@ -1,12 +1,13 @@
 package com.glanner.core.domain.user;
 
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.PathMetadata;
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
 import com.querydsl.core.types.dsl.*;
 
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
-
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -34,6 +35,10 @@ public class QDailyWorkSchedule extends EntityPathBase<DailyWorkSchedule> {
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
+    public final DateTimePath<java.time.LocalDateTime> notiDate = createDateTime("notiDate", java.time.LocalDateTime.class);
+
+    public final EnumPath<NotificationStatus> notiStatus = createEnum("notiStatus", NotificationStatus.class);
 
     public final QSchedule schedule;
 

@@ -1,10 +1,20 @@
 package com.glanner.api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glanner.api.dto.request.SendMailReqDto;
 import com.glanner.api.dto.request.SendSmsApiReqDto;
 import com.glanner.api.dto.request.SendSmsReqDto;
+import com.glanner.api.dto.response.FindWorkByTimeResDto;
 import com.glanner.api.dto.response.SendSmsApiResDto;
+import com.glanner.api.exception.UserNotFoundException;
+import com.glanner.api.queryrepository.NotificationQueryRepository;
+import com.glanner.core.domain.user.DailyWorkSchedule;
+import com.glanner.core.domain.user.Schedule;
+import com.glanner.core.domain.user.User;
+import com.glanner.core.domain.user.UserRoleStatus;
+import com.glanner.core.repository.DailyWorkScheduleRepository;
+import com.glanner.core.repository.UserRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +30,35 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 class NotificationServiceTest {
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private NotificationQueryRepository notificationQueryRepository;
+
+    @Autowired
+    private DailyWorkScheduleRepository dailyWorkScheduleRepository;
+
+    @Autowired
+    private EntityManager em;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Value("${sms.serviceid}")
     private String serviceId;
     @Value("${sms.accesskey}")
@@ -56,9 +84,49 @@ class NotificationServiceTest {
         //given
         SendSmsReqDto reqDto = new SendSmsReqDto("01087973122", "테스트");
         //when
-        Long time = System.currentTimeMillis();
         List<SendSmsReqDto> messages = new ArrayList<>();
         messages.add(reqDto);
+        try {
+            sendSmsServer(messages);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //then
+    }
+
+    @Test
+    public void testSendScheduledSms() throws Exception{
+        //given
+        createUser();
+        LocalDateTime now = LocalDateTime.now();
+
+        addWorks(now.plusMinutes(1), now.plusHours(1), now);            // 알림 O
+        addWorks(now.plusMinutes(29), now.plusHours(1), now.minusMinutes(1)); // 알림 O
+        addWorks(now.plusMinutes(40), now.plusHours(1), now.plusMinutes(10)); // 알림 X
+
+        //when
+        List<FindWorkByTimeResDto> resDtos = notificationQueryRepository.findWorkBySchedule();
+
+        for(FindWorkByTimeResDto resDto:resDtos){
+
+            List<SendSmsReqDto> messages = new ArrayList<>();
+            messages.add(new SendSmsReqDto(resDto.getPhoneNumber().replace("-",""), makeContent(resDto.getTitle())));
+
+            DailyWorkSchedule schedule = dailyWorkScheduleRepository.findById(resDto.getDailyWorkId()).orElseThrow(IllegalArgumentException::new);
+
+            schedule.changeNotiStatus();
+
+            sendSmsServer(messages);
+        }
+        //then
+    }
+
+    private String makeContent(String title) {
+        return "["+title+"] 시작이 얼마 남지 않았어요! 일정을 위해 준비해 주세요 :)";
+    }
+
+    public void sendSmsServer(List<SendSmsReqDto> messages)  throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, URISyntaxException, JsonProcessingException {
+        Long time = System.currentTimeMillis();
 
         SendSmsApiReqDto smsRequest = new SendSmsApiReqDto("SMS", "COMM", "82", "01034033122", "테스트", messages);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -77,8 +145,8 @@ class NotificationServiceTest {
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
         restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+this.serviceId+"/messages"), body, SendSmsApiResDto.class);
-        //then
     }
+
 
     public String makeSignature(Long time) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
 
@@ -108,5 +176,34 @@ class NotificationServiceTest {
         String encodeBase64String = Base64.encodeBase64String(rawHmac);
 
         return encodeBase64String;
+    }
+
+    public void createUser(){
+        User user = User.builder()
+                .phoneNumber("010-8797-3122")
+                .email("cherish8513@naver.com")
+                .name("JeongJooHeon")
+                .password("1234")
+                .role(UserRoleStatus.ROLE_USER)
+                .build();
+
+        Schedule schedule = Schedule.builder()
+                .build();
+        user.changeSchedule(schedule);
+        userRepository.save(user);
+        em.flush();
+        em.clear();
+    }
+
+    private void addWorks(LocalDateTime start, LocalDateTime end, LocalDateTime noti) {
+        User user = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(UserNotFoundException::new);
+        DailyWorkSchedule workSchedule = DailyWorkSchedule.builder()
+                .content("hard")
+                .title("work")
+                .startDate(start)
+                .endDate(end)
+                .notiDate(noti)
+                .build();
+        user.getSchedule().addDailyWork(workSchedule);
     }
 }
