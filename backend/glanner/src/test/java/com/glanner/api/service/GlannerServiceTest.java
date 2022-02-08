@@ -2,9 +2,8 @@ package com.glanner.api.service;
 
 import com.glanner.api.dto.request.AddUserToGlannerReqDto;
 import com.glanner.api.dto.request.UpdateGlannerWorkReqDto;
+import com.glanner.api.dto.response.FindGlannerResDto;
 import com.glanner.api.exception.UserNotFoundException;
-import com.glanner.api.queryrepository.GlannerQueryRepository;
-import com.glanner.api.queryrepository.UserQueryRepository;
 import com.glanner.core.domain.glanner.DailyWorkGlanner;
 import com.glanner.core.domain.glanner.Glanner;
 import com.glanner.core.domain.glanner.UserGlanner;
@@ -14,6 +13,7 @@ import com.glanner.core.domain.user.User;
 import com.glanner.core.domain.user.UserRoleStatus;
 import com.glanner.core.repository.DailyWorkGlannerRepository;
 import com.glanner.core.repository.GlannerRepository;
+import com.glanner.core.repository.UserGlannerRepository;
 import com.glanner.core.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -34,11 +36,10 @@ public class GlannerServiceTest {
     @Autowired
     private GlannerRepository glannerRepository;
     @Autowired
-    private UserQueryRepository userQueryRepository;
-    @Autowired
-    private GlannerQueryRepository glannerQueryRepository;
-    @Autowired
     private DailyWorkGlannerRepository dailyWorkGlannerRepository;
+    @Autowired
+    private UserGlannerRepository userGlannerRepository;
+
 
     // save user
     @Autowired
@@ -93,7 +94,8 @@ public class GlannerServiceTest {
 
         //when
         Glanner findGlanner = getGlanner(glannerRepository.findRealById(savedGlanner.getId()));
-
+        glannerRepository.deleteAllWorksById(findGlanner.getId());
+        glannerRepository.deleteAllUserGlannerById(findGlanner.getId());
         glannerRepository.delete(findGlanner);
 
         //then
@@ -131,12 +133,11 @@ public class GlannerServiceTest {
         User savedAnotherUser = userRepository.save(anotherUser);
 
         int size = 5;
-        AddUserToGlannerReqDto reqDto = new AddUserToGlannerReqDto("cherish8514@naver.com");
+        AddUserToGlannerReqDto reqDto = new AddUserToGlannerReqDto(savedGlanner.getId(),"cherish8514@naver.com");
 
         //when
-        findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
         User findAnotherUser = getUser(userRepository.findByEmail(reqDto.getEmail()));
-        Glanner findGlanner = getGlanner(glannerRepository.findRealById(findUser.getId()));
+        Glanner findGlanner = getGlanner(glannerRepository.findRealById(savedGlanner.getId()));
         if (findGlanner.getUserGlanners().size() >= size){
             throw new IllegalStateException("회원 수가 가득 찼습니다.");
         }
@@ -256,6 +257,36 @@ public class GlannerServiceTest {
 
         //then
         assertThat(updateWork.getTitle()).isEqualTo("title");
+    }
+
+    @Test
+    public void testFindAGlannerInfo() throws Exception{
+        //given
+        User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
+
+        Glanner glanner = Glanner.builder()
+                .host(findUser)
+                .build();
+
+        UserGlanner userGlanner = UserGlanner.builder()
+                .user(findUser)
+                .build();
+
+        glanner.addUserGlanner(userGlanner);
+
+        Glanner savedGlanner = glannerRepository.save(glanner);
+        Long savedGlannerId = savedGlanner.getId();
+
+        //when
+        Glanner findGlanner = glannerRepository.findRealById(savedGlannerId).orElseThrow(IllegalArgumentException::new);
+        List<UserGlanner> findUserGlanners = userGlannerRepository.findByGlannerId(savedGlannerId);
+        FindGlannerResDto findGlannerResDto = new FindGlannerResDto(findGlanner, findUserGlanners);
+
+        //then
+        assertThat(findGlannerResDto.getGlannerId()).isEqualTo(savedGlannerId);
+        assertThat(findGlannerResDto.getHostEmail()).isEqualTo(findGlanner.getHost().getEmail());
+        assertThat(findGlannerResDto.getNumOfMember()).isEqualTo(1);
+        assertThat(findGlannerResDto.getMembersEmail().get(0)).isEqualTo("cherish8513@naver.com");
     }
 
     public void createUser(){

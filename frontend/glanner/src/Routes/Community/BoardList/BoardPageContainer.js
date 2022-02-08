@@ -3,9 +3,10 @@ import BoardPagePresenter from "./BoardPagePresenter";
 import Helmet from "react-helmet";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 export default function BoardPageContainer () { 
-   
+    // const type = useParams();   
     const [loading, setLoading] = useState(true);
     const [boardList, setBoardList] = useState([]);
     const [latestNoticeList, setLatestNoticeList] = useState([]);
@@ -45,8 +46,8 @@ export default function BoardPageContainer () {
           boardList={boardList}
           latestNoticeList={latestNoticeList}
           handleChangePage={handleChangePage}
+          // type = {type}
         />
       </>
     );
   }
-

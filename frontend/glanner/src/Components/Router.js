@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import MainPage from "../Routes/MainPage";
+import MainPage from "../Routes/Planner/MainPlanner";
 import Header from "./Header";
 import Navigator from "./Navigator";
 
@@ -12,17 +12,20 @@ import BoardList from "../Routes/Community/BoardList";
 import BoardForm from "../Routes/Community/BoardForm";
 import GroupForm from "../Routes/Community/GroupForm";
 import NoticeList from "../Routes/Community/NoticeList";
+import GroupBoardList from "../Routes/Community/GroupBoardList";
 import FloatingActionButtons from "../Routes/Community/BoardDetail/Sections/FloatingActionButton";
+import DailyPlanner from '../Routes/Planner/DailyPlanner/DailyPlanerContainer';
+
 const HeaderDiv = styled.div`
   border-bottom: 2px solid #e5e5e5;
 `;
 
 export default () => (
   <Paper elevation={2} sx={{width: "100%", minWidth:"900px", minHeight:"100%"}}>
+    <Router>
     <HeaderDiv>
       <Header title="글래너님의 플래너" />
     </HeaderDiv>
-    <Router>
       <Navigator
         PaperProps={{
           style: {
@@ -40,6 +43,8 @@ export default () => (
         />
         <Route path="/community/free" element={<BoardList />} />
         <Route path="/community/notice" element={<NoticeList />} />
+        <Route path="/community/group" element={<GroupBoardList />} />
+        {/* <Route path="/community/:type" element={<BoardList />} /> */}
         <Route path="/home" />
         <Route path="/board/free/:id" element={<BoardDetail />} />
         <Route path="/board/notice/:id" element={<BoardDetail />} />
@@ -47,6 +52,9 @@ export default () => (
         <Route path="/board-form"  element={<BoardForm />} />
         <Route path="/notice-form"  element={<BoardForm />} />
         <Route path="/group-form" element={<GroupForm />} />
+        <Route path="/board/:id" element={<BoardDetail />} />
+        <Route path="/daily" element={<DailyPlanner />} />
+
       </Routes>
       <FloatingActionButtons />
     </Router>

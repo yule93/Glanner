@@ -4,57 +4,54 @@ import com.glanner.api.dto.request.AddCommentReqDto;
 import com.glanner.api.dto.request.SaveBoardReqDto;
 import com.glanner.api.dto.request.UpdateCommentReqDto;
 import com.glanner.api.dto.response.BaseResponseEntity;
-import com.glanner.api.dto.response.FindBoardResDto;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.service.BoardService;
 import com.glanner.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@Transactional
 public class BoardController<Q extends SaveBoardReqDto> {
     private final BoardService boardService;
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<BaseResponseEntity> saveBoard(@RequestBody @Valid Q requestDto){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         boardService.saveBoard(userEmail, requestDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PutMapping("/modify/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BaseResponseEntity> modifyBoard(@PathVariable Long id, @RequestBody @Valid Q requestDto){
         boardService.modifyBoard(id, requestDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponseEntity> deleteBoard(@PathVariable Long id){
         boardService.deleteBoard(id);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PostMapping("/add-comment")
+    @PostMapping("/comment")
     public ResponseEntity<BaseResponseEntity> addComment(@RequestBody @Valid AddCommentReqDto reqDto){
         String userEmail = getUsername(SecurityUtils.getCurrentUsername());
         boardService.addComment(userEmail, reqDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @PutMapping("/modify-comment")
-    public ResponseEntity<BaseResponseEntity> modifyComment(@RequestBody @Valid UpdateCommentReqDto reqDto){
-        boardService.modifyComment(reqDto);
+    @PutMapping("/comment/{id}")
+    public ResponseEntity<BaseResponseEntity> modifyComment(@PathVariable Long commentId, @RequestBody @Valid UpdateCommentReqDto reqDto){
+        boardService.modifyComment(commentId, reqDto);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));
     }
 
-    @DeleteMapping("/delete-comment/{commentId}")
+    @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<BaseResponseEntity> deleteComment(@PathVariable Long commentId){
         boardService.deleteComment(commentId);
         return ResponseEntity.status(200).body(new BaseResponseEntity(200, "Success"));

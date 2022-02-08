@@ -205,7 +205,7 @@ export default function BoardPagePresenter({
                 >
                   <Grid container>
                     <Grid item xs={1}>
-                      <ListItemText primary={type == "공지" ? "[공지]" : "[자유]"} />
+                      <ListItemText primary={type == 'notice' ? "[공지]" : "[자유]"} />
                     </Grid>
                     <Grid item xs={7}>
                       <Link to={`/board/free/${id}`}>

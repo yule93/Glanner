@@ -2,20 +2,19 @@ package com.glanner.api.controller;
 
 import com.glanner.api.dto.request.SaveFreeBoardReqDto;
 import com.glanner.api.dto.response.FindFreeBoardResDto;
-import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.api.queryrepository.FreeBoardQueryRepository;
 import com.glanner.api.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
-@Transactional
 @RestController
-@RequestMapping("/api/freeBoard")
+@RequestMapping("/api/free-board")
 public class FreeBoardController extends BoardController<SaveFreeBoardReqDto> {
     private final FreeBoardQueryRepository freeBoardQueryRepository;
 
@@ -32,7 +31,7 @@ public class FreeBoardController extends BoardController<SaveFreeBoardReqDto> {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindFreeBoardResDto> getFreeBoard(@PathVariable Long id){
+    public ResponseEntity<FindFreeBoardResDto> getBoard(@PathVariable Long id){
         FindFreeBoardResDto responseDto = freeBoardQueryRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return ResponseEntity.status(200).body(responseDto);
     }

@@ -3,12 +3,10 @@ package com.glanner.api.service;
 import com.glanner.api.dto.request.AddCommentReqDto;
 import com.glanner.api.dto.request.SaveBoardReqDto;
 import com.glanner.api.dto.request.UpdateCommentReqDto;
-import com.glanner.api.dto.response.FindBoardResDto;
 import com.glanner.api.exception.UserNotFoundException;
 import com.glanner.core.domain.board.Board;
 import com.glanner.core.domain.board.Comment;
 import com.glanner.core.domain.board.FileInfo;
-import com.glanner.core.domain.board.FreeBoard;
 import com.glanner.core.domain.user.User;
 import com.glanner.core.repository.BoardRepository;
 import com.glanner.core.repository.CommentRepository;
@@ -70,8 +68,8 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void modifyComment(UpdateCommentReqDto requestDto) {
-        Comment comment = commentRepository.findById(requestDto.getCommentId()).orElseThrow(IllegalArgumentException::new);
+    public void modifyComment(Long commentId, UpdateCommentReqDto requestDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(IllegalArgumentException::new);
         comment.changeContent(requestDto.getContent());
     }
 
