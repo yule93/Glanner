@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import PeopleIcon from '@mui/icons-material/People';
 
-export const GroupMember = () => {
+export const GroupMember = ({post}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -34,7 +34,7 @@ export const GroupMember = () => {
             <PeopleIcon fontSize="large" color="disabled" />
           </IconButton>          
         </Tooltip>
-        <Typography sx={{color: "#6F6F6F", fontWeight: 'regular', fontSize: '24px', textAlign: 'center', marginLeft: 1}}>1 / 4</Typography>
+        <Typography sx={{color: "#6F6F6F", fontWeight: 'regular', fontSize: '24px', textAlign: 'center', marginLeft: 1}}>{post.present} / {post.full}</Typography>
       </Box>
       <Menu
         anchorEl={anchorEl}

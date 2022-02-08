@@ -12,16 +12,14 @@ import { GroupMember } from "./GroupButton";
 
 const useStyles = makeStyles(boardStyles);
 
-export const DetailBody = ({post, addLike }) => {
+export const DetailBody = ({ post, addLike }) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [groupPage, setGroupPage] = useState(false);
-  const [category, setCategory] = useState([]);
 
   useEffect(() => {
     if (pathname.includes('/group/')) {
-      setGroupPage(true)
-      setCategory([{title: '알고리즘'}, {title: '운동'}])
+      setGroupPage(true)      
     }
   }, [pathname])
 
@@ -35,11 +33,11 @@ export const DetailBody = ({post, addLike }) => {
         action={
           groupPage ?
           <div style={{display: 'flex', justifyContent: 'space-between', width: '170px'}}>
-              <GroupMember />              
-              <MoreBtn editData={post} type='body' />           
+              <GroupMember post={post} />
+              <MoreBtn editData={post} type={`/group/body`} />
           </div>
           :
-          <MoreBtn editData={post} type='body' />
+          <MoreBtn editData={post} type={`/free/body`} />
         }
         
         title={post.writer}
@@ -64,8 +62,8 @@ export const DetailBody = ({post, addLike }) => {
       {groupPage &&
       <Stack spacing={1} sx={{mt: 5}}>        
         <Stack direction="row" spacing={1}>          
-          {category.map(item => {
-            return <Chip label={item.title} size="small" sx={{color: 'white', backgroundColor: "#8C7B80"}} />
+          {post.tags && post.tags.map(title => {
+            return <Chip label={title} size="small" sx={{borderRadius: '5px', color: 'white', backgroundColor: "#8C7B80"}} />
           })}
         </Stack>
       </Stack>}

@@ -20,7 +20,7 @@ export const BoardDetailPageContainer = () => {
        isLoading(false)
       })
      .catch(err => console.log(err))   
-    } else {
+    } else if (pathname.includes('/free/')) {
       axios(`http://localhost:8000/boardList/${id}`, {method: 'GET'})
        .then(res => {
          
@@ -42,12 +42,27 @@ export const BoardDetailPageContainer = () => {
         isLoading(false)
       })
       .catch(err => console.log(err))
-    }   
+    } else if (pathname.includes('/group/')) {
+      axios(`http://localhost:8000/groupBoardList/${id}`, {method: 'GET'})
+       .then(res => { 
+         setPost(() => res.data)    
+         isLoading(false)
+        })
+       .catch(err => console.log(err))    
+      
+      axios(`http://localhost:8000/groupComments?postId=${id}`, {method: 'GET'})
+      .then(res => {
+        setComments(() => res.data)
+        isLoading(false)
+      })
+      .catch(err => console.log(err))
+    }
   }, [id, pathname])
 
   // 해당 게시글의 좋아요 + 1
   const addLike = () => {
-    axios(`http://localhost:8000/boardlist/${id}`, {
+    if (pathname.includes('/notice/')) {
+      axios(`http://localhost:8000/boardlist/${id}`, {
       method: 'PATCH',
       data: {like: post.like + 1}
     })
@@ -55,6 +70,25 @@ export const BoardDetailPageContainer = () => {
         setPost(res.data)
       })
       .catch(err => console.log(err))
+    } else if (pathname.includes('/free/')) {
+      axios(`http://localhost:8000/latestNoticelist/${id}`, {
+      method: 'PATCH',
+      data: {like: post.like + 1}
+    })
+      .then(res => {
+        setPost(res.data)
+      })
+      .catch(err => console.log(err))
+    } else if (pathname.includes('/group/')) {
+      axios(`http://localhost:8000/groupBoardList/${id}`, {
+      method: 'PATCH',
+      data: {like: post.like + 1}
+    })
+      .then(res => {
+        setPost(res.data)
+      })
+      .catch(err => console.log(err))
+    }    
   }
 
   //  해당 게시글에 댓글 && 대댓글 남기기
@@ -69,13 +103,23 @@ export const BoardDetailPageContainer = () => {
       postId: post.id,
       responseTo: parentCommentId
     }
-    axios(`http://localhost:8000/comments`, {
-      method: 'POST',
-      data: commentData
-    }).then(res => 
-      setComments(comments.concat(res.data)) 
-      )
-      .catch(err => console.log(err.message))
+    if (pathname.includes('/free/')) {
+      axios(`http://localhost:8000/comments`, {
+        method: 'POST',
+        data: commentData
+      }).then(res => 
+        setComments(comments.concat(res.data)) 
+        )
+        .catch(err => console.log(err.message))
+    } else if (pathname.includes('/group/')) {
+      axios(`http://localhost:8000/groupComments`, {
+        method: 'POST',
+        data: commentData
+      }).then(res => 
+        setComments(comments.concat(res.data)) 
+        )
+        .catch(err => console.log(err.message))
+    }
   }  
 
   // 댓글 && 대댓글 수정하기
@@ -89,26 +133,45 @@ export const BoardDetailPageContainer = () => {
       postId: post.id,
       responseTo: commentData.responseTo
     }
-    axios(`http://localhost:8000/comments/${commentData.id}`, {
-      method: 'PUT',
-      data: newCommentData
-    }).then(res => {
-      const newCommentList = comments.map(comment => {
-        if (comment.id !== commentData.id) {
-          return comment
-        } else {
-          return res.data
-        }
-      })
-      setComments(newCommentList)
-    } 
-      )
-      .catch(err => console.log(err.message))
-  }
+    if (pathname.includes('/free/')) {
+      axios(`http://localhost:8000/comments/${commentData.id}`, {
+        method: 'PUT',
+        data: newCommentData
+      }).then(res => {
+        const newCommentList = comments.map(comment => {
+          if (comment.id !== commentData.id) {
+            return comment
+          } else {
+            return res.data
+          }
+        })
+        setComments(newCommentList)
+      } 
+        )
+        .catch(err => console.log(err.message))
+    } else if (pathname.includes('/group/')) {
+      axios(`http://localhost:8000/groupComments/${commentData.id}`, {
+        method: 'PUT',
+        data: newCommentData
+      }).then(res => {
+        const newCommentList = comments.map(comment => {
+          if (comment.id !== commentData.id) {
+            return comment
+          } else {
+            return res.data
+          }
+        })
+        setComments(newCommentList)
+      } 
+        )
+        .catch(err => console.log(err.message))
+    }
+    }
 
   // 댓글 && 대댓글 좋아요 + 1
   const addCommentLike = (_comment) => {
-    axios(`http://localhost:8000/comments/${_comment.id}`, {
+    if (pathname.includes('/free/')) {
+      axios(`http://localhost:8000/comments/${_comment.id}`, {
       method: 'PATCH',
       data: {like: _comment.like + 1}
     })
@@ -124,6 +187,25 @@ export const BoardDetailPageContainer = () => {
         setComments(newCommentsData)
       })
       .catch(err => console.log(err))
+    } else if (pathname.includes('/group/')) {
+      axios(`http://localhost:8000/groupComments/${_comment.id}`, {
+      method: 'PATCH',
+      data: {like: _comment.like + 1}
+    })
+      .then(res => {
+        const newCommentsData = comments.map(comment => {
+          if (comment.id === _comment.id) {
+            comment.like ++
+            return comment
+          } else {
+            return comment
+          }
+        })
+        setComments(newCommentsData)
+      })
+      .catch(err => console.log(err))
+    }
+    
   }
 
   return (
@@ -138,6 +220,7 @@ export const BoardDetailPageContainer = () => {
     addComment={addComment}
     addCommentLike={addCommentLike}
     updateComment={updateComment}
+    pathname={pathname}
     />
   )
 }

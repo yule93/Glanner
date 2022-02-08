@@ -16,7 +16,9 @@ export const SingleComment = ({
   comment,
   addComment, 
   addCommentLike, 
-  updateComment}) => {
+  updateComment,
+  pathname
+}) => {
   const classes = useStyles();
 
   const [openForm, setOpenForm] = useState(false);
@@ -52,7 +54,7 @@ export const SingleComment = ({
         action={
           <MoreBtn
             editData={comment} 
-            type="comment" 
+            type={`${pathname}comment`}
             comments={comments} 
             setComments={setComments} 
             setOpenForm={setOpenForm} 

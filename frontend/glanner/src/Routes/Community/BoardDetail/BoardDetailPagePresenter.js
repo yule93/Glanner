@@ -18,7 +18,8 @@ export const BoardDetailPagePresenter = ({
   setComments,
   addComment, 
   addCommentLike,
-  updateComment
+  updateComment,
+  pathname
 }) => {
   const classes = useStyles();  
   return (
@@ -43,7 +44,8 @@ export const BoardDetailPagePresenter = ({
                 addComment={addComment}
                 addCommentLike={addCommentLike}
                 setComments={setComments}
-                updateComment={updateComment}                
+                updateComment={updateComment}
+                pathname={pathname}                
                 />
                 <ReplyComment
                   addCommentLike={addCommentLike} 
