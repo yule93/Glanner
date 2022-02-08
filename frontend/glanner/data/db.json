@@ -27,9 +27,9 @@
       "like": 3
     },
     {
-      "title": "테스트 글입니다",
+      "title": "테스트 글입니다!!!!",
       "content": "내용입니다.",
-      "date": "2022-02-02T14:37:47.843Z",
+      "date": "2022-02-08T05:11:33.533Z",
       "writer": "관리자관리자관리자관리자관리자관리자관리자관리자관리자",
       "count": 43,
       "like": 43,
@@ -285,6 +285,34 @@
       "like": 18,
       "postId": 5,
       "responseTo": -1
+    }
+  ],
+  "groupBoardList": [
+    {
+      "title": "CS 스터디",
+      "content": "",
+      "date": "2022-02-08T06:02:28.962Z",
+      "writer": "테스트 유저",
+      "count": 0,
+      "like": 0,
+      "attachment": "",
+      "tags": [
+        "알고리즘"
+      ],
+      "present": 1,
+      "full": 4,
+      "id": 2
+    }
+  ],
+  "groupComments": [
+    {
+      "id": 1,
+      "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "date": "2022-01-11 07:16:27",
+      "writer": "관리자",
+      "like": 18,
+      "postId": 5,
+      "responseTo": -1
     },
     {
       "id": 2,
@@ -294,58 +322,15 @@
       "like": 6,
       "postId": 5,
       "responseTo": -1
-    }
-  ],
-  "groupboardList": [
-    {
-      "id": 1,
-      "title": "알고리즘 스터디",
-      "date": "2022-01-30 07:16:27",
-      "writer": "관리자",
-      "tag": "공부 알고리즘",
-      "list" :"공부합시다",
-      "full" : 4,
-      "present" : 3
     },
     {
-      "id": 2,
-      "title": "알고리즘 스터디",
-      "date": "2022-01-30 07:16:27",
-      "writer": "관리자",
-      "tag": "공부 알고리즘",
-      "list" :"공부합시다",
-      "full" : 4,
-      "present" : 3
-    },
-    {
-      "id": 3,
-      "title": "알고리즘 스터디",
-      "date": "2022-01-30 07:16:27",
-      "writer": "관리자",
-      "tag": "공부 알고리즘",
-      "list" :"공부합시다",
-      "full" : 4,
-      "present" : 3
-    },
-    {
-      "id": 4,
-      "title": "알고리즘 스터디",
-      "date": "2022-01-30 07:16:27",
-      "writer": "관리자",
-      "tag": "공부 알고리즘",
-      "list" :"공부합시다",
-      "full" : 4,
-      "present" : 3
-    },
-    {
-      "id": 5,
-      "title": "알고리즘 스터디",
-      "date": "2022-01-30 07:16:27",
-      "writer": "관리자",
-      "tag": "공부 알고리즘",
-      "list" :"공부합시다",
-      "full" : 4,
-      "present" : 3
+      "content": "ㅇㅇㅇ",
+      "writer": "테스트 유저",
+      "date": "Tue Feb 08 2022 15:00:35 GMT+0900 (한국 표준시)",
+      "like": 0,
+      "postId": 2,
+      "responseTo": -1,
+      "id": 3
     }
   ]
 }
