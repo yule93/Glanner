@@ -8,7 +8,8 @@ export const boardStyles = {
     border: '2px solid #E5E5E5',
     boxSizing: 'border-box',
     boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
-    borderRadius: '10px'
+    borderRadius: '10px',
+    '& legend': { width: 0}
   },
   smallInput: {
     '& .MuiOutlinedInput-root': {
