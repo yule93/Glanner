@@ -38,7 +38,7 @@
     "react-dnd-html5-backend": "^14.1.0",
     "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.25.3",
+    "react-hook-form": "^7.26.1",
     "react-moment": "^1.1.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
@@ -61,6 +61,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://i6a606.p.ssafy.io:8080",
   "browserslist": {
     "production": [
       ">0.2%",
