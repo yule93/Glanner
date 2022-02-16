@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -24,15 +24,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactComponent as Logout } from "../assets/arrow-right-from-bracket-solid.svg";
 import logo from "../assets/glannerLogo1.png";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { addGlanner, onClickPlanner, removeGlanner } from "../redux/planners";
-import { deleteGlanner, fetchGlanner } from "../redux/apiCalls";
+import { Typography } from "@mui/material";
 
 const GroupPlannerList = styled.div`
   background-color: #ffffff;
   color: #5f5f5f;
   font-size: 16px;
+  font-family: "Noto Sans KR, sans-serif" !important;
   vertical-align: middle;
   border-radius: 5px;
   box-shadow: 0.5px 2px 5px 0.5px rgba(130, 130, 130, 0.2);
@@ -40,9 +38,13 @@ const GroupPlannerList = styled.div`
   &:hover {
     background-color: rgba(255, 255, 255, 0.08);
   }
-`;
 
-const categories = [{ id: "내 플래너" }, { id: "그룹 플래너" }];
+  span {
+    display: flex;
+    align-items: center;
+    font-family: "Noto Sans KR, sans-serif" !important;
+  }
+`;
 
 const boards = [
   {
@@ -88,6 +90,7 @@ const boards = [
 const item = {
   py: 0,
   color: "#5f5f5f",
+  fontFamily: "Noto Sans KR",
   "&:hover, &:focus": {
     bgcolor: "rgba(255, 255, 255, 0.08)",
   },
@@ -96,6 +99,7 @@ const item = {
 const groupItem = {
   py: 0,
   color: "#5f5f5f",
+  fontFamily: "Noto Sans KR",
   "&:hover, &:focus": {
     bgcolor: "rgba(255, 255, 255, 0.08)",
   },
@@ -105,6 +109,7 @@ const settingItem = {
   position: "relative",
   color: "#909090",
   fontSize: "16px",
+  fontFamily: "Noto Sans KR",
 };
 
 // const onClickPlanner = (e) => {
@@ -121,13 +126,6 @@ const settingItem = {
 
 function Navigator(props) {
   const { ...other } = props;
-  const navigate = useNavigate();
-  
-  // const onLogout = () => {
-  //   sessionStorage.removeItem("token");
-  //   localStorage.removeItem("token");
-  //   navigate("/");
-  // };
   const settings = [
     {
       id: "",
@@ -145,16 +143,21 @@ function Navigator(props) {
         {
           id: "로그아웃",
           icon: <Logout style={{ width: 15 + "px" }} />,
-          // func: onLogout(),
+          func: (e) => {
+            sessionStorage.removeItem("token");
+            localStorage.removeItem("token");
+            window.location.href = "/";
+          },
         },
       ],
     },
   ];
 
   const [groupPList, setGroupPList] = useState([]);
+  const decodeEmail = jwt_decode(localStorage.getItem("token")).sub;
 
   const bodyParams = {
-    id: jwt_decode(localStorage.getItem("token")),
+    id: decodeEmail,
   };
   const fetchGroupList = () => {
     axios
@@ -192,8 +195,13 @@ function Navigator(props) {
           }}
         >
           <ListItem sx={{ pb: 0, px: 2, mt: 2 }}>
-            <ListItemText sx={{ color: "#959595", fontSize: "14px" }}>
-              내 플래너
+            <ListItemText
+              sx={{
+                color: "#959595",
+                fontSize: "14px",
+              }}
+            >
+              <Typography style={{fontFamily: "Noto Sans KR",}}>내 플래너</Typography>
             </ListItemText>
           </ListItem>
           <Box
@@ -203,22 +211,24 @@ function Navigator(props) {
             }}
           >
             {/* 내 플래너 리스트 들어갈 자리 */}
-            <ListItem key={"emailid들어갈자리"} sx={{ pb: 0 }}>
+            <ListItem key={decodeEmail} sx={{ pb: 0 }}>
               <GroupPlannerList>
                 <Link to={`/`}>
-                  <ListItemButton
-                    selected={true}
-                    sx={item}
-                    id={"emailid들어갈자리"}
-                  >
-                    <ListItemText>
+                  <ListItemButton selected={true} sx={item} id={decodeEmail}>
+                    <ListItemText style={{ fontFamily: "Noto Sans KR" }}>
                       <FontAwesomeIcon
                         icon={faCircle}
                         className="circle"
                         style={{ width: 12 + "px", color: "#FFABAB" }}
                       />
-                      {"  "}
-                      {"emailid"}의 플래너
+                      <Typography
+                        style={{
+                          fontFamily: "Noto Sans KR",
+                          marginLeft: "4px",
+                        }}
+                      >
+                        {String(decodeEmail).split("@")[0]}의 플래너
+                      </Typography>
                     </ListItemText>
                   </ListItemButton>
                 </Link>
@@ -233,8 +243,13 @@ function Navigator(props) {
           }}
         >
           <ListItem sx={{ pb: 0, px: 2, mt: 2 }}>
-            <ListItemText sx={{ color: "#959595", fontSize: "14px" }}>
-              그룹 플래너
+            <ListItemText
+              sx={{
+                color: "#959595",
+                fontSize: "14px",
+              }}
+            >
+              <Typography style={{fontFamily: "Noto Sans KR",}}>그룹 플래너</Typography>
             </ListItemText>
           </ListItem>
           <Box
@@ -264,14 +279,21 @@ function Navigator(props) {
                       sx={item}
                       id={glannerId}
                     >
-                      <ListItemText>
+                      <ListItemText style={{ display: "flex" }}>
                         <FontAwesomeIcon
                           icon={faCircle}
                           className="circle"
                           style={{ width: 12 + "px", color: "#ABC3FF" }}
                         />
                         {"  "}
-                        {glannerName}
+                        <Typography
+                          style={{
+                            fontFamily: "Noto Sans KR",
+                            marginLeft: "4px",
+                          }}
+                        >
+                          {glannerName}
+                        </Typography>
                         {/* {active ? (
                             <FontAwesomeIcon
                               icon={faAngleRight}
@@ -298,7 +320,11 @@ function Navigator(props) {
         {boards.map(({ id, children }) => (
           <Box key={id} sx={{ mt: 3 }}>
             <ListItem>
-              <ListItemText sx={{ color: "#959595" }}>{id}</ListItemText>
+              <ListItemText sx={{ color: "#959595" }}>
+                <Typography style={{ fontFamily: "Noto Sans KR" }}>
+                  {id}
+                </Typography>
+              </ListItemText>
             </ListItem>
             {children.map(({ id: childId, icon, type }) => (
               <ListItem key={childId} sx={{ py: 0, px: "5px" }}>
@@ -306,9 +332,11 @@ function Navigator(props) {
                 <Link to={`/community/${type}`}>
                   <ListItemButton sx={groupItem}>
                     <ListItemText>
-                      {icon}
-                      {"  "}
-                      {childId}
+                      <Typography style={{ fontFamily: "Noto Sans KR" }}>
+                        {icon}
+                        {"  "}
+                        {childId}
+                      </Typography>
                     </ListItemText>
                   </ListItemButton>
                 </Link>
@@ -331,10 +359,12 @@ function Navigator(props) {
                 <ListItemButton
                   sx={{ m: 0, height: "30px" }}
                   components="a"
-                  // onClick={func}
+                  onClick={func}
                 >
                   <ListItemText>
-                    {icon} {childId}
+                    <Typography style={{ fontFamily: "Noto Sans KR" }}>
+                      {icon} {childId}
+                    </Typography>
                   </ListItemText>
                 </ListItemButton>
               </ListItem>

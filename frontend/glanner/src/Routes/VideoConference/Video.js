@@ -9,8 +9,6 @@ import logo from "../../assets/glannerLogo1.png";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import TextField from "@mui/material/TextField";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { Container, Stack } from "@mui/material";
 
 const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
@@ -289,7 +287,11 @@ class Video extends Component {
                 />
               </Link>
             </div>
-            <div id="join-dialog" className="jumbotron vertical-center">
+            <div
+              id="join-dialog"
+              className="jumbotron vertical-center"
+              style={{ fontFamily: "Noto Sans KR" }}
+            >
               <h1> 그룹 모임 참여 </h1>
               <div style={{ width: "50%", margin: "0 auto" }}>
                 <form className="form-group" onSubmit={this.joinSession}>
@@ -312,7 +314,7 @@ class Video extends Component {
                       }}
                     />
                     <Button
-                      sx={{ mt: 4, mb: 1 }}
+                      sx={{ mt: 4, mb: 1, fontFamily: "Noto Sans KR" }}
                       variant="contained"
                       size="large"
                       onClick={this.joinSession}

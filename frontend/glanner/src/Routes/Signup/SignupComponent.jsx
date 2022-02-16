@@ -85,7 +85,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
             <Typography component="h1" variant="h4" color="#6F6F6F" fontFamily="Rozha One">
               Sign Up
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, width: '100%'}}>
+            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, width: '100%'}} method="POST">
 
 
               {/* 이름 폼 */}
