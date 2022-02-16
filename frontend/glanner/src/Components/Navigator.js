@@ -23,8 +23,8 @@ import logo from "../assets/glannerLogo1.png";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { addGlanner, onClickPlanner, removeGlanner } from "../redux/planners";
-import { deleteGlanner, fetchGlanner } from "../redux/apiCalls";
+// import { addGlanner, onClickPlanner, removeGlanner } from "../redux/planners";
+// import { deleteGlanner, fetchGlanner } from "../redux/apiCalls";
 
 const GroupPlannerList = styled.div`
   background-color: #ffffff;
@@ -162,13 +162,9 @@ function Navigator(props) {
   const { ...other } = props;
 
   const [groupPList, setGroupPList] = useState([]);
-
-  const bodyParams = {
-    id: "test001@naver.com",
-  };
   const fetchGroupList = () => {
     axios
-      .get(`/api/glanner`, bodyParams)
+      .get(`/api/glanner`)
       .then((res) => {
         setGroupPList(res.data);
         console.log(res.data);
@@ -178,8 +174,8 @@ function Navigator(props) {
 
   React.useEffect(() => {
     fetchGroupList();
-  }, []);
 
+  }, []);
   return (
     <Drawer variant="persistent" {...other} open={true} varient="no">
       <List disablePadding sx={{ display: "inline-block" }}>
@@ -238,7 +234,7 @@ function Navigator(props) {
           </Box>
         </Box>
         <Box
-          key={"myPlanner"}
+          key={"glanner"}
           sx={{
             maxHeight: "240px",
           }}
@@ -259,19 +255,20 @@ function Navigator(props) {
                 <GroupPlannerList>
                   <Link to={`/group/${glannerId}`}>
                     <ListItemButton
-                      selected={function () {
-                        return (
-                          <FontAwesomeIcon
-                            icon={faAngleRight}
-                            className="arrowRight"
-                            style={{
-                              width: 15 + "px",
-                              color: "#959595",
-                              marginLeft: 10 + "px",
-                            }}
-                          />
-                        );
-                      }}
+                      // selected={
+                      //   () => {
+                      //   return (
+                      //     <FontAwesomeIcon
+                      //       icon={faAngleRight}
+                      //       className="arrowRight"
+                      //       style={{
+                      //         width: 15 + "px",
+                      //         color: "#959595",
+                      //         marginLeft: 10 + "px",
+                      //       }}
+                      //     />
+                      //   );
+                      // }}
                       sx={item}
                       id={glannerId}
                     >

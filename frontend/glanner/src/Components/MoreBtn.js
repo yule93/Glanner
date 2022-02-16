@@ -6,8 +6,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlagIcon from '@mui/icons-material/Flag';
 import { MoreVert } from '@material-ui/icons';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
 
 
 const StyledMenu = styled((props) => (
@@ -53,11 +55,15 @@ const StyledMenu = styled((props) => (
 
 
 
-export default function MoreBtn({ editData, type, comments, setComments, setOpenForm, setContent, setUpdateFlag}) {
+export default function MoreBtn({ editData, type, comments, setComments, setOpenForm, setContent, setUpdateFlag, addMember, glannerInfo}) {
   const navigate = useNavigate();
   const { pathname } = useLocation();  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [path, setPath] = React.useState("");
+  const { id } = useParams();
+  const [added, setAdded] = React.useState(true);
+  const [authData, setAuthData] = React.useState({});
+  const [hostMail, setHostMail] = React.useState('');
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -75,6 +81,9 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
     } else if (pathname.includes('/group/')) {
       setPath('group-board')
     }
+    const token = localStorage.getItem('token');
+    const decoded = jwt_decode(token);
+    setAuthData(decoded)
   }, [pathname])
 
 // 게시글 && 댓글 삭제
@@ -148,6 +157,25 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
       setContent(item.content);
     }
   }
+  const getNewGlannerInfo = () => {
+    // glanner에 포함된 유저인지 확인 용도
+    axios(`/api/group-board/glanner/${id}`)
+      .then(res => { 
+        setHostMail(res.data.hostEmail)       
+        res.data.membersInfos.map(info => {
+          if (info.userEmail === editData.userEmail) {
+            setAdded(false)
+            return
+          }
+        })
+      })
+      .catch(err => console.log(err))
+  }
+  
+  useEffect(() => {
+    getNewGlannerInfo()
+    return () => setAdded(false)
+  }, [])
 
   return (
     <div>
@@ -172,15 +200,24 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-      >        
-        <MenuItem onClick={() => updateItem(editData, type, comments, setComments)} disableRipple>
-          <EditIcon />
-          수정
-        </MenuItem>        
-        <MenuItem onClick={() => deleteItem(editData, type)} disableRipple>
-          <DeleteIcon />
-          삭제
-        </MenuItem>
+      > 
+
+        {hostMail === authData.sub && authData.sub !== editData.userEmail && type.includes('comment') && added && 
+        <MenuItem onClick={() => {addMember(editData.userEmail); setAnchorEl(null)}} disableRipple>
+          <AddCircleIcon />
+          글래너에 추가
+        </MenuItem>}    
+        {authData.sub === editData.userEmail &&
+        <div>
+          <MenuItem onClick={() => updateItem(editData, type, comments, setComments)} disableRipple>
+            <EditIcon />
+            수정
+          </MenuItem>        
+          <MenuItem onClick={() => deleteItem(editData, type)} disableRipple>
+            <DeleteIcon />
+            삭제
+          </MenuItem>
+        </div>}
         <MenuItem onClick={handleClose} disableRipple>
           <FlagIcon />
           신고
