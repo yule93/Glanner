@@ -24,6 +24,7 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
 //     });
 //   };  
     const onSubmit = (data) => {
+      console.log(data)
         axios(`/api/auth`, 
         {
             method: 'POST',

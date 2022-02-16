@@ -47,10 +47,10 @@ export default function FindGroupPresenter({
 }) {
   const navigator = useNavigate();  
   const classes = useStyles();
-  
+  console.log(groupBoardList)
   return (
     <>
-      {loading && <div>Loading...</div>}
+      {loading && <div>Loading...</div>}      
       {groupBoardList &&
       <Box sx={{ mt: 2}}>        
         <Box
@@ -65,7 +65,11 @@ export default function FindGroupPresenter({
             <OutlinedInput
               value={inputData}
               onChange={handleInput}
-              onKeyUp={searchBoard}
+              onKeyUp={(e) => {
+                if (e.keyCode === 13) {
+                  searchBoard()
+                }
+              }}
               id="search-board"
               startAdornment={
                 <Select
@@ -107,7 +111,7 @@ export default function FindGroupPresenter({
         <Divider sx={{mb: 1, width: '88%', mx: 'auto'}} />
         <Box className={classes.textField} sx={{ textAlign: "left", height: '500px', px: 15 }}>
           <Grid container rowSpacing={1.2} columnSpacing={{ xs: 1.5 }}>
-          {groupBoardList.map(({ boardId, title, userName, createdDate, content, userCount, interests, count, commentCount }) => (
+          {groupBoardList && groupBoardList.map(({ boardId, title, userName, createdDate, content, userCount, interests, count, commentCount }) => (
             <Grid item xs={6} key={boardId} >
               <Paper sx={{ px: 3, py: 2, height: 'auto' }}>
                   <Grid container direction="column" spacing={0} sx={{height: 'auto'}}>
@@ -177,14 +181,15 @@ export default function FindGroupPresenter({
                     </Grid>
                   </Grid>
 
-              </Paper>
+                </Paper>
+            </Grid>
+            ))}
+            {!loading && groupBoardList.length === 0 && <div>검색 결과가 없습니다.</div>}          
           </Grid>
-          ))}          
-        </Grid>
               
         
-      </Box>
-      <Divider sx={{my: 1, width: '90%', mx: 'auto'}} />
+        </Box>
+        <Divider sx={{my: 1, width: '90%', mx: 'auto'}} />
         <div style={{ width: "95%", textAlign: "right", marginTop: "12px" }}>
           <Link to={`/group-form`}>
             <Button 
@@ -206,11 +211,11 @@ export default function FindGroupPresenter({
               }}
             >글쓰기</Button>
           </Link>
+          <Stack alignItems={'center'} spacing={2} sx={{mb: 10}}>
+            <Pagination onChange={e => {handleChangePage(e.target.innerText); console.log(e.target.innerText)}} count={5} size="large"/>      
+          </Stack>
         </div>
       </Box>}
-    <Stack alignItems={'center'} spacing={2}>
-      <Pagination onChange={e => {handleChangePage(e.target.innerText); console.log(e.target.innerText)}} count={5} sx={{position: 'fixed', bottom: 5}} size="large"/>      
-    </Stack>
     </>
   );
 }

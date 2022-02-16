@@ -35,25 +35,33 @@ export default function BoardPagePresenter({
   latestNoticeList,  
   handleChangePage,
   inputData,
-  handleInput
+  handleInput,
+  searchBoard
 }) {
   const classes = useStyles();
   return (
     <>
       {loading && <div>Loading...</div>}
       {(boardList || latestNoticeList) &&
-      <>      
-        <Box
+      <>
+      <Grid container direction={'column'} sx={{justifyContent: 'space-between'}}>      
+        <Grid
+          item
           component="form"
           noValidate
           autoComplete="off"
-          sx={{ textAlign: "right", width: "95%", minHeight: "100%", m: 0 }}
+          sx={{ textAlign: "right", width: "95%", minHeight: "100%", m: 0, height: '100%' }}
         >
-          <FormGroup sx={{ ml: 100, width: "25ch", mb: 1, mt: 3, height: 50,}} size="small">
+          <FormGroup sx={{ float: 'right', width: "25ch", mb: 1, mt: 3, height: 50,}} size="small">
             {/* <InputLabel htmlFor="search-board">이름, 제목</InputLabel> */}
             <OutlinedInput
               value={inputData}
               onChange={handleInput}
+              onKeyUp={(e) => {
+                if (e.keyCode === 13) {
+                  searchBoard()
+                }
+              }}
               id="search-board"              
               endAdornment={
                 <InputAdornment position="end">
@@ -69,8 +77,8 @@ export default function BoardPagePresenter({
               }}
             />
           </FormGroup>
-        </Box>
-        <Box className={classes.textField} sx={{ textAlign: "center", minHeight: "100%" }}>          
+        </Grid>
+        <Grid item sx={{ textAlign: "center", minHeight: "100%", }}>          
           <List
             sx={{
               width: "90%",
@@ -142,7 +150,7 @@ export default function BoardPagePresenter({
               minHeight: "100%",
             }}
           >
-            {boardList.map(({ boardId, title, userName, createdDate, count, likeCount }) => (
+            {boardList.map(({ boardId, title, userName, createdDate, count, likeCount, commentCount }) => (
               <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={boardId}>
                 <ListItem                
                   disableGutters
@@ -163,7 +171,7 @@ export default function BoardPagePresenter({
                     </Grid>
                     <Grid item xs={7}>
                       <Link to={`/board/free/${boardId}`}>
-                        <ListItemText sx={{textAlign: 'start', '&:hover': { color: '#FFFFFF'}}}>{title}</ListItemText>
+                        <ListItemText sx={{textAlign: 'start', '&:hover': { color: '#FFFFFF'}}}>{title} [{commentCount}]</ListItemText>
                       </Link>
                     </Grid>
                     <Grid item xs={1.8}>
@@ -189,33 +197,38 @@ export default function BoardPagePresenter({
               </Paper>
             ))}
           </List>
+        </Grid>
+        <Box> 
+          <div style={{ width: "95%", textAlign: "right", margin: "12px"}}>
+            <Link to={'/board-form/'}>
+              <Button 
+                sx={{
+                  width: '90px',
+                  height: '35px',
+                  border: "1px solid #8C7B80",
+                  fontFamily: 'Noto Sans CJK KR',
+                  fontSize: '16px',
+                  fontWeight: 'medium',
+                  color: "#8C7B80",
+                  borderRadius: "10px",
+                  "&:hover": {
+                    color: "#FFFFFF",
+                    backgroundColor: "#8C7B80",
+                    borderColor: "#8C7B80",
+                    boxShadow: "none",
+                  },
+                  position: 'fixed',
+                  right: 70,
+                  bottom: 50
+                }}
+              >글쓰기</Button>
+            </Link>
+          </div>
+          <Stack alignItems={'center'} spacing={2} sx={{}} >
+            <Pagination onChange={e => handleChangePage(e.target.innerText)} count={5} sx={{position: 'fixed', bottom: '5%'}} size="large"/>      
+          </Stack>
         </Box>
-        <div style={{ width: "95%", textAlign: "right", margin: "12px" }}>
-          <Link to={'/board-form/'}>
-            <Button 
-              sx={{
-                width: '90px',
-                height: '35px',
-                border: "1px solid #8C7B80",
-                fontFamily: 'Noto Sans CJK KR',
-                fontSize: '16px',
-                fontWeight: 'medium',
-                color: "#8C7B80",
-                borderRadius: "10px",
-                "&:hover": {
-                  color: "#FFFFFF",
-                  backgroundColor: "#8C7B80",
-                  borderColor: "#8C7B80",
-                  boxShadow: "none",
-                }
-              }}
-            >글쓰기</Button>
-          </Link>
-        </div>
-      
-      <Stack alignItems={'center'} spacing={2}>
-        <Pagination onChange={e => handleChangePage(e.target.innerText)} count={5} sx={{position: 'fixed', bottom: 25}} size="large"/>      
-      </Stack>
+      </Grid>
       </>}
     </>
   );

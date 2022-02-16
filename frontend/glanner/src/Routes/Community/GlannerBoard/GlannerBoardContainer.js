@@ -16,34 +16,29 @@ export default function GroupPlannerContainer () {
     const { id } = useParams();
     const { register, watch, formState: {errors}, handleSubmit, reset } = useForm();
     const [decoded, setDecoded] = useState('');
-
+    const [fetching, setFetching] = useState(false);
     // 무한 스크롤
     const handleScroll = (nowPage) => {
         if (nowPage > boardList.length) {
-            console.log('도달!')
+            setFetching(true)
+            setLoading(false)           
             return
         }
+        setLoading(true)
         const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
         // console.log(
-        //     scrollTop, clientHeight, scrollHeight
+        //     Math.round(scrollHeight - scrollTop),  Math.round(clientHeight)
         // );
-        if (Math.round(scrollHeight - scrollTop) === Math.round(clientHeight)) {
+        if ((Math.round(scrollHeight - scrollTop) < Math.round(clientHeight) + 50) && fetching === false) {
             setPage(prev => {
                 return prev + 5
             });
+            setLoading(false)
         }
       };
-    window.addEventListener('scroll', (event) => {
-        if (page < boardList.length) {
-            event.preventDefault();
-        } else {
-            handleScroll(page)
-        }
-        
-
-
-    })
+    
     useEffect(() => {
+        setFetching(true);
         setLoading(true)
         axios(`/api/glanner-board/${id}/${page}/5`)
             .then(res => {
@@ -56,7 +51,18 @@ export default function GroupPlannerContainer () {
             .catch(err => console.log(err))
         
         setDecoded(jwt_decode(localStorage.getItem('token')))
-        
+        setFetching(false);
+        window.addEventListener('scroll', (event) => {
+            if (page < boardList.length) {
+                return
+            } else {
+                handleScroll(page)
+            }
+        })
+        return () => {
+          // scroll event listener 해제
+          window.removeEventListener("scroll", handleScroll);
+        };
         }, [page, id])
     
     // 글래너 게시글 작성
@@ -65,7 +71,7 @@ export default function GroupPlannerContainer () {
             {method: 'POST', data: {glannerId: Number(id), files: [], title: boardData.boardTitle, content: boardData.boardContent}})
             .then(res => {
                 console.log('작성 완료!')                
-                refreshData(page)
+                refreshData()
             })
             .catch(err => console.log(err))
     }

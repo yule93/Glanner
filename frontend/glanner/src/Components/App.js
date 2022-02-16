@@ -26,6 +26,7 @@ const RouterContainer = styled.div`
 `;
 
 function App() {
+  
   // const token = localStorage.getItem('token')
   const [signupPage, setSignupPage] = useState(true);
   const isLogin = useSelector(state => state.auth.isLogin);

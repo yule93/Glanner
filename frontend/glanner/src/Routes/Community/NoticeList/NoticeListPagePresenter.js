@@ -19,6 +19,7 @@ import {
   Divider,
   Stack,
   Pagination,
+  FormGroup,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
@@ -48,24 +49,34 @@ const useStyles = makeStyles(boardStyles)
 export default function NoticeListPagePresenter({ 
   loading, 
   latestNoticeList,  
-  handleChangePage
+  handleChangePage,
+  inputData,
+  handleInput,
+  searchBoard
 }) {
   const classes = useStyles();
   return (
     <>
       {loading && <div>Loading...</div>}
       {latestNoticeList &&
-      <>      
+      <Box>      
         <Box
           component="form"
           noValidate
           autoComplete="off"
           sx={{ textAlign: "right", width: "95%", minHeight: "100%", m: 0 }}
         >
-          <FormControl sx={{ m: 1, width: "25ch" }} size="small">
-            <InputLabel htmlFor="search-board">이름, 제목</InputLabel>
+          <FormGroup sx={{ float: 'right', width: "25ch", mb: 1, mt: 3, height: 50,}} size="small">
+            {/* <InputLabel htmlFor="search-board">이름, 제목</InputLabel> */}
             <OutlinedInput
-              id="search-board"
+              value={inputData}
+              onChange={handleInput}
+              onKeyUp={(e) => {
+                if (e.keyCode === 13) {
+                  searchBoard()
+                }
+              }}
+              id="search-board"              
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="search-button" edge="end">
@@ -74,8 +85,12 @@ export default function NoticeListPagePresenter({
                 </InputAdornment>
               }
               label="Password"
+              sx={{ borderRadius: 5, background: '#F7F6F6',
+                border: '2px solid #E5E5E5', "legend": {width: 0},
+                "fieldset": {border: 'none'}, height: 40
+              }}
             />
-          </FormControl>
+          </FormGroup>
         </Box>
         <Box className={classes.textField} sx={{ textAlign: "center", minHeight: "100%" }}>          
           <List
@@ -146,7 +161,7 @@ export default function NoticeListPagePresenter({
             <WriteButton WriteButton variant="">글쓰기</WriteButton>
           </Link>
         </div>
-      </>}
+      </Box>}
     <Stack alignItems={'center'} spacing={2}>
       <Pagination onChange={e => handleChangePage(e.target.innerText)} count={5} sx={{position: 'fixed', bottom: 100}} size="large"/>      
     </Stack>

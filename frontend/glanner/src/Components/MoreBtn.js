@@ -173,7 +173,9 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
   }
 
   useEffect(() => {
-    getNewGlannerInfo()
+    if (path.includes('/group/')) {
+      getNewGlannerInfo()
+    }
     return () => setAdded(false)
   }, [glannerInfo])
 
