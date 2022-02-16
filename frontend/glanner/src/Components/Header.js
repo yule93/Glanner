@@ -16,14 +16,15 @@ const HeaderContainer = styled.div`
   min-width: 100%;
   overflow: hidden;
   font-size: 16px;
+  font-family: 'Noto Sans KR' !important;
   color: 5f5f5f;
   width: 100%;
 `;
 
 const headerStyle = {
   display: "flex",
-  alignItems: "center"
-}
+  alignItems: "center",
+};
 
 export default function Header({ title }) {
   return (
@@ -31,11 +32,12 @@ export default function Header({ title }) {
       <div
         style={{
           marginLeft: "20px",
-          lineHeight: 3,
+          lineHeight: 3.5,
           textAlign: "left",
-          fontSize: "30px",
+          fontSize: "28px",
           width: "300px",
           float: "left",
+          fontFamily: "Noto Sans KR",
         }}
       >
         {title}
@@ -47,11 +49,11 @@ export default function Header({ title }) {
           minWidth: "300px",
           float: "right",
           display: "flex",
-          alignItems: "center"
+          alignItems: "center",
         }}
       >
         <Grid container direction="row">
-          <Grid item xs={5} sx={headerStyle} >
+          <Grid item xs={5} sx={headerStyle}>
             <CalendarIcon
               style={{
                 fontSize: 25 + "px",
@@ -71,13 +73,17 @@ export default function Header({ title }) {
                 marginRight: "3px",
               }}
             />
-            <Link to ={``}>
-              알림함
-            </Link>
+            <Link to={``}>알림함</Link>
           </Grid>
-          <Grid item xs={2} sx={{
-            ml: "10px", pl: "20px", borderLeft: "1px solid #b5b5b5"
-          }}>
+          <Grid
+            item
+            xs={2}
+            sx={{
+              ml: "10px",
+              pl: "20px",
+              borderLeft: "1px solid #b5b5b5",
+            }}
+          >
             <CircleUser
               style={{
                 fontSize: 40 + "px",

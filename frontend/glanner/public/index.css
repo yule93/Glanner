@@ -8,6 +8,7 @@ body {
   height: 100%; /* full height of the content box */
   max-height: 20em; /* requires an absolute value for height. */
   width: 100%;
+  font-family: 'Noto Sans KR sans-serif' !important;
 }
 
 div::-webkit-scrollbar {

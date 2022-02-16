@@ -44,6 +44,12 @@ const WriteButton = St(Button)({
   },
 });
 
+const NoaticeListDiv = styled.div`
+  span {
+    font-family: 'Noto Sans KR' !important;
+  }
+`;
+
 const useStyles = makeStyles(boardStyles)
 
 export default function NoticeListPagePresenter({ 
@@ -56,7 +62,7 @@ export default function NoticeListPagePresenter({
 }) {
   const classes = useStyles();
   return (
-    <>
+    <NoaticeListDiv>
       {loading && <div>Loading...</div>}
       {latestNoticeList &&
       <Box>      
@@ -165,6 +171,6 @@ export default function NoticeListPagePresenter({
     <Stack alignItems={'center'} spacing={2}>
       <Pagination onChange={e => handleChangePage(e.target.innerText)} count={5} sx={{position: 'fixed', bottom: 100}} size="large"/>      
     </Stack>
-    </>
+    </NoaticeListDiv>
   );
 }

@@ -71,7 +71,7 @@ export default function GroupPlannerContainer () {
             {method: 'POST', data: {glannerId: Number(id), files: [], title: boardData.boardTitle, content: boardData.boardContent}})
             .then(res => {
                 console.log('작성 완료!')                
-                refreshData()
+                refreshData(page)
             })
             .catch(err => console.log(err))
     }

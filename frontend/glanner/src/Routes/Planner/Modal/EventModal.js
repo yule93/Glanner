@@ -33,6 +33,7 @@ const ModalHeaderDiv = styled.div`
   border-bottom: 2px solid #e5e5e5;
   display: flex;
   padding-bottom: 5px;
+  font-family: 'Noto Sans KR, sans-serif';
 `;
 
 const ModalFooterDiv = styled.div`
@@ -49,6 +50,7 @@ const SubmitButton = styled.button`
   border-radius: 6px;
   height: 35px;
   width: 55px;
+  font-family: 'Noto Sans KR, sans-serif';
   &:hover {
     color: #ffffff;
     background-color: #8c7b8066;
@@ -78,7 +80,7 @@ const StyledInputElement = styledClass("input")(
   ({ theme }) => `
   width: 100%;
   font-size: 0.875rem;
-  font-family: "Noto Sans KR", sans-serif;;
+  font-family: "Noto Sans KR", sans-serif;
   font-weight: 400;
   line-height: 1.5;
   color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
@@ -164,11 +166,12 @@ export default function EventModal({
             alert("수정 성공!");
             setData({});
             console.log(res.data);
+            handleClose();
             navigate(`/group/${groupPlannerId}`);
           })
           .catch((err) => {
             console.log(err);
-            alert("작성 실패!");
+            alert("수정 실패!");
           });
       } else if (type === "myPlanner") {
         axios
@@ -176,14 +179,15 @@ export default function EventModal({
           .then((res) => {
             alert("수정 성공!");
             console.log(res.data);
+            handleClose();
             navigate("/");
           })
           .catch((err) => {
             console.log(err);
-            alert("작성 실패!");
+            alert("수정 실패!");
           });
       }
-    } else if(specificEvent == null) {
+    } else if (specificEvent == null) {
       // 새로운 일정 추가
       if (type === "groupPlanner") {
         axios
@@ -192,6 +196,7 @@ export default function EventModal({
             alert("작성 성공!");
             setData({});
             console.log(res.data);
+            handleClose();
             navigate(`/group/${groupPlannerId}`);
           })
           .catch((err) => {
@@ -204,10 +209,11 @@ export default function EventModal({
           .then((res) => {
             alert("작성 성공!");
             console.log(res.data);
+            handleClose();
             navigate("/");
           })
           .catch((err) => {
-            console.log(err, data);
+            console.log(err.toJSON(), data);
             alert("작성 실패!");
           });
       }
@@ -245,7 +251,8 @@ export default function EventModal({
                 color: "#8C7B80",
                 fontSize: "25px",
                 padding: "2px",
-                margin: "3",
+                marginRight: "3",
+                marginLeft: "5",
                 textAlign: "center",
                 borderRadius: "2px",
               }}
@@ -282,9 +289,10 @@ export default function EventModal({
             color: "#5F5F5F",
             pt: 3,
             px: 4,
+            fontFamily: "Noto Sans KR, sans-serif",
           }}
         >
-          <form noValidate onSubmit={handleSubmit}>
+          <form noValidate onSubmit={handleSubmit} method="POST">
             <input
               type="hidden"
               value={data.workId ? data.workId : data.glannerWorkId}
