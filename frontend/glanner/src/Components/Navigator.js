@@ -137,7 +137,11 @@ function Navigator(props) {
         {
           id: "로그아웃",
           icon: <Logout style={{ width: 15 + "px" }} />,
-          // func: onLogout(),
+          func: (e) => {
+          sessionStorage.removeItem("token");
+          localStorage.removeItem("token");
+          window.location.href = '/';
+        },
         },
       ],
     },
@@ -323,7 +327,7 @@ function Navigator(props) {
                 <ListItemButton
                   sx={{ m: 0, height: "30px" }}
                   components="a"
-                  // onClick={func}
+                  onClick={func}
                 >
                   <ListItemText>
                     {icon} {childId}
