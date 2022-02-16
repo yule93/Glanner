@@ -288,7 +288,7 @@ export default function EventModal({
             px: 4,
           }}
         >
-          <form noValidate onSubmit={handleSubmit}>
+          <form noValidate onSubmit={handleSubmit} method="POST">
             <input
               type="hidden"
               value={data.workId ? data.workId : data.glannerWorkId}
