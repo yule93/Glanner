@@ -1,5 +1,5 @@
 #join-dialog {
-  padding-top: 50px;
+  padding: 150px 0px 25px 0px;
 }
 /* .container {
   border: 1px solid lightgray;
@@ -12,10 +12,30 @@
 }
 
 .form-group {
-  padding-top: 50px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.form-group p {
+  font-size: 20px;
+  display: flex;
+  margin: 10px;
+  text-align: center;
+}
+
+.form-group input {
+  /* width: 300px; */
 }
 
 .form-control {
   /* width: 350px; */
   text-align: center;
+}
+
+#session-header {
+  padding: 20px;
+}
+
+#session-title {
+  padding: 20px;
 }
