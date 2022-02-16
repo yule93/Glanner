@@ -25,17 +25,17 @@ export default function BoardPageContainer () {
         .catch(err => console.log(err))
     }
 
-    // const fetchLatestNoticeList = () => {
-    //   axios('http://localhost:8000/LatestNoticeList', {method: 'GET'})
-    //   .then(res => {
-    //     setLatestNoticeList(res.data) 
-    //     setLoading(false)
-    //   })
-    //   .catch(err => console.log(err))
-    // }
+    const fetchLatestNoticeList = () => {
+      axios(`/api/notice/0/3`, {method: 'GET'})
+      .then(res => {
+        setLatestNoticeList(res.data) 
+        setLoading(false)
+      })
+      .catch(err => console.log(err))
+    }
     useEffect(() => {
       fetchBoardList()
-      // fetchLatestNoticeList()
+      fetchLatestNoticeList()
     }, [page])
 
     const handleChangePage = newPage => {

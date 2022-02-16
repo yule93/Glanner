@@ -26,43 +26,6 @@ import "moment/locale/ko";
 import { boardStyles } from "../Board.styles";
 import { getListTime } from "../helper";
 
-// const latestNoticeList = [
-//   {
-//     id: 1,
-//     title: "공지 1",
-//     writer: "관리자",
-//     date: "22.01.15",
-//   }
-//   
-// ];
-// const boardList = [
-//   {
-//     id: 1,
-//     title: "예시 1",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 2,
-//     title: "예시 2",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 3,
-//     title: "예시 3",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 4,
-//     title:
-//       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-// ];
-
 const WriteButton = St(Button)({
   width: '90px',
   height: '35px',
@@ -145,8 +108,8 @@ export default function NoticeListPagePresenter({
               </Grid>
             </Grid>
             <Divider />
-            {latestNoticeList.map(({ id, title, writer, date, count, like }) => (
-              <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={id}>
+            {latestNoticeList.map(({ boardId, title, userName, createdDate, count, like }) => (
+              <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={boardId}>
                 <ListItem
                   disableGutters
                   sx={{ height: "35px", textAlign: "center", color: "#DB1111" }}
@@ -156,15 +119,15 @@ export default function NoticeListPagePresenter({
                       <ListItemText primary={"[공지]"} />                
                     </Grid>
                     <Grid item xs={7}>
-                      <Link to={`/board/notice/${id}`}>
+                      <Link to={`/board/notice/${boardId}`}>
                         <ListItemText sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>{title}</ListItemText>
                       </Link>
                     </Grid>
                     <Grid item xs={1.8}>
-                      <ListItemText>{writer}</ListItemText>
+                      <ListItemText>{userName}</ListItemText>
                     </Grid>
                     <Grid item xs={1}>
-                      <ListItemText>{getListTime(date)}</ListItemText>
+                      <ListItemText>{getListTime(createdDate)}</ListItemText>
                     </Grid>
                     <Grid item xs={0.6}>
                       <ListItemText>{count}</ListItemText>

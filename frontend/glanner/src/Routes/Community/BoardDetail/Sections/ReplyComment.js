@@ -21,7 +21,7 @@ export const ReplyComment = ({commentList, parentCommentId, addCommentLike, setC
               addCommentLike={addCommentLike}
               setComments={setComments}
               updateComment={updateComment}
-              key={comment.boardId}
+              key={comment.commentId}
             />            
           )
         }

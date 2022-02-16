@@ -101,8 +101,8 @@ export default function BoardPagePresenter({
               </Grid>
             </Grid>
             <Divider />
-            {latestNoticeList.map(({ id, title, userName, createdDate, count, like }) => (
-              <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={id}>
+            {latestNoticeList.map(({ boardId, title, userName, createdDate, count, like }) => (
+              <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={boardId}>
                 <ListItem
                   disableGutters
                   sx={{ height: "35px", textAlign: "center", color: "#DB1111" }}
@@ -112,7 +112,7 @@ export default function BoardPagePresenter({
                       <ListItemText primary={"[공지]"} />                
                     </Grid>
                     <Grid item xs={7}>
-                      <Link to={`/board/notice/${id}`}>
+                      <Link to={`/board/notice/${boardId}`}>
                         <ListItemText sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>{title}</ListItemText>                
                       </Link>
                     </Grid>
@@ -126,7 +126,7 @@ export default function BoardPagePresenter({
                       <ListItemText>{count}</ListItemText>
                     </Grid>
                     <Grid item xs={0.6}>
-                      <ListItemText>{like}</ListItemText>
+                      <ListItemText>-</ListItemText>
                     </Grid>
                   </Grid>
                 </ListItem>

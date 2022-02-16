@@ -24,7 +24,6 @@ export const DetailBody = ({ post, addLike, postLikeCount, glannerInfo }) => {
       setGroupPage(true)
     }
   }, [pathname])
-  
   return (
     <>    
       <CardHeader
@@ -48,7 +47,7 @@ export const DetailBody = ({ post, addLike, postLikeCount, glannerInfo }) => {
               <MoreBtn editData={post} type={`/group/body`} />
           </div>
           :
-          <MoreBtn editData={post} type={`/free/body`} />
+          <MoreBtn editData={post} type={`/free/body`} glannerInfo={glannerInfo} />
         }
         
         title={post.userName}

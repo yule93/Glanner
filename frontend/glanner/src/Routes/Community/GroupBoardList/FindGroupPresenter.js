@@ -60,7 +60,7 @@ export default function FindGroupPresenter({
           sx={{ textAlign: "right", width: "95%", minHeight: "100%", m: 0 }}
         >
           
-          <FormGroup sx={{ ml: 95, width: "25ch", mb: 1, mt: 3, height: 50,}} size="small">
+          <FormGroup sx={{ float: 'right', width: "25ch", mb: 1, mt: 3, height: 50,}} size="small">
             {/* <InputLabel htmlFor="search-board">이름, 제목</InputLabel> */}
             <OutlinedInput
               value={inputData}
@@ -107,7 +107,7 @@ export default function FindGroupPresenter({
         <Divider sx={{mb: 1, width: '88%', mx: 'auto'}} />
         <Box className={classes.textField} sx={{ textAlign: "left", height: '500px', px: 15 }}>
           <Grid container rowSpacing={1.2} columnSpacing={{ xs: 1.5 }}>
-          {groupBoardList.map(({ boardId, title, userName, createdDate, content, present, interests, count, commentCount }) => (
+          {groupBoardList.map(({ boardId, title, userName, createdDate, content, userCount, interests, count, commentCount }) => (
             <Grid item xs={6} key={boardId} >
               <Paper sx={{ px: 3, py: 2, height: 'auto' }}>
                   <Grid container direction="column" spacing={0} sx={{height: 'auto'}}>
@@ -128,10 +128,10 @@ export default function FindGroupPresenter({
                         />  */}
                           <PeopleIcon fontSize="medium" sx={{mb: 1}} />
                           <Box component='span' sx={{ ml: 1, fontSize: 20}}>
-                            {present} / 5
+                            {userCount} / 5
                           </Box>
                         </Typography>
-                        <Typography sx={{color: '#5F5F5F', fontWeight: 800, display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, my: 2, height: 'auto' }} className='boardpost' variant="body2" color="text.secondary">
+                        <Typography sx={{color: '#5F5F5F', fontWeight: 800, display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, my: 2, height: '20px' }} className='boardpost' variant="body2" color="text.secondary">
                           {content}
                         </Typography>
 
