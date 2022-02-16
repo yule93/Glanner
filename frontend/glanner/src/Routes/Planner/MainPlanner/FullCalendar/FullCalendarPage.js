@@ -186,8 +186,8 @@ export default function Calendar({ eventList, handleEvent }) {
 
   const calendarRef = useRef();
 
-  useEffect(() => {}, [eventList, date]);
-
+  useEffect(() => { }, [eventList, date]);
+  
   return (
     <CalendarDiv>
       <FullCalendar
@@ -240,6 +240,7 @@ export default function Calendar({ eventList, handleEvent }) {
         dayCellDidMount={(date) => {
           var newDay = new Date(date.date);
           console.log(newDay.toISOString().substring(0, 10));
+          console.log(eventList);
           if (
             newDay.toISOString().substring(8, 10) === "01" &&
             newDay.getMonth() === new Date().getMonth()
