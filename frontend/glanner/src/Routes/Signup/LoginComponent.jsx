@@ -9,18 +9,12 @@ import { useRef } from 'react';
 import "./SignupComponent.scoped.css";
 import { useState } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/auth';
 
 const LoginComponent = ({setSignupPage, signupPage}) => {  
     const { register, reset, formState: {errors}, handleSubmit } = useForm();
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     console.log()
-//     const data = new FormData(event.currentTarget);
-//     console.log({
-//       email: data.get('email'),
-//       password: data.get('password'),
-//     });
-//   };  
+  const dispatch = useDispatch();
   const emailInput = useRef(null);
   const onSubmit = (data) => {
     axios(`/api/auth`, 
@@ -30,6 +24,7 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
     })
       .then(res =>{
         localStorage.setItem('token', res.data.idToken)
+        // dispatch(login(res.data))
         window.location.reload();
       })
       .catch(err => {               
