@@ -242,7 +242,7 @@ export default function Calendar({ eventList, handleEvent }) {
           console.log(newDay.toISOString().substring(0, 10));
           if (
             newDay.toISOString().substring(8, 10) === "01" &&
-            newDay.getMonth() == new Date().getMonth()
+            newDay.getMonth() === new Date().getMonth()
           ) {
             setDate(newDay);
             handleEvent(newDay.toISOString().substring(0, 10));

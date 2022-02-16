@@ -164,11 +164,12 @@ export default function EventModal({
             alert("수정 성공!");
             setData({});
             console.log(res.data);
+            handleClose();
             navigate(`/group/${groupPlannerId}`);
           })
           .catch((err) => {
             console.log(err);
-            alert("작성 실패!");
+            alert("수정 실패!");
           });
       } else if (type === "myPlanner") {
         axios
@@ -176,14 +177,15 @@ export default function EventModal({
           .then((res) => {
             alert("수정 성공!");
             console.log(res.data);
+            handleClose();
             navigate("/");
           })
           .catch((err) => {
             console.log(err);
-            alert("작성 실패!");
+            alert("수정 실패!");
           });
       }
-    } else if(specificEvent == null) {
+    } else if (specificEvent == null) {
       // 새로운 일정 추가
       if (type === "groupPlanner") {
         axios
@@ -192,6 +194,7 @@ export default function EventModal({
             alert("작성 성공!");
             setData({});
             console.log(res.data);
+            handleClose();
             navigate(`/group/${groupPlannerId}`);
           })
           .catch((err) => {
@@ -204,10 +207,11 @@ export default function EventModal({
           .then((res) => {
             alert("작성 성공!");
             console.log(res.data);
+            handleClose();
             navigate("/");
           })
           .catch((err) => {
-            console.log(err, data);
+            console.log(err.toJSON(), data);
             alert("작성 실패!");
           });
       }

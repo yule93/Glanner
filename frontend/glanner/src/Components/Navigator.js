@@ -24,10 +24,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactComponent as Logout } from "../assets/arrow-right-from-bracket-solid.svg";
 import logo from "../assets/glannerLogo1.png";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { addGlanner, onClickPlanner, removeGlanner } from "../redux/planners";
-import { deleteGlanner, fetchGlanner } from "../redux/apiCalls";
 
 const GroupPlannerList = styled.div`
   background-color: #ffffff;
@@ -41,8 +37,6 @@ const GroupPlannerList = styled.div`
     background-color: rgba(255, 255, 255, 0.08);
   }
 `;
-
-const categories = [{ id: "내 플래너" }, { id: "그룹 플래너" }];
 
 const boards = [
   {
@@ -121,8 +115,6 @@ const settingItem = {
 
 function Navigator(props) {
   const { ...other } = props;
-  const navigate = useNavigate();
-  
   // const onLogout = () => {
   //   sessionStorage.removeItem("token");
   //   localStorage.removeItem("token");
