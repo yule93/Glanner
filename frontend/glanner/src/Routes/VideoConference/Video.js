@@ -6,9 +6,15 @@ import UserVideoComponent from "./UserVideoComponent";
 import jwt_decode from "jwt-decode";
 import { useParams, Link } from "react-router-dom";
 import logo from "../../assets/glannerLogo1.png";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import TextField from "@mui/material/TextField";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { Container, Stack } from "@mui/material";
 
-// const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
-const OPENVIDU_SERVER_URL = "https://i6a606.p.ssafy.io:5443";
+const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
+// const OPENVIDU_SERVER_URL = "https://i6a606.p.ssafy.io:5443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 class Video extends Component {
@@ -285,40 +291,37 @@ class Video extends Component {
             </div>
             <div id="join-dialog" className="jumbotron vertical-center">
               <h1> 그룹 모임 참여 </h1>
-              <form className="form-group" onSubmit={this.joinSession}>
-                <p>
-                  <label>이메일주소: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="userName"
-                    value={myUserName}
-                    onChange={this.handleChangeUserName}
-                    required
-                    disabled
-                  />
-                </p>
-                <p>
-                  <label> 세션: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="sessionId"
-                    value={mySessionId}
-                    onChange={this.handleChangeSessionId}
-                    required
-                    disabled
-                  />
-                </p>
-                <p className="text-center">
-                  <input
-                    className="btn btn-lg btn-success"
-                    name="commit"
-                    type="submit"
-                    value="참여하기"
-                  />
-                </p>
-              </form>
+              <div style={{ width: "50%", margin: "0 auto" }}>
+                <form className="form-group" onSubmit={this.joinSession}>
+                  <Stack>
+                    <TextField
+                      id="outlined-read-only-input"
+                      label="이메일 주소"
+                      value={myUserName}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <TextField
+                      sx={{ mt: 2 }}
+                      id="outlined-read-only-input"
+                      label="세션"
+                      value={mySessionId}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <Button
+                      sx={{ mt: 4, mb: 1 }}
+                      variant="contained"
+                      size="large"
+                      onClick={this.joinSession}
+                    >
+                      참여하기
+                    </Button>
+                  </Stack>
+                </form>
+              </div>
             </div>
           </div>
         ) : null}
@@ -327,65 +330,50 @@ class Video extends Component {
           <div id="session">
             <div id="session-header">
               <h1 id="session-title">{mySessionId}</h1>
-              <br />
-              <input
-                className="btn btn-large btn-danger"
-                type="button"
-                id="buttonLeaveSession"
-                onClick={this.leaveSession}
-                value="Leave session"
-              />
-              <input
-                className="btn btn-large btn-danger"
-                type="button"
-                id="buttonMuteAudio"
-                onClick={this.muteAudio}
-                value="Audio"
-              />
-              <input
-                className="btn btn-large btn-danger"
-                type="button"
-                id="buttonMuteVideo"
-                onClick={this.muteVideo}
-                value="Video"
-              />
+              <ButtonGroup
+                variant="outlined"
+                aria-label="outlined button group"
+              >
+                <Button onClick={this.leaveSession}>Leave Session</Button>
+                <Button onClick={this.muteAudio}>Audio</Button>
+                <Button onClick={this.muteVideo}>Video</Button>
+              </ButtonGroup>
             </div>
 
-            {this.state.mainStreamManager !== undefined ? (
-              <div id="main-video" className="col-md-6">
-                <UserVideoComponent
-                  streamManager={this.state.mainStreamManager}
-                />
-                {/* <input
-                  className="btn btn-large btn-success"
-                  type="button"
-                  id="buttonSwitchCamera"
-                  onClick={this.switchCamera}
-                  value="Switch Camera"
-                /> */}
-              </div>
-            ) : null}
-            <div id="video-container" className="col-md-6">
-              {this.state.publisher !== undefined ? (
-                <div
-                  className="stream-container col-md-6 col-xs-6"
-                  onClick={() =>
-                    this.handleMainVideoStream(this.state.publisher)
-                  }
-                >
-                  <UserVideoComponent streamManager={this.state.publisher} />
-                </div>
+            <Stack direction="row">
+              {this.state.mainStreamManager !== undefined ? (
+                <Container>
+                  <UserVideoComponent
+                    streamManager={this.state.mainStreamManager}
+                  />
+                </Container>
               ) : null}
-              {this.state.subscribers.map((sub, i) => (
-                <div
-                  key={i}
-                  className="stream-container col-md-6 col-xs-6"
-                  onClick={() => this.handleMainVideoStream(sub)}
-                >
-                  <UserVideoComponent streamManager={sub} />
+              <Container>
+                <div id="video-container" className="col-md-6">
+                  {this.state.publisher !== undefined ? (
+                    <div
+                      className="stream-container col-md-6 col-xs-6"
+                      onClick={() =>
+                        this.handleMainVideoStream(this.state.publisher)
+                      }
+                    >
+                      <UserVideoComponent
+                        streamManager={this.state.publisher}
+                      />
+                    </div>
+                  ) : null}
+                  {this.state.subscribers.map((sub, i) => (
+                    <div
+                      key={i}
+                      className="stream-container col-md-6 col-xs-6"
+                      onClick={() => this.handleMainVideoStream(sub)}
+                    >
+                      <UserVideoComponent streamManager={sub} />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </Container>
+            </Stack>
           </div>
         ) : null}
       </div>
