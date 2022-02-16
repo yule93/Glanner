@@ -240,14 +240,12 @@ export default function Calendar({ eventList, handleEvent }) {
         dayCellDidMount={(date) => {
           var newDay = new Date(date.date);
           console.log(newDay.toISOString().substring(0, 10));
-          console.log(eventList);
+          // console.log(eventList);
           if (
-            newDay.toISOString().substring(8, 10) === "01" &&
-            newDay.getMonth() === new Date().getMonth()
+            newDay.toISOString().substring(8, 10) === "15"
           ) {
-            setDate(newDay);
+            setDate(newDay.getUTCFullYear(), newDay.getMonth(), 1);
             handleEvent(newDay.toISOString().substring(0, 10));
-            console.log(eventList);
           }
         }}
         events={eventList}

@@ -11,7 +11,7 @@ export const SignupPageButton = styled(Button)({
   boxSizing: 'border-box',
   filter: 'drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25))',
   borderRadius: '10px',
-  fontFamily: 'Noto Sans CJK KR',
+  fontFamily: 'Noto Sans KR',
   fontStyle: 'normal',
   fontWeight: 'normal',
   fontSize: '16px',
@@ -27,7 +27,7 @@ export const SignupPageButton = styled(Button)({
 export const SignupPageLink = styled(Link)({    
   textDecoration: 'none', 
   color: '#6F6F6F', 
-  fontFamily: 'Noto Sans CJK KR',
+  fontFamily: 'Noto Sans KR',
   // fontWeight: '500'
   fontWeight: 'normal'
 });
@@ -37,7 +37,7 @@ export const SignupPageLabel = styled(InputLabel)({
   display:"flex", 
   justifyContent:"end", 
   marginRight: '1rem', 
-  fontFamily: 'Noto Sans CJK KR',
+  fontFamily: 'Noto Sans KR',
   maxWidth: 'auto'   
   
 });

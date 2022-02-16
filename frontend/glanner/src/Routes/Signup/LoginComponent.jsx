@@ -18,7 +18,7 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
 //     });
 //   };  
     const onSubmit = (data) => {
-        axios(`/api/auth`, 
+        axios(`api/auth`, 
         {
             method: 'POST',
             data: data
@@ -33,7 +33,7 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
             })
     }
   return (
-      <Grid container component="main" sx={{ height: '100vh', width: '100%'}}>
+      <Grid container component="main" sx={{ height: '100vh', width: '100%', fontFamily: "Noto Sans KR",}}>
         <CssBaseline />
         <Grid
           item
