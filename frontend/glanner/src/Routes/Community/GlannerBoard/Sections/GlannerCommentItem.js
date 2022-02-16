@@ -34,7 +34,7 @@ export const GlannerCommentItem = ({
     const getGlannerComments = () => {
         axios(`/api/glanner-board/${post.boardId}`)
             .then(res => {
-                setComments(res.data.comments)
+                setComments(res.data.comments.reverse())
             })
             .catch(err => console.log(err))
     }

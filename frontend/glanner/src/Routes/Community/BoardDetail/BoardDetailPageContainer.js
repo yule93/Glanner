@@ -2,8 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { checkUserList } from "../../../redux/apiCalls";
-import { BoardDetailPagePresenter } from "./BoardDetailPagePresenter"
+import { BoardDetailPagePresenter } from "./BoardDetailPagePresenter";
 
 export const BoardDetailPageContainer = () => {
   const { id } = useParams();
@@ -102,26 +101,26 @@ export const BoardDetailPageContainer = () => {
       .then(res => {
         setPostLikeCount(postLikeCount + 1)
       })
-      .catch(err => console.log(err))
-    } else if (pathname.includes('/group/')) {
-      axios(`/api/group-board/like/${id}`, {
-      method: 'PUT',
-      // data: {like: post.like + 1}
-    })
-      .then(res => {
-        setPostLikeCount(postLikeCount + 1)
+        .then((res) => {
+          setPost(res.data);
+        })
+        .catch((err) => console.log(err));
+    } else if (pathname.includes("/group/")) {
+      axios(`groupBoardList/${id}`, {
+        method: "PATCH",
+        data: { like: post.like + 1 },
       })
-      .catch(err => console.log(err))
-    }    
-  }
+        .then((res) => {
+          setPost(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   //  해당 게시글에 댓글 && 대댓글 남기기
   // responseTo는 부모 댓글의 id임. responseTo가 -1 이라면 루트 댓글, responseTo가 -1이 아니라 자연수라면 대댓글임
   const addComment = (newCommentData, parentCommentId) => {
-    if (newCommentData.trim() === "") {
-      alert('댓글을 입력해주세요.')
-      return
-    }
+    const today = Date();
     const commentData = {
       content: newCommentData,
       boardId: post.boardId,
@@ -144,9 +143,10 @@ export const BoardDetailPageContainer = () => {
         // setComments(comments.concat(res.data)) 
         getBoard()
       })
-        .catch(err => console.log(err.message))
+        .then((res) => setComments(comments.concat(res.data)))
+        .catch((err) => console.log(err.message));
     }
-  }  
+  };
 
   // 댓글 && 대댓글 수정하기
   const updateComment = (commentContent, commentData) => {    
@@ -169,44 +169,45 @@ export const BoardDetailPageContainer = () => {
         )
         .catch(err => console.log(err.message))
     }
-    }
+    
+  };
 
   // 댓글 && 대댓글 좋아요 + 1
   const addCommentLike = (_comment) => {
-    if (pathname.includes('/free/')) {
+    if (pathname.includes("/free/")) {
       axios(`comments/${_comment.id}`, {
-      method: 'PATCH',
-      data: {like: _comment.like + 1}
-    })
-      .then(res => {
-        const newCommentsData = comments.map(comment => {
-          if (comment.id === _comment.id) {
-            comment.like ++
-            return comment
-          } else {
-            return comment
-          }
-        })
-        setComments(newCommentsData)
+        method: "PATCH",
+        data: { like: _comment.like + 1 },
       })
-      .catch(err => console.log(err))
-    } else if (pathname.includes('/group/')) {
+        .then((res) => {
+          const newCommentsData = comments.map((comment) => {
+            if (comment.id === _comment.id) {
+              comment.like++;
+              return comment;
+            } else {
+              return comment;
+            }
+          });
+          setComments(newCommentsData);
+        })
+        .catch((err) => console.log(err));
+    } else if (pathname.includes("/group/")) {
       axios(`groupComments/${_comment.id}`, {
-      method: 'PATCH',
-      data: {like: _comment.like + 1}
-    })
-      .then(res => {
-        const newCommentsData = comments.map(comment => {
-          if (comment.id === _comment.id) {
-            comment.like ++
-            return comment
-          } else {
-            return comment
-          }
-        })
-        setComments(newCommentsData)
+        method: "PATCH",
+        data: { like: _comment.like + 1 },
       })
-      .catch(err => console.log(err))
+        .then((res) => {
+          const newCommentsData = comments.map((comment) => {
+            if (comment.id === _comment.id) {
+              comment.like++;
+              return comment;
+            } else {
+              return comment;
+            }
+          });
+          setComments(newCommentsData);
+        })
+        .catch((err) => console.log(err));
     }
     
   }
@@ -226,7 +227,8 @@ export const BoardDetailPageContainer = () => {
         axios(`/api/glanner/user`, {method: 'POST', data: {email: userEmail, glannerId: res.data.glannerId}})
           .then(res => {
             alert('글래너에 추가되었습니다.')
-            setGlannerInfo(glannerInfo.numOfMember + 1)
+            // setGlannerInfo(glannerInfo.numOfMember + 1)
+            fetchGlannerInfo()
             getBoard()
           })
           .catch(err => {
@@ -236,7 +238,7 @@ export const BoardDetailPageContainer = () => {
       .catch(err => console.log(err))    
   }
   return (
-    <BoardDetailPagePresenter 
+    <BoardDetailPagePresenter
       loading={loading}
       post={post}
       addLike={addLike}
@@ -252,5 +254,5 @@ export const BoardDetailPageContainer = () => {
       glannerInfo={glannerInfo}
       addMember={addMember}
     />
-  )
-}
+  );
+};

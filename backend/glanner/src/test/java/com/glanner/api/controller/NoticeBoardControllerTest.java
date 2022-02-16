@@ -87,12 +87,14 @@ public class NoticeBoardControllerTest {
 
         //when
         mockMvc.perform(get("/api/notice/search/{page}/{limit}", page, limit)
-                        .param("keyword", "키워드"))
+                        .content(asJsonString(reqDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 //then
                 .andExpect(status().isOk());
 
         verify(queryRepository, times(1))
-                .findPageWithKeyword(page, limit, "키워드");
+                .findPageWithKeyword(page, limit, reqDto.getKeyWord());
     }
 
     public static String asJsonString(final Object obj) {

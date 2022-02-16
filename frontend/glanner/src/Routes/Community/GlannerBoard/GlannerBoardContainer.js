@@ -21,6 +21,7 @@ export default function GroupPlannerContainer () {
     const handleScroll = (nowPage) => {
         if (nowPage > boardList.length) {
             console.log('도달!')
+            return
         }
         const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
         // console.log(
@@ -33,13 +34,12 @@ export default function GroupPlannerContainer () {
         }
       };
     window.addEventListener('scroll', (event) => {
-        if (page < boardList.length) return
-        const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-        if (Math.round(scrollHeight - scrollTop) === Math.round(clientHeight)) {
-            setPage(prev => {
-                return prev + 5
-            });
+        if (page < boardList.length) {
+            event.preventDefault();
+        } else {
+            handleScroll(page)
         }
+        
 
 
     })
@@ -65,7 +65,7 @@ export default function GroupPlannerContainer () {
             {method: 'POST', data: {glannerId: Number(id), files: [], title: boardData.boardTitle, content: boardData.boardContent}})
             .then(res => {
                 console.log('작성 완료!')                
-                refreshData()
+                refreshData(page)
             })
             .catch(err => console.log(err))
     }
@@ -77,12 +77,12 @@ export default function GroupPlannerContainer () {
         }
         axios(`/api/glanner-board/comment`, {method: 'POST', data: {boardId, content, parentId: null}})
             .then(res => {
-                refreshData()
+                refreshData(page)
             })
             .catch(err => console.log(err))
     }
 
-    // 실시간 렌더링 용도(무한 스크롤 리스트 페이지에서도 게시글, 댓글을 실시간으로 수정, 삭제 가능!!)
+    // 실시간 렌더링 용도(무한 스크롤 리스트 페이지에서도 게시글, 댓글 수정, 삭제가 실시간으로 반영!!)
     const refreshData = (nowPage) => {
         axios(`/api/glanner-board/${id}/0/${(nowPage + 1) * 5}`)
             .then(res => {

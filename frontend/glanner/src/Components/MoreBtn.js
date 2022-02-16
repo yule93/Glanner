@@ -171,11 +171,11 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
       })
       .catch(err => console.log(err))
   }
-  
+
   useEffect(() => {
     getNewGlannerInfo()
     return () => setAdded(false)
-  }, [])
+  }, [glannerInfo])
 
   return (
     <div>
