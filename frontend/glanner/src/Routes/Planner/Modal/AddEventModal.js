@@ -64,7 +64,7 @@ function AddEventsButton({ date, event }) {
 // `
 // );
 
-export default function AddEventModal({ date, specificEvent, type }) {
+export default function AddEventModal({ date, type, handleEvent, groupPlannerId }) {
   
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -77,7 +77,9 @@ export default function AddEventModal({ date, specificEvent, type }) {
         handleClose={handleClose}
         open={open}
         specificEvent={null}
-        type = {type}
+        type={type}
+        handleEvent={handleEvent}
+        groupPlannerId={groupPlannerId}
       />
     </AddEventModalDiv>
   );

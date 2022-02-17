@@ -72,15 +72,25 @@ const WriteButton = St(Button)({
   },
 });
 
+const BoardDiv = styled.div`
+  font-family: 'Noto Sans KR' !important;
+`;
+
 export default function BoardPageContainer() {
   const { type } = useParams();
   return (
-    <>
+    <BoardDiv>
       <Box
         component="form"
         noValidate
         autoComplete="off"
-        sx={{ textAlign: "right", width: "95%", minHeight: "100%", m: 0 }}
+        sx={{
+          textAlign: "right",
+          width: "95%",
+          minHeight: "100%",
+          m: 0,
+          fontFamily: "Noto Sans KR",
+        }}
       >
         <FormControl sx={{ m: 1, width: "25ch" }} size="small">
           <InputLabel htmlFor="search-board">이름, 제목</InputLabel>
@@ -200,6 +210,6 @@ export default function BoardPageContainer() {
       <div style={{ width: "95%", textAlign: "right", marginTop: "12px" }}>
         <WriteButton variant="">글쓰기</WriteButton>
       </div>
-    </>
+    </BoardDiv>
   );
 }

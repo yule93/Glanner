@@ -1,17 +1,13 @@
 import * as React from 'react';
-import {CssBaseline, FormControlLabel, Checkbox, Paper, Box, Grid, Typography} from '@mui/material';
+import {CssBaseline, Paper, Box, Grid, Typography} from '@mui/material';
 import initialScreen from "./initial_screen.png";
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import { SignupPageButton, SignupPageLink, SignupInput, SignupPageLabel, Copyright } from './SignupComponent.styles';
 import { useForm } from "react-hook-form";
-import { useRef } from 'react';
 import "./SignupComponent.scoped.css";
-import { useState } from 'react';
 import axios from 'axios';
 
 const LoginComponent = ({setSignupPage, signupPage}) => {  
-    const { register, watch, formState: {errors}, handleSubmit } = useForm();
+    const { register, formState: {errors}, handleSubmit } = useForm();
 //   const handleSubmit = (event) => {
 //     event.preventDefault();
 //     console.log()
@@ -22,7 +18,7 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
 //     });
 //   };  
     const onSubmit = (data) => {
-        axios(`/api/auth`, 
+        axios(`api/auth`, 
         {
             method: 'POST',
             data: data
@@ -37,7 +33,7 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
             })
     }
   return (
-      <Grid container component="main" sx={{ height: '100vh', width: '100%'}}>
+      <Grid container component="main" sx={{ height: '100vh', width: '100%', fontFamily: "Noto Sans KR",}}>
         <CssBaseline />
         <Grid
           item
@@ -58,10 +54,6 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
           <Box
             sx={{
               mt: '50%',
-              // mx: {
-              //   xs: 0,
-              //   sm: 0
-              // },
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -71,7 +63,7 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
             <Typography component="h1" variant="h4" color="#6F6F6F" fontFamily="Rozha One">
               Log In
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, width: '100%'}}>
+            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 1, width: '100%'}} method="POST">
 
               {/* 이메일 폼 */}
               <Grid container direction='row' alignItems='center' sx={{ mt: '1em'}}>
@@ -108,15 +100,14 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
                     id="password"
                     autoComplete="current-password"
                     {...register('password', {required: true, minLength: 6})}
-                 />
+                  />
                 </Grid>
                 {errors.password && errors.password.type === "required" && <p className='error-text'>비밀번호를 입력해주세요</p>}
                 {errors.password && errors.password.type === "minLength" && <p className='error-text'>비밀번호를 6자 이상으로 입력해주세요</p>}
               </Grid>              
-             
+
               <Grid container sx={{mt: '1em'}}>
 
-                               
                 {/* 로그인 버튼  */}
                 <Grid item xs={4} />
                 <Grid item xs={6}>
@@ -142,17 +133,17 @@ const LoginComponent = ({setSignupPage, signupPage}) => {
                         variant="body2" 
                         sx={{fontWeight: '600'}}
                         >회원가입
-                   </SignupPageLink>
+                    </SignupPageLink>
                 </Grid>
 
                 {/* 아이디 찾기, 비밀번호 찾기 링크 */}
                 <Grid item>
-                  <SignupPageLink href="#" variant="body2" sx={{color: '#959595', m: '0.5em'}}>
+                  <SignupPageLink to="/" variant="body2" sx={{color: '#959595', m: '0.5em'}}>
                     아이디 찾기                                      
                   </SignupPageLink>
                   <span style={{border: '1px solid #E5E5E5',transform: 'rotate(90deg)'}}></span>
                 
-                  <SignupPageLink href="#" variant="body2" sx={{color: '#959595', m: '0.5em'}}>
+                  <SignupPageLink to="/" variant="body2" sx={{color: '#959595', m: '0.5em'}}>
                     비밀번호 찾기
                   </SignupPageLink>                
                 </Grid>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import {
@@ -227,8 +227,10 @@ export default function GroupPlannerPresenter({
   handleModalClose,
   handlePickerOpen,
   handlePickerClose,
+  handleEvent,
 }) {
   const [specificEvent, setSpecificEvent] = useState({});
+  const [eventId, setEventId] = useState();
   const [date, setDate] = useState(new Date());
   const emptyPlans = [];
   const emptyWrite = [];
@@ -239,7 +241,8 @@ export default function GroupPlannerPresenter({
   for (var j = 0; j < 3 - latestWrite.length; j++) {
     emptyWrite.push(j);
   }
-  console.log(eventList);
+
+  useEffect(()=> {}, [eventList])
 
   return (
     <CalendarDiv className="calendar-div">
@@ -248,12 +251,16 @@ export default function GroupPlannerPresenter({
         initialView="dayGridWeek"
         contentHeight={180}
         // * eventList의 값을 반환해주기도 하고, 이벤트리스트가 있을 때, console.log 출력해주기도 하는데, 날짜를 바꿨을 때 값이 갱신되는 걸 구현하는 건 좀 더 생각해봐야겠음!!
-        events={
-          ((event) => {
-            console.log(event);
-          },
-          eventList)
-        }
+        dayCellDidMount={(date) => {
+          var newDay = new Date(date.date);
+          console.log(newDay.toISOString().substring(0, 10));
+          // console.log(eventList);
+          if (newDay.toISOString().substring(8, 10) === "15") {
+            setDate(newDay.toISOString().substring(0, 8) + "01");
+            handleEvent(newDay.toISOString().substring(0, 8) + "01");
+          }
+        }}
+        events={eventList}
         eventDisplay="block"
         eventClick={(e) => {
           handleModalOpen();
@@ -270,6 +277,7 @@ export default function GroupPlannerPresenter({
             alarmDate: "",
           };
           setSpecificEvent(newEvent);
+          setEventId(e.event._def.extendedProps.workId);
         }}
         titleFormat={function (date) {
           //console.log(date)
@@ -360,7 +368,12 @@ export default function GroupPlannerPresenter({
                   marginRight: "20px",
                 }}
               >
-                <AddEventModal date={date.date} />
+                <AddEventModal
+                  date={date.date}
+                  type={"groupPlanner"}
+                  handleEvent={handleEvent}
+                  groupPlannerId={groupPlannerId}
+                />
               </div>
             </div>
           );
@@ -374,6 +387,8 @@ export default function GroupPlannerPresenter({
         specificEvent={specificEvent}
         type={"groupPlanner"}
         groupPlannerId={groupPlannerId}
+        handleEvent={handleEvent}
+        eventId={eventId}
       />
 
       {/* 플래너 예정된 일정, 최근 글 파트 */}
