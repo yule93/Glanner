@@ -197,9 +197,10 @@ export default function EventModal({
             alert("수정 실패!");
           });
       } else if (type === "myPlanner") {
-        console.log(data);
+        const newData = { ...data, glannerId: groupPlannerId };
+        console.log(newData);
         axios
-          .put(`/api/user/planner/work/${eventId}`, data)
+          .put(`/api/user/planner/work/${eventId}`, newData)
           .then((res) => {
             alert("수정 성공!");
             console.log(res.data);
@@ -217,8 +218,10 @@ export default function EventModal({
     } else if (specificEvent == null) {
       // 새로운 일정 추가
       if (type === "groupPlanner") {
+        const newData = { ...data, glannerId: groupPlannerId };
+        console.log(newData);
         axios
-          .post("/api/glanner/work", data)
+          .post("/api/glanner/work", newData)
           .then((res) => {
             alert("작성 성공!");
             if (handleEvent) {

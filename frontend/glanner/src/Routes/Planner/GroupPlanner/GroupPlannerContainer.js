@@ -35,20 +35,28 @@ export default function GroupPlannerContainer() {
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
-  const fetchEventList = (date) => {
+  const fetchEventList = (moveDay) => {
+    if (moveDay !== undefined) {
+      setDate(moveDay);
+      console.log(date);
+    } else {
+      const nowDate =
+        new Date(new Date().getTime()).toISOString().substring(0, 8) + "01";
+      setDate(nowDate);
+    }
+
     axios
       .get(`/api/glanner/${groupPlannerId.id}/${date}`)
       .then((res) => {
         console.log(res.data);
+        setEventList(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  useEffect(() => {
-    fetchEventList(date);
-  })
+  useEffect(() => {}, [date, eventList]);
 
   return (
     <>
