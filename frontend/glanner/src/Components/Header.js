@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import styled from "styled-components";
 
@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as CalendarIcon } from "../assets/calendar-check-solid.svg";
 import { ReactComponent as CircleUser } from "../assets/circle-user-solid.svg";
+import axios from "axios";
 
 const HeaderContainer = styled.div`
   word-break: break-all;
@@ -27,6 +28,27 @@ const headerStyle = {
 };
 
 export default function Header({ title }) {
+  const { pathname } = useLocation();
+  const [headTitle, setHeadTitle] = useState('');
+  useEffect(() => {
+    if (pathname.includes('/community/group') || pathname.includes('/board/group/')) {
+      setHeadTitle('그룹 찾기')
+    } else if (pathname.includes('/community/free') || pathname.includes('/board/free/')) {
+      setHeadTitle('자유 게시판')
+    } else if (pathname.includes('/community/notice') || pathname.includes('/board/notice/')) {
+      setHeadTitle('공지 게시판')
+    } else if (pathname.includes('/group/')) {
+      const id = pathname.slice(7)
+      axios(`/api/glanner/${id}`)
+        .then(res => {
+          // console.log(res.data)
+          setHeadTitle(res.data.glannerName)
+        })
+        .catch(err => console.log(err))
+    } else {
+      setHeadTitle(title)
+    }
+  }, [pathname])
   return (
     <HeaderContainer>
       <div
@@ -40,7 +62,8 @@ export default function Header({ title }) {
           fontFamily: "Noto Sans KR",
         }}
       >
-        {title}
+        {/* {title}  */}
+        {headTitle}
       </div>
       <div
         style={{
