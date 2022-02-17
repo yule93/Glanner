@@ -204,7 +204,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
               </Grid>
 
               {/* 인증번호 폼 */}
-              <Grid container direction='row' alignItems='center' sx={{ mt: '1em'}}>
+              {/* <Grid container direction='row' alignItems='center' sx={{ mt: '1em'}}>
                   <Grid item xs={4} >
                     <SignupPageLabel htmlFor='passwordConfirm' >인증번호</SignupPageLabel>
                   </Grid>
@@ -236,7 +236,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                   </SignupPageButton>
                   {errors.verification && errors.password_confirm.type === "required" && <p className='error-text'>비밀번호를 입력해주세요</p>}
                   {errors.verification && errors.password_confirm.type === "validate" && <p className='error-text'>비밀번호가 일치하지 않습니다</p>}
-                </Grid>
+                </Grid> */}
                       
 
               <Grid container sx={{mt: '2em'}}>
