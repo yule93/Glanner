@@ -96,7 +96,7 @@ export default function Header({ title }) {
                 marginRight: "3px",
               }}
             />
-            <Link to={``}>알림함</Link>
+            <Link to={`/alarm`}>알림함</Link>
           </Grid>
           <Grid
             item
