@@ -88,7 +88,7 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
 
 // 게시글 && 댓글 삭제
   const deleteItem = (item, type) => {
-    console.log(type)
+    // console.log(type)
     const ok = window.confirm('삭제하겠습니까?')
     if (ok) {
       // 게시글인 경우

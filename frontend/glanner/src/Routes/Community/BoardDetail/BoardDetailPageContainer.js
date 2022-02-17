@@ -64,7 +64,7 @@ export const BoardDetailPageContainer = () => {
     } else if (pathname.includes('/group/')) {
       axios(`/api/group-board/${id}`, {method: 'GET'})
         .then(res => {
-          console.log(res.data)
+          // console.log(res.data)
           setPost(() => res.data)
           setComments(res.data.comments.reverse())
              

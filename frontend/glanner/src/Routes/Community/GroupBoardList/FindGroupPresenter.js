@@ -47,7 +47,7 @@ export default function FindGroupPresenter({
 }) {
   const navigator = useNavigate();  
   const classes = useStyles();
-  console.log(groupBoardList)
+  // console.log(groupBoardList)
   return (
     <>
       {loading && <div>Loading...</div>}      
@@ -212,7 +212,7 @@ export default function FindGroupPresenter({
             >글쓰기</Button>
           </Link>
           <Stack alignItems={'center'} spacing={2} sx={{mb: 10}}>
-            <Pagination onChange={e => {handleChangePage(e.target.innerText); console.log(e.target.innerText)}} count={5} size="large"/>      
+            <Pagination onChange={e => {handleChangePage(e.target.innerText)}} count={5} size="large"/>      
           </Stack>
         </div>
       </Box>}

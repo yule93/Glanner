@@ -50,13 +50,13 @@ export const plannerSlice = createSlice({
               } else {
                 targetPlanner.active = false;
               }
-            console.log(current(state.plannerList))
+            // console.log(current(state.plannerList))
             });
           });
         },
         checkUser: (state, action) => {
           state.userList = action.payload
-          console.log(current(state.userList))
+          // console.log(current(state.userList))
         }, 
     }
 

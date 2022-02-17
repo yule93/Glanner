@@ -28,7 +28,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
 
     axios(`/api/user`, {method: 'POST', data: joinData})
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         setSignupPage(!signupPage)
       })
       .catch(err => {
@@ -212,7 +212,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                         onClick={() => {
                           if (consent) setConsent(false)
                           else setConsent(true)
-                          console.log(consent)
+                          // console.log(consent)
                         }} 
                         value="consent"                         
                         icon={<RadioButtonUncheckedIcon />}
