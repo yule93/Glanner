@@ -9,13 +9,14 @@ import { useRef } from 'react';
 import "./SignupComponent.scoped.css";
 import { useState } from 'react';
 import axios from 'axios';
-const SignupComponent = ({signupPage, setSignupPage}) => {
-  const { register, watch, formState: {errors}, handleSubmit } = useForm();
-  const [consent, setConsent] = useState(false);
 
+const SignupComponent = ({signupPage, setSignupPage}) => {
+  const { register, watch, formState: {errors}, handleSubmit, getValues } = useForm();
+  const [consent, setConsent] = useState(false);
+  const [randomNum, setRandomNum] = useState('');
+  const [verificationNumber, setVerificationNumber] = useState("");
   const [isSent, setIsSent] = useState(false);
-  const [time, setTime] = useState(299)
-  const [verification, setVerification] = useState("");
+  const [isPassed, setIsPassed] = useState(false);
   const password = useRef();
   password.current = watch("password");
   const onSubmit = (data) => {
@@ -23,6 +24,11 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
       alert('서비스 이용약관에 동의해주세요.')
       return
     }
+    if (!isPassed) {
+      alert('연락처 인증이 필요합니다.')
+      return
+    }
+
     const joinData = {
       email: data.email,
       name: data.name,
@@ -33,25 +39,91 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
     axios(`/api/user`, {method: 'POST', data: joinData})
       .then(res => {
         // console.log(res.data)
+        alert('회원가입이 정상적으로 완료되었습니다.')
         setSignupPage(!signupPage)
       })
       .catch(err => {
         console.log(err)
       })    
   }
-  const onVerificate = () => {
-    localStorage.setItem('expiredAt', new Date().getTime())
+  // const onVerificate = () => {
+  //   localStorage.setItem('expiredAt', new Date().getTime())
 
-  }
+  // // }
+  // React.useEffect(() => { 
+  //   if (time > 0) {
+  //     const Counter = setInterval(() => {
+  //       const gap = Math.floor((localStorage.getItem('expireAt') - new Date().getTime()) / 100000)
+        
+  //       console.log(gap)
+  //       setTime(time + gap)
+  //     }, 1000)
+  //     return () => clearInterval(Counter)
+  //   }
+  // }, [localStorage.getItem('expireAt'), time])
+
+  const regPhone = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/
+  const [min, setMin] = useState(3);
+  const [sec, setSec] = useState(0);
+  const time = useRef(180);
+  const timerId = useRef(null);
+
   React.useEffect(() => {
-    if (time > 0) {
-      const Counter = setInterval(() => {
-        const gap = Math.floor((new Date(localStorage.getItem('expireAt')).getTime() - new Date().getTime()) / 1000)
-        setTime(gap)
-      }, 1000)
-      return () => clearInterval(Counter)
+    timerId.current = setInterval(() => {
+      setMin(parseInt(time.current / 60));
+      setSec(time.current % 60);
+      time.current -= 1;
+    }, 1000);
+
+    return () => clearInterval(timerId.current);
+  }, []);
+
+  React.useEffect(() => {
+    // 만약 타임 아웃이 발생했을 경우
+    if (time.current <= 0) {
+      alert('다시 인증해주세요.')
+      clearInterval(timerId.current);
+      // dispatch event
+      setMin(3)
+      setSec(0)
     }
-  }, [localStorage.getItem('expireAt'), time])
+    if (time.current == 200) {
+      clearInterval(timerId.current);
+      time.current = 180
+      setMin(3)
+      setSec(0)
+    }
+  }, [sec]);
+
+  const generateRandomCode = (n) => {
+    let str = ''
+    for (let i = 0; i < n; i++) {
+      str += Math.floor(Math.random() * 10)
+    }
+    return str
+  }
+
+  const sendNumber = (phoneNum) => {
+    if (!regPhone.test(phoneNum)) {
+      alert('휴대폰 번호 형식이 올바르지 않습니다.')
+      return
+    }
+    time.current = 200
+    
+    const number = generateRandomCode(6)
+    setRandomNum(number)
+    console.log(phoneNum)
+    axios(`/api/notification/sms`, {method: 'POST', data: {
+      content: `[Glanner] 본인 확인을 위해 인증번호[${number}]를 입력해 주세요.`,
+      to: phoneNum
+    }})
+      .then(res => {
+        alert('인증번호가 발송되었습니다.')
+        setIsSent(true)
+      })
+      .catch(err => console.log(err))
+  }
+  
   return (
       <Grid container component="main" sx={{ height: '100vh', width: '100%'}}>
         <CssBaseline />
@@ -83,7 +155,6 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
               alignItems: 'center',
             }}
           >
-
             <Typography component="h1" variant="h4" color="#6F6F6F" fontFamily="Rozha One">
               Sign Up
             </Typography>
@@ -179,7 +250,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                 </Grid>
                 <Grid item xs={4}>
                   <SignupInput
-                    InputProps={{readOnly: isSent}}                    
+                    InputProps={{readOnly: isSent || isPassed}}                    
                     required
                     fullWidth
                     id="phone"
@@ -194,7 +265,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                 
                 {/* 추후 인증 과정에서 로딩중 버튼 고민 중 */}
                 {/* <LoadingButton loading variant="outlined">Submit</LoadingButton> */}  
-                <SignupPageButton sx={{ ml: 1.3 }} onClick={onVerificate}>
+                <SignupPageButton sx={{ ml: 1.3 }} onClick={() => sendNumber(getValues("phone"))} disabled={isPassed}>
                   {!isSent ? <>인증</> : <>재전송</> }
                 </SignupPageButton>
                   
@@ -204,7 +275,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
               </Grid>
 
               {/* 인증번호 폼 */}
-              {/* <Grid container direction='row' alignItems='center' sx={{ mt: '1em'}}>
+              {isSent && <Grid container direction='row' alignItems='center' sx={{ mt: '1em'}}>
                   <Grid item xs={4} >
                     <SignupPageLabel htmlFor='passwordConfirm' >인증번호</SignupPageLabel>
                   </Grid>
@@ -216,27 +287,35 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                       type="text"
                       id="verification"
                       autoComplete="verification"
-                      value={verification}
+                      value={verificationNumber}
                       onChange={e => {
-                        console.log(e.target.value)
-                        setVerification(e.target.value)
+                        setVerificationNumber(e.target.value)                      
                       }}
                       placeholder="숫자 6자리 입력"
                       InputProps={{
                         endAdornment: (
                           <Box>
-                            {time}
+                            {min}:{sec}
                           </Box>
                         ),
                       }}
                     />
                   </Grid>
-                  <SignupPageButton sx={{ ml: 1.3 }}>
+                  <SignupPageButton sx={{ ml: 1.3 }} onClick={() => {
+                    if (String(verificationNumber) === randomNum) {
+                      setIsPassed(true)
+                      alert('인증이 완료되었습니다.')
+                      setIsSent(false)
+                    } else {
+                      alert('인증번호가 일치하지 않습니다.')
+                    }
+                  }}>
                    확인
                   </SignupPageButton>
                   {errors.verification && errors.password_confirm.type === "required" && <p className='error-text'>비밀번호를 입력해주세요</p>}
                   {errors.verification && errors.password_confirm.type === "validate" && <p className='error-text'>비밀번호가 일치하지 않습니다</p>}
-                </Grid> */}
+                </Grid>
+              }
                       
 
               <Grid container sx={{mt: '2em'}}>
