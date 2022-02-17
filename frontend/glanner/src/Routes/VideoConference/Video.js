@@ -11,6 +11,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import TextField from "@mui/material/TextField";
 import { Container, Stack } from "@mui/material";
 
+/** docker run -p 4443:4443 --rm -e OPENVIDU_SECRET=MY_SECRET openvidu/openvidu-server-kms:2.20.0*/
 // const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
 const OPENVIDU_SERVER_URL = "https://i6a606.p.ssafy.io:5443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
