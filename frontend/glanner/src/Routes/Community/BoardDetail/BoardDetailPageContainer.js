@@ -79,7 +79,7 @@ export const BoardDetailPageContainer = () => {
      .catch(err => console.log(err))   
     }
   }
-
+  
   // 해당 게시글의 좋아요 + 1
   const addLike = () => {
     // if (pathname.includes('/notice/')) {

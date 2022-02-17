@@ -8,7 +8,7 @@ export const plannerSlice = createSlice({
             name: "내 플래너",
             children: [
               { 
-                plannerId: 1,
+                plannerId: -1,
                 plannerName: "내 플래너",
                 active: true,
               },              
