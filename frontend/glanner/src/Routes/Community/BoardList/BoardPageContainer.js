@@ -36,9 +36,9 @@ export default function BoardPageContainer () {
       fetchBoardList()
       fetchLatestNoticeList()
     }, [page])
-
-    const handleChangePage = newPage => {
-      setPage((newPage - 1) * 9)     
+    
+    const handleChangePage = (event, value) => {
+      setPage((value - 1) * 9)     
     }
     const handleInput = (e) => {
       // console.log(e.target.value)

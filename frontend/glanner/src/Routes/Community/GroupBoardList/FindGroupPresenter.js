@@ -117,7 +117,7 @@ export default function FindGroupPresenter({
                   <Grid container direction="column" spacing={0} sx={{height: 'auto'}}>
                       <Grid item onClick={() => navigator(`/board/group/${boardId}`)} sx={{cursor: 'pointer'}}>
                         <Grid container sx={{justifyContent: 'space-between'}}>
-                          <Typography className='title' gutterBottom variant="h5" sx={{color: '#262626'}}>                          
+                          <Typography className='title' gutterBottom variant="h5" sx={{color: '#262626', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', width: '350px'}}>                          
                             {title}                            
                           </Typography>
                           <Typography sx={{color: '#959595', fontSize: 15 }}>
@@ -135,7 +135,7 @@ export default function FindGroupPresenter({
                             {userCount} / 5
                           </Box>
                         </Typography>
-                        <Typography sx={{color: '#5F5F5F', fontWeight: 800, display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, my: 1, height: '20px' }} className='boardpost' variant="body2" color="text.secondary">
+                        <Typography sx={{color: '#5F5F5F', fontWeight: 800, display: '-webkit-box', overflow: 'hidden', textOverflow: 'ellipsis', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, my: 1, height: '20px' }} className='boardpost' variant="body2" color="text.secondary">
                           {content}
                         </Typography>
 
@@ -211,8 +211,8 @@ export default function FindGroupPresenter({
               }}
             >글쓰기</Button>
           </Link>
-          <Stack alignItems={'center'} spacing={2} sx={{mb: 10}}>
-            <Pagination onChange={e => {handleChangePage(e.target.innerText)}} count={5} size="large"/>      
+          <Stack alignItems={'center'} spacing={2} sx={{mb: 200}}>
+            <Pagination onChange={handleChangePage} count={5} size="large"/>      
           </Stack>
         </div>
       </Box>}

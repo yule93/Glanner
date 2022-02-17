@@ -22,8 +22,8 @@ export default function FindGroupContainer () {
       )
       .catch(err => console.log(err))
     }
-    const handleChangePage = newPage => {
-      setPage((newPage - 1) * 6)
+    const handleChangePage = (event, value) => {
+      setPage((value - 1) * 6)
     }
     const handleInput = (e) => {
       // console.log(e.target.value)
@@ -33,7 +33,7 @@ export default function FindGroupContainer () {
     // 검색 기능
     const searchBoard = () => {
       if (category === 'search') {
-        axios(`/api/group-board/search/${page}/4/?keyword=${inputData}`, { method: 'GET' })
+        axios(`/api/group-board/search/${page}/6/?keyword=${inputData}`, { method: 'GET' })
           .then(res => {
               setInputData('')
               setGroupBoardList(res.data)
@@ -42,7 +42,7 @@ export default function FindGroupContainer () {
           )
         .catch(err => console.log(err))
       } else if (category === 'interest') {
-        axios(`/api/group-board/interest/${page}/4/?keyword=${inputData}`, { method: 'GET' })
+        axios(`/api/group-board/interest/${page}/6/?keyword=${inputData}`, { method: 'GET' })
           .then(res => {
               setInputData('')
               setGroupBoardList(res.data)
