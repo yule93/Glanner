@@ -26,3 +26,6 @@
   font-weight: 400;
   font-style: normal;
 }
+input:focus {
+  outline: none !important;
+}

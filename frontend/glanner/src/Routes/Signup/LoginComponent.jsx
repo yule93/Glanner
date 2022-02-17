@@ -5,18 +5,12 @@ import { SignupPageButton, SignupPageLink, SignupInput, SignupPageLabel, Copyrig
 import { useForm } from "react-hook-form";
 import "./SignupComponent.scoped.css";
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/auth';
 
 const LoginComponent = ({setSignupPage, signupPage}) => {  
     const { register, formState: {errors}, handleSubmit } = useForm();
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     console.log()
-//     const data = new FormData(event.currentTarget);
-//     console.log({
-//       email: data.get('email'),
-//       password: data.get('password'),
-//     });
-//   };  
+
     const onSubmit = (data) => {
         axios(`api/auth`, 
         {

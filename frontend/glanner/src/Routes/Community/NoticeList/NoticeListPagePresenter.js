@@ -19,49 +19,13 @@ import {
   Divider,
   Stack,
   Pagination,
+  FormGroup,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import "moment/locale/ko";
 import { boardStyles } from "../Board.styles";
 import { getListTime } from "../helper";
-
-// const latestNoticeList = [
-//   {
-//     id: 1,
-//     title: "공지 1",
-//     writer: "관리자",
-//     date: "22.01.15",
-//   }
-//   
-// ];
-// const boardList = [
-//   {
-//     id: 1,
-//     title: "예시 1",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 2,
-//     title: "예시 2",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 3,
-//     title: "예시 3",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-//   {
-//     id: 4,
-//     title:
-//       "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-//     writer: "관리자",
-//     date: "22.01.20",
-//   },
-// ];
 
 const WriteButton = St(Button)({
   width: '90px',
@@ -91,24 +55,34 @@ const useStyles = makeStyles(boardStyles)
 export default function NoticeListPagePresenter({ 
   loading, 
   latestNoticeList,  
-  handleChangePage
+  handleChangePage,
+  inputData,
+  handleInput,
+  searchBoard
 }) {
   const classes = useStyles();
   return (
     <NoaticeListDiv>
       {loading && <div>Loading...</div>}
       {latestNoticeList &&
-      <>      
+      <Box>      
         <Box
           component="form"
           noValidate
           autoComplete="off"
           sx={{ textAlign: "right", width: "95%", minHeight: "100%", m: 0 }}
         >
-          <FormControl sx={{ m: 1, width: "25ch" }} size="small">
-            <InputLabel htmlFor="search-board">이름, 제목</InputLabel>
+          <FormGroup sx={{ float: 'right', width: "25ch", mb: 1, mt: 3, height: 50,}} size="small">
+            {/* <InputLabel htmlFor="search-board">이름, 제목</InputLabel> */}
             <OutlinedInput
-              id="search-board"
+              value={inputData}
+              onChange={handleInput}
+              onKeyUp={(e) => {
+                if (e.keyCode === 13) {
+                  searchBoard()
+                }
+              }}
+              id="search-board"              
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="search-button" edge="end">
@@ -117,8 +91,12 @@ export default function NoticeListPagePresenter({
                 </InputAdornment>
               }
               label="Password"
+              sx={{ borderRadius: 5, background: '#F7F6F6',
+                border: '2px solid #E5E5E5', "legend": {width: 0},
+                "fieldset": {border: 'none'}, height: 40
+              }}
             />
-          </FormControl>
+          </FormGroup>
         </Box>
         <Box className={classes.textField} sx={{ textAlign: "center", minHeight: "100%" }}>          
           <List
@@ -151,8 +129,8 @@ export default function NoticeListPagePresenter({
               </Grid>
             </Grid>
             <Divider />
-            {latestNoticeList.map(({ id, title, writer, date, count, like }) => (
-              <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={id}>
+            {latestNoticeList.map(({ boardId, title, userName, createdDate, count, like }) => (
+              <Paper sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }} key={boardId}>
                 <ListItem
                   disableGutters
                   sx={{ height: "35px", textAlign: "center", color: "#DB1111" }}
@@ -162,15 +140,15 @@ export default function NoticeListPagePresenter({
                       <ListItemText primary={"[공지]"} />                
                     </Grid>
                     <Grid item xs={7}>
-                      <Link to={`/board/notice/${id}`}>
+                      <Link to={`/board/notice/${boardId}`}>
                         <ListItemText sx={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>{title}</ListItemText>
                       </Link>
                     </Grid>
                     <Grid item xs={1.8}>
-                      <ListItemText>{writer}</ListItemText>
+                      <ListItemText>{userName}</ListItemText>
                     </Grid>
                     <Grid item xs={1}>
-                      <ListItemText>{getListTime(date)}</ListItemText>
+                      <ListItemText>{getListTime(createdDate)}</ListItemText>
                     </Grid>
                     <Grid item xs={0.6}>
                       <ListItemText>{count}</ListItemText>
@@ -189,7 +167,7 @@ export default function NoticeListPagePresenter({
             <WriteButton WriteButton variant="">글쓰기</WriteButton>
           </Link>
         </div>
-      </>}
+      </Box>}
     <Stack alignItems={'center'} spacing={2}>
       <Pagination onChange={e => handleChangePage(e.target.innerText)} count={5} sx={{position: 'fixed', bottom: 100}} size="large"/>      
     </Stack>

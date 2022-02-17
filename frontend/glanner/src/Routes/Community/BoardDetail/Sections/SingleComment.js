@@ -8,19 +8,27 @@ import { boardStyles } from "../../Board.styles";
 import MoreBtn from "../../../../Components/MoreBtn";
 import { getTime } from "../../helper";
 import { ReactComponent as CircleUser } from "../../../../assets/circle-user-solid.svg";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { useLocation, useParams } from "react-router-dom";
 const useStyles = makeStyles(boardStyles)
 
 export const SingleComment = ({
+  boardId,
   comments, 
   setComments, 
   comment,
   addComment, 
   addCommentLike, 
   updateComment,
-  pathname
+  pathname,
+  glannerInfo,
+  addMember,
 }) => {
   const classes = useStyles();
-
   const [openForm, setOpenForm] = useState(false);
   const [content, setContent] = useState("");
   const [updateFlag, setUpdateFlag] = useState(false);
@@ -31,33 +39,33 @@ export const SingleComment = ({
       setOpenForm(true)
     }
     setContent("")
-    setUpdateFlag(false)
+    setUpdateFlag(false)  
   };
-  
+  const [added, setAdded] = useState(true);
+  const { id } = useParams();
+
   return (
     <Box className={comment.parentId === -1 ? classes.comments : classes.nestedComment} key={comment.boardId}>
       <CardHeader
         avatar={
           comment.parentId === -1 ? 
-          // <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">              
-          // </Avatar>
-          <CircleUser
-            style={{
-              fontSize: 30 + "px",
-              color: "#5F5F5F",
-              backgroundColor: "#F2D0D9",
-              borderRadius: "50%",
-              marginRight: 2
-            }}
-          /> 
+          <>
+            <CircleUser
+              style={{
+                fontSize: 30 + "px",
+                color: "#5F5F5F",
+                backgroundColor: "#F2D0D9",
+                borderRadius: "50%",
+                marginRight: 2
+              }}
+            />   
+          </> 
           :
           <>
             <span 
               className={classes.replyIcon}
               style={{ position: 'relative', left: '-30px'}}
             >ㄴ</span>
-            {/* <Avatar sx={{ bgcolor: grey[500], right: '25.2px' }} aria-label="recipe">              
-            </Avatar> */}
             <CircleUser
               style={{
                 fontSize: 30 + "px",
@@ -72,15 +80,19 @@ export const SingleComment = ({
           </>
         }
         action={
-          <MoreBtn
-            editData={comment} 
-            type={`${pathname}comment`}
-            comments={comments} 
-            setComments={setComments} 
-            setOpenForm={setOpenForm} 
-            setContent={setContent} 
-            setUpdateFlag={setUpdateFlag} 
-          />
+          <>          
+            <MoreBtn
+              editData={comment} 
+              type={`${pathname}comment`}
+              comments={comments} 
+              setComments={setComments} 
+              setOpenForm={setOpenForm} 
+              setContent={setContent} 
+              setUpdateFlag={setUpdateFlag}
+              addMember={addMember}
+              glannerInfo={glannerInfo}
+              />
+          </>
         }
         title={comment.userName}
         subheader={getTime(comment.createdDate)}
@@ -88,8 +100,7 @@ export const SingleComment = ({
         sx={ comment.parentId !== -1 ? {'& .MuiCardHeader-content': {position: 'relative', right: '25px'}} : null }
       />
       <CardContent>
-        <p className={classes.commentContent} style={{ whiteSpace: 'normal', overflow: 'hidden', wordWrap: 'break-word'
-	 }}>
+        <p className={classes.commentContent} style={{ whiteSpace: 'normal', overflow: 'hidden', wordWrap: 'break-word'}}>
           {comment.content}
         </p>
       </CardContent>

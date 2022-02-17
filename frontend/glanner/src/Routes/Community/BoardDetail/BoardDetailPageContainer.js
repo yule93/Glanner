@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { BoardDetailPagePresenter } from "./BoardDetailPagePresenter";
 
@@ -7,65 +8,98 @@ export const BoardDetailPageContainer = () => {
   const { id } = useParams();
   const [loading, isLoading] = useState(true);
   const [post, setPost] = useState({});
+  const [postLikeCount, setPostLikeCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState("");
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    if (pathname.includes("/notice/")) {
-      axios(`latestNoticeList/${id}`, { method: "GET" })
-        .then((res) => {
-          setPost(() => res.data);
-          isLoading(false);
-        })
-        .catch((err) => console.log(err));
-    } else if (pathname.includes("/free/")) {
-      axios(`/api/free-board/${id}`, { method: "GET" })
-        .then((res) => {
-          console.log(res.data);
-          setPost(() => res.data);
-          isLoading(false);
-        })
-        .catch((err) => console.log(err));
+  const [glannerInfo, setGlannerInfo] = useState({});
+  
+  useEffect(() => {    
+    getBoard()
+    // if (pathname.includes('/notice/')) {
+    //   axios(`/api/notice/${id}`, {method: 'GET'})
+    //  .then(res => {
+    //    setPost(() => res.data)    
+    //    isLoading(false)
+    //   })
+    //  .catch(err => console.log(err))   
+    // } else if (pathname.includes('/free/')) {     
+      
+    //   // 게시글 데이터 가져오기
+    //   axios(`/api/free-board/${id}`)
+    //     .then(res => {
+    //       setPost(res.data)          
+    //       setComments(res.data.comments)
+    //       setPostLikeCount(res.data.likeCount)
+    //       isLoading(false)
+    //     })
+    //     .catch(err => console.log(err))
 
-      axios(`comments?postId=${id}`, { method: "GET" })
-        .then((res) => {
-          setComments(() => res.data);
-          isLoading(false);
+    // } else if (pathname.includes('/group/')) {
+    //   axios(`/api/group-board/${id}`, {method: 'GET'})
+    //    .then(res => { 
+    //       setPost(res.data)
+    //       fetchGlannerInfo()          
+    //       setComments(res.data.comments)
+    //       setPostLikeCount(res.data.likeCount)    
+    //       isLoading(false)
+    //     })
+    //    .catch(err => console.log(err))    
+    // }
+  }, [id, pathname])
+  
+  // 게시글 데이터 가져오기
+  const getBoard = () => {
+    if (pathname.includes('/free/')) {
+      axios(`/api/free-board/${id}`, {method: 'GET'})
+        .then(res => {
+          console.log(res.data)
+          setPost(() => res.data)
+          setComments(res.data.comments.reverse())
+          setPostLikeCount(res.data.likeCount)    
+          isLoading(false)
         })
-        .catch((err) => console.log(err));
-    } else if (pathname.includes("/group/")) {
-      axios(`/api/group-board/${id}`, { method: "GET" })
-        .then((res) => {
-          setPost(() => res.data);
-          isLoading(false);
-        })
-        .catch((err) => console.log(err));
-
-      axios(`groupComments?postId=${id}`, { method: "GET" })
-        .then((res) => {
-          setComments(() => res.data);
-          isLoading(false);
-        })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err)) 
+    } else if (pathname.includes('/group/')) {
+      axios(`/api/group-board/${id}`, {method: 'GET'})
+        .then(res => {
+          console.log(res.data)
+          setPost(() => res.data)
+          setComments(res.data.comments.reverse())
+             
+          isLoading(false)
+      })
+      fetchGlannerInfo()
+    } else if (pathname.includes('/notice/')) {
+      axios(`/api/notice/${id}`, {method: 'GET'})
+     .then(res => {
+       setPost(() => res.data)    
+       isLoading(false)
+      })
+     .catch(err => console.log(err))   
     }
-  }, [id, pathname]);
+  }
 
   // 해당 게시글의 좋아요 + 1
   const addLike = () => {
-    if (pathname.includes("/notice/")) {
-      axios(`boardlist/${id}`, {
-        method: "PATCH",
-        data: { like: post.like + 1 },
-      })
-        .then((res) => {
-          setPost(res.data);
-        })
-        .catch((err) => console.log(err));
-    } else if (pathname.includes("/free/")) {
-      axios(`/free-board/${id}`, {
-        method: "PATCH",
-        data: { like: post.like + 1 },
+    // if (pathname.includes('/notice/')) {
+    //   axios(`boardlist/${id}`, {
+    //   method: 'PATCH',
+    //   data: {like: post.like + 1}
+    // })
+    //   .then(res => {
+    //     setPost(res.data)
+    //   })
+    //   .catch(err => console.log(err))
+    // } else 
+    if (pathname.includes('/free/')) {
+      axios(`/api/free-board/like/${id}`, {
+      method: 'PUT',
+      // data: {like: post.like + 1}
+    })
+      .then(res => {
+        setPostLikeCount(postLikeCount + 1)
       })
         .then((res) => {
           setPost(res.data);
@@ -89,23 +123,25 @@ export const BoardDetailPageContainer = () => {
     const today = Date();
     const commentData = {
       content: newCommentData,
-      writer: "테스트 유저",
-      date: today,
-      like: 0,
-      postId: post.id,
-      responseTo: parentCommentId,
-    };
-    if (pathname.includes("/free/")) {
-      axios(`comments`, {
-        method: "POST",
-        data: commentData,
+      boardId: post.boardId,
+      parentId: parentCommentId
+    }
+    if (pathname.includes('/free/')) {
+      axios(`/api/free-board/comment`, {
+        method: 'POST',
+        data: commentData
+      }).then(res => {        
+        // setComments(comments.concat(res.data))
+        getBoard() 
       })
-        .then((res) => setComments(comments.concat(res.data)))
-        .catch((err) => console.log(err.message));
-    } else if (pathname.includes("/group/")) {
-      axios(`groupComments`, {
-        method: "POST",
-        data: commentData,
+        .catch(err => console.log(err.message))
+    } else if (pathname.includes('/group/')) {
+      axios(`/api/group-board/comment`, {
+        method: 'POST',
+        data: commentData
+      }).then(res => {
+        // setComments(comments.concat(res.data)) 
+        getBoard()
       })
         .then((res) => setComments(comments.concat(res.data)))
         .catch((err) => console.log(err.message));
@@ -113,49 +149,27 @@ export const BoardDetailPageContainer = () => {
   };
 
   // 댓글 && 대댓글 수정하기
-  const updateComment = (commentContent, commentData) => {
-    const today = Date();
-    const newCommentData = {
-      content: commentContent,
-      writer: commentData.writer,
-      date: today,
-      like: commentData.like,
-      postId: post.id,
-      responseTo: commentData.responseTo,
-    };
-    if (pathname.includes("/free/")) {
-      axios(`comments/${commentData.id}`, {
-        method: "PUT",
-        data: newCommentData,
-      })
-        .then((res) => {
-          const newCommentList = comments.map((comment) => {
-            if (comment.id !== commentData.id) {
-              return comment;
-            } else {
-              return res.data;
-            }
-          });
-          setComments(newCommentList);
-        })
-        .catch((err) => console.log(err.message));
-    } else if (pathname.includes("/group/")) {
-      axios(`groupComments/${commentData.id}`, {
-        method: "PUT",
-        data: newCommentData,
-      })
-        .then((res) => {
-          const newCommentList = comments.map((comment) => {
-            if (comment.id !== commentData.id) {
-              return comment;
-            } else {
-              return res.data;
-            }
-          });
-          setComments(newCommentList);
-        })
-        .catch((err) => console.log(err.message));
+  const updateComment = (commentContent, commentData) => {    
+    if (pathname.includes('/free/')) {
+      axios(`/api/free-board/comment/${commentData.commentId}`, {
+        method: 'PUT',
+        data: {content: commentContent}
+      }).then(res => {
+        getBoard()
+      } 
+        )
+        .catch(err => console.log(err.message))
+    } else if (pathname.includes('/group/')) {
+      axios(`/api/group-board/comment/${commentData.commentId}`, {
+        method: 'PUT',
+        data: {content: commentContent}
+      }).then(res => {
+        getBoard()
+      } 
+        )
+        .catch(err => console.log(err.message))
     }
+    
   };
 
   // 댓글 && 대댓글 좋아요 + 1
@@ -195,8 +209,34 @@ export const BoardDetailPageContainer = () => {
         })
         .catch((err) => console.log(err));
     }
-  };
-
+    
+  }
+  
+  // glanner 정보 가져오기
+  const fetchGlannerInfo = () => {
+    axios(`/api/group-board/glanner/${id}`)
+      .then(res => {
+        setGlannerInfo(res.data)
+      })
+      .catch(err => console.log(err))
+  }
+  // 글래너에 멤버 추가하기
+  const addMember = (userEmail) => {
+    axios(`/api/group-board/glanner/${id}`)
+      .then(res => {
+        axios(`/api/glanner/user`, {method: 'POST', data: {email: userEmail, glannerId: res.data.glannerId}})
+          .then(res => {
+            alert('글래너에 추가되었습니다.')
+            // setGlannerInfo(glannerInfo.numOfMember + 1)
+            fetchGlannerInfo()
+            getBoard()
+          })
+          .catch(err => {
+            alert('글래너에 추가할 수 없습니다.')
+          })
+      })
+      .catch(err => console.log(err))    
+  }
   return (
     <BoardDetailPagePresenter
       loading={loading}
@@ -210,6 +250,9 @@ export const BoardDetailPageContainer = () => {
       addCommentLike={addCommentLike}
       updateComment={updateComment}
       pathname={pathname}
+      postLikeCount={postLikeCount}
+      glannerInfo={glannerInfo}
+      addMember={addMember}
     />
   );
 };

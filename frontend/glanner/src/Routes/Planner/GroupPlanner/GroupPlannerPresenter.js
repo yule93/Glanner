@@ -18,8 +18,12 @@ import momentPlugin from "@fullcalendar/moment";
 
 import monthName from "../../../store/monthName";
 import AddEventModal from "../Modal/AddEventModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import {MenuItem, Menu, } from "@mui/material";
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import EventModal from "../Modal/EventModal";
+import { getTime } from "../../Community/helper";
 
 const CalendarDiv = styled.div`
   width: 100%;
@@ -221,6 +225,14 @@ function Dday(date) {
 
 export default function GroupPlannerPresenter({
   groupPlannerId,
+  numOfMember,
+  hostEmail,
+  membersInfos,
+  latestBoard,
+  latestPlan,
+  groupBoardId,
+  deleteMember,
+  authData,
   eventList,
   modalOpen,
   handleModalOpen,
@@ -228,18 +240,23 @@ export default function GroupPlannerPresenter({
   handlePickerOpen,
   handlePickerClose,
 }) {
+
+  const navigator = useNavigate();
+  // const [date, setDate] = useState(new Date());
+  // const emptyPlans = [1, 2, 3];
+  // const emptyWrite = [1, 2, 3];
   const [specificEvent, setSpecificEvent] = useState({});
   const [date, setDate] = useState(new Date());
-  const emptyPlans = [];
-  const emptyWrite = [];
+  const emptyPlans = [1, 2, 3];
+  const emptyWrite = [1, 2, 3];
 
-  for (var i = 0; i < 3 - intendedPlans.length; i++) {
-    emptyPlans.push(i);
-  }
-  for (var j = 0; j < 3 - latestWrite.length; j++) {
-    emptyWrite.push(j);
-  }
-  console.log(eventList);
+  // for (var i = 0; i < 3 - intendedPlans.length; i++) {
+  //   emptyPlans.push(i);
+  // }
+  // for (var j = 0; j < 3 - latestWrite.length; j++) {
+  //   emptyWrite.push(j);
+  // }
+  // console.log(eventList);
 
   return (
     <CalendarDiv className="calendar-div">
@@ -282,11 +299,11 @@ export default function GroupPlannerPresenter({
           center: "",
           end: "member filtering prev next updateBoard",
         }}
-        customButtons={{
+        customButtons={{          
           updateBoard: {
-            text: "모집하기",
+            text: "모집글",
             click: () => {
-              alert("모집하기");
+              navigator(`/board/group/${groupBoardId}`)
             },
           },
           gotoDate: {
@@ -320,20 +337,36 @@ export default function GroupPlannerPresenter({
           },
           member: {
             text: (
-              <div style={{ color: "#5F5F5F" }}>
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="user"
-                  style={{
-                    width: 14 + "px",
-                    color: "#959595",
-                    marginRight: "5px",
-                  }}
-                />
-                3
-              </div>
+              <PopupState variant="popover" popupId="demo-popup-menu">
+                {(popupState) => (
+                  <React.Fragment>
+                    <Box {...bindTrigger(popupState)}>
+                      <div style={{ color: "#5F5F5F" }}>
+                        <FontAwesomeIcon
+                          icon={faUser}
+                          className="user"
+                          style={{
+                            width: 'auto',
+                            color: "#959595",
+                            marginRight: "5px",
+                          }}                          
+                        />
+                        {numOfMember}
+                      </div>
+                    </Box>
+                    <Menu {...bindMenu(popupState)}>
+                      {membersInfos && membersInfos.map((info, idx) => {
+                        return <MenuItem key={idx} sx={{width: 200, display: 'flex', justifyContent: 'space-between'}}>
+                          {info.userName} 
+                          {authData.sub === hostEmail && <HighlightOffIcon onClick={() => {popupState.close(); deleteMember(info.userName, info.userId)}} />}
+                          </MenuItem>
+                      })}   
+                    </Menu>
+                  </React.Fragment>
+                )}
+              </PopupState>   
             ),
-          },
+          },          
         }}
         initialDate={date}
         locale={"ko"}
@@ -387,7 +420,7 @@ export default function GroupPlannerPresenter({
         }}
       >
         {/* 예정된 일정 파트 */}
-        <Typography sx={{ mx: "7px" }}>예정된 일정</Typography>
+        <Typography component={'div'} sx={{ mx: "7px" }}>예정된 일정</Typography>
         <Box
           sx={{
             width: "auto",
@@ -396,10 +429,10 @@ export default function GroupPlannerPresenter({
             justifyContent: "center",
           }}
         >
-          {intendedPlans.map(({ id, title, start, end, content }) => {
+          {latestPlan.map(({ glannerWorkId, title, start, end, content }) => {
             // console.log("그룹 플래너 파트" + id);
             return (
-              <Link to={`/conference/${groupPlannerId}`}>
+              <Link to={`/conference/${groupPlannerId}`} key={glannerWorkId}>
                 <Paper
                   elevation={0}
                   sx={{
@@ -414,12 +447,14 @@ export default function GroupPlannerPresenter({
                   }}
                 >
                   <Typography
+                    component={'div'}
                     sx={{ color: "#262626", fontSize: "20px", display: "flex" }}
                   >
                     {title}
                     <Dday date={start} />
                   </Typography>
                   <Typography
+                    component={'div'}
                     sx={{ color: "#262626", fontSize: "18px", mt: "5px" }}
                   >
                     {String(start).substring(0, 10).replaceAll("-", ".")}{" "}
@@ -427,6 +462,7 @@ export default function GroupPlannerPresenter({
                     {String(end).substring(11, end.length)}
                   </Typography>
                   <Typography
+                    component={'div'}
                     sx={{ color: "#5F5F5F", fontSize: "16px", mt: "10px" }}
                   >
                     {content.length > 30
@@ -434,10 +470,11 @@ export default function GroupPlannerPresenter({
                       : content}
                   </Typography>
                   <Typography
+                    component={'div'}
                     sx={{ display: "flex", alignItems: "center", mt: "24px" }}
                   >
                     화상회의
-                    <Typography sx={{ ml: "8px", color: "#929292" }}>
+                    <Typography component={'div'} sx={{ ml: "8px", color: "#929292" }}>
                       ON
                     </Typography>
                   </Typography>
@@ -445,7 +482,7 @@ export default function GroupPlannerPresenter({
               </Link>
             );
           })}
-          {emptyPlans.map(() => {
+          {latestPlan.length < 3 && emptyPlans.slice(latestPlan.length - 3).map((idx) => {
             return (
               <Paper
                 elevation={0}
@@ -461,8 +498,9 @@ export default function GroupPlannerPresenter({
                   textAlign: "center",
                   color: "#C4C4C4",
                 }}
+                key={idx}
               >
-                <Typography>예정된 일정이 없습니다.</Typography>
+                <Typography component={'div'}>예정된 일정이 없습니다.</Typography>
               </Paper>
             );
           })}
@@ -477,7 +515,13 @@ export default function GroupPlannerPresenter({
             textAlign: "left",
           }}
         >
-          <Typography sx={{ mx: "7px" }}>최근 글</Typography>
+          <Typography sx={{ mx: "7px" }} component={'div'}>최근 글
+            <Link to={'./glanner-board'}> 
+              <span style={{float: 'right', marginRight: 50, color: '#959595' }}>
+                더보기 {'>'}
+              </span>
+            </Link>
+          </Typography>
           <Box
             sx={{
               width: "100%",
@@ -486,9 +530,9 @@ export default function GroupPlannerPresenter({
               justifyContent: "center",
             }}
           >
-            {latestWrite.map(({ id, title, author, writeDate, content }) => {
+            {latestBoard.map(({ boardId, title, userName, createdDate, content }) => {
               return (
-                <Link to={``}>
+                <Link to={``} key={boardId}>
                   <Paper
                     elevation={0}
                     sx={{
@@ -503,6 +547,7 @@ export default function GroupPlannerPresenter({
                     }}
                   >
                     <Typography
+                      component={'div'}
                       sx={{
                         color: "#262626",
                         fontSize: "20px",
@@ -513,6 +558,7 @@ export default function GroupPlannerPresenter({
                       {title}
                     </Typography>
                     <Typography
+                      component={'div'}
                       sx={{
                         color: "#5F5F5F",
                         fontSize: "16px",
@@ -522,12 +568,14 @@ export default function GroupPlannerPresenter({
                     >
                       작성자{" "}
                       <Typography
+                        component={'div'}
                         sx={{ ml: "5px", fontSize: "18px", color: "#262626" }}
                       >
-                        {author}
+                        {userName}
                       </Typography>
                     </Typography>
                     <Typography
+                      component={'div'}
                       sx={{
                         color: "#5F5F5F",
                         fontSize: "16px",
@@ -537,12 +585,14 @@ export default function GroupPlannerPresenter({
                     >
                       작성일{" "}
                       <Typography
+                        component={'div'}
                         sx={{ ml: "5px", fontSize: "18px", color: "#262626" }}
                       >
-                        {writeDate}
+                        {getTime(createdDate)}
                       </Typography>
                     </Typography>
                     <Typography
+                      component={'div'}
                       sx={{ color: "#262626", fontSize: "16px", mt: "20px" }}
                     >
                       {content.length > 30
@@ -553,7 +603,7 @@ export default function GroupPlannerPresenter({
                 </Link>
               );
             })}
-            {emptyWrite.map(() => {
+            {latestBoard.length < 3 && emptyWrite.slice(latestBoard.length - 3).map((idx) => {
               return (
                 <Paper
                   elevation={0}
@@ -569,8 +619,9 @@ export default function GroupPlannerPresenter({
                     textAlign: "center",
                     color: "#C4C4C4",
                   }}
+                  key={idx}
                 >
-                  <Typography>작성된 게시물이 없습니다.</Typography>
+                  <Typography component={'div'}>작성된 게시물이 없습니다.</Typography>
                 </Paper>
               );
             })}
