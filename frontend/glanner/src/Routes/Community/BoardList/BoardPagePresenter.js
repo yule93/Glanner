@@ -119,10 +119,10 @@ export default function BoardPagePresenter({
               </Grid>
               <Divider />
               {latestNoticeList.map(
-                ({ id, title, userName, createdDate, count, like }) => (
+                ({ boardId, title, userName, createdDate, count, like }) => (
                   <Paper
                     sx={{ mb: 1, width: "100%", backgroundColor: "#F9F9F9" }}
-                    key={id}
+                    key={boardId}
                   >
                     <ListItem
                       disableGutters
@@ -137,7 +137,7 @@ export default function BoardPagePresenter({
                           <ListItemText primary={"[공지]"} />
                         </Grid>
                         <Grid item xs={7}>
-                          <Link to={`/board/notice/${id}`}>
+                          <Link to={`/board/notice/${boardId}`}>
                             <ListItemText
                               sx={{ whiteSpace: "nowrap", overflow: "hidden" }}
                             >
@@ -257,6 +257,7 @@ export default function BoardPagePresenter({
                     borderColor: "#8C7B80",
                     boxShadow: "none",
                   },
+                  position: 'fixed', bottom: '100px', right: '100px'
                 }}
               >
                 글쓰기
@@ -266,9 +267,9 @@ export default function BoardPagePresenter({
 
           <Stack alignItems={"center"} spacing={2}>
             <Pagination
-              onChange={(e) => handleChangePage(e.target.innerText)}
+              onChange={handleChangePage}
               count={5}
-              sx={{ position: "fixed", bottom: 25 }}
+              sx={{ position: "fixed", bottom: 50 }}
               size="large"
             />
           </Stack>

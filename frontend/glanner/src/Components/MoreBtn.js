@@ -218,7 +218,7 @@ export default function MoreBtn({ editData, commentData, commentUserName, type, 
         onClose={handleClose}
       > 
 
-        {type.includes('comment') && added && 
+        {glannerInfo && authData.sub === glannerInfo.hostEmail && type.includes('comment') && added && 
         <MenuItem onClick={() => {addMember(commentData.userEmail); setAnchorEl(null)}} disableRipple>
           <AddCircleIcon />
           글래너에 추가

@@ -7,7 +7,6 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { GlannerBoardPresenter } from "./GlannerBoardPresenter"
-import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function GroupPlannerContainer () {
     const [boardList, setBoardList] = useState([]);
@@ -106,7 +105,6 @@ export default function GroupPlannerContainer () {
                 // onSubmitComment={onSubmitComment}
                 refreshData={refreshData}                
                 loading={loading}
-                InfiniteScroll={InfiniteScroll}
                 page={page}
             />
 } 
