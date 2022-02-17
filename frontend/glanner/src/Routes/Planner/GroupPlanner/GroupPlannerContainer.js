@@ -131,8 +131,12 @@ export default function GroupPlannerContainer() {
 
   };
 
-  useEffect(() => {}, [date, eventList]);
-
+  useEffect(() => {
+    fetchEventList(date);
+    const token = localStorage.getItem('token');
+    const decoded = jwt_decode(token);
+    setAuthData(decoded)
+  }, [id, date, eventList])
   
 
     // 멤버 삭제
