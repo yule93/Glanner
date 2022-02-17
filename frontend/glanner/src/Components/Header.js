@@ -35,7 +35,7 @@ export default function Header({ title }) {
           lineHeight: 3.5,
           textAlign: "left",
           fontSize: "28px",
-          width: "300px",
+          width: "400px",
           float: "left",
           fontFamily: "Noto Sans KR",
         }}

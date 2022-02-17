@@ -155,7 +155,8 @@ export default function EventModal({
     if (specificEvent !== null) {
       setData(specificEvent);
     }
-  }, [data, specificEvent]);
+  }, [specificEvent]);
+  // * data를 useEffect에서 빼니까 성공....
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -184,12 +185,11 @@ export default function EventModal({
           .put("/api/glanner/work", data)
           .then((res) => {
             alert("수정 성공!");
+            console.log(res.data);
+            handleClose();
             if (handleEvent) {
               handleEvent(String(data.startDate).substring(0, 8) + "01");
             }
-            console.log(res.data);
-            setData({});
-            handleClose();
             navigate(`/group/${groupPlannerId}`);
           })
           .catch((err) => {
@@ -197,16 +197,16 @@ export default function EventModal({
             alert("수정 실패!");
           });
       } else if (type === "myPlanner") {
+        console.log(data);
         axios
           .put(`/api/user/planner/work/${eventId}`, data)
           .then((res) => {
             alert("수정 성공!");
             console.log(res.data);
+            handleClose();
             if (handleEvent) {
               handleEvent(String(data.startDate).substring(0, 8) + "01");
             }
-            setData({});
-            handleClose();
             navigate("/");
           })
           .catch((err) => {
@@ -297,6 +297,7 @@ export default function EventModal({
   const handle = (e) => {
     const newData = { ...data };
     newData[e.target.id] = e.target.value;
+    // console.log(newData);
     setData(newData);
   };
 
