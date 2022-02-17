@@ -243,9 +243,6 @@ export default function GroupPlannerPresenter({
 }) {
 
   const navigator = useNavigate();
-  // const [date, setDate] = useState(new Date());
-  // const emptyPlans = [1, 2, 3];
-  // const emptyWrite = [1, 2, 3];
   const [specificEvent, setSpecificEvent] = useState({});
   const [eventId, setEventId] = useState();
   const [date, setDate] = useState(new Date());
@@ -259,8 +256,6 @@ export default function GroupPlannerPresenter({
     emptyWrite.push(j);
   }
 
-  useEffect(()=> {}, [eventList])
-
   return (
     <CalendarDiv className="calendar-div">
       <FullCalendar
@@ -271,7 +266,6 @@ export default function GroupPlannerPresenter({
         dayCellDidMount={(date) => {
           var newDay = new Date(date.date);
           console.log(newDay.toISOString().substring(0, 10));
-          // console.log(eventList);
           if (newDay.toISOString().substring(8, 10) === "15") {
             setDate(newDay.toISOString().substring(0, 8) + "01");
             handleEvent(newDay.toISOString().substring(0, 8) + "01");
@@ -294,7 +288,7 @@ export default function GroupPlannerPresenter({
             alarmDate: "",
           };
           setSpecificEvent(newEvent);
-          setEventId(e.event._def.extendedProps.workId);
+          setEventId(e.event._def.extendedProps.glannerWorkId);
         }}
         titleFormat={function (date) {
           //console.log(date)

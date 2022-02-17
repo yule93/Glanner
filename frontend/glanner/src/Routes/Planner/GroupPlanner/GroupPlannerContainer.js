@@ -128,15 +128,13 @@ export default function GroupPlannerContainer() {
         setlatestPlan(res.data)
       })
       .catch(err => console.log(err))
-
   };
 
   useEffect(() => {
-    fetchEventList(date);
     const token = localStorage.getItem('token');
     const decoded = jwt_decode(token);
     setAuthData(decoded)
-  }, [id, date, eventList])
+  }, [id, date])
   
 
     // 멤버 삭제
@@ -173,9 +171,8 @@ export default function GroupPlannerContainer() {
         groupBoardId={glannerInfo.groupBoardId}
         deleteMember={deleteMember}
         authData={authData}
-
         groupPlannerId={groupPlannerId.id}
-        // eventList={eventList}
+        eventList={eventList}
         handleModalOpen={handleModalOpen}
         handleModalClose={handleModalClose}
         modalOpen={modalOpen}
