@@ -179,6 +179,7 @@ export default function GroupPlannerContainer() {
         handleModalOpen={handleModalOpen}
         handleModalClose={handleModalClose}
         modalOpen={modalOpen}
+        handleEvent={fetchEventList}
       />
     </>
   );
