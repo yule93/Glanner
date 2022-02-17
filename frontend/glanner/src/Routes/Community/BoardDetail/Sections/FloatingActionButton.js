@@ -18,7 +18,7 @@ export default function FloatingActionButtons() {
   const classes = useStyles();
 
   return (
-    pathname.includes('board') &&
+    pathname.includes('/board/') &&
       <Button
         onClick={() => {          
           if (pathname.includes('/board/free/')) {

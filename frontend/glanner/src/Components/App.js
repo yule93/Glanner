@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Router from "../Components/Router";
 import SignupComponent from "../Routes/Signup/SignupComponent";
 import LoginComponent from "../Routes/Signup/LoginComponent";
-
+import { useSelector } from "react-redux";
 import { useState } from "react";
 
 const MainContainer = styled.div`
@@ -26,8 +26,11 @@ const RouterContainer = styled.div`
 `;
 
 function App() {
-  const token = localStorage.getItem('token')
+  
+  // const token = localStorage.getItem('token')
   const [signupPage, setSignupPage] = useState(true);
+  const isLogin = useSelector(state => state.auth.isLogin);
+  const token = localStorage.getItem('token')
   if (!token) {
     return signupPage ? <SignupComponent signupPage={signupPage} setSignupPage={setSignupPage} /> : <LoginComponent signupPage={signupPage} setSignupPage={setSignupPage} />
   }
