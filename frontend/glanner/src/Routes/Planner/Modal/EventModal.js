@@ -342,11 +342,12 @@ export default function EventModal({
   }
   const TimeToString = (Time, Minute) => {
     if (Time < 10) {
-      return '0' + Time + ':' + Minute;
+      var t = '0' + Time
     }
-    else {
-      return Time + ':' + Minute;
+    if (Minute < 10) {
+      var m = '0' + Minute
     }
+    return t + ':' + m;
   }
 
   return (
