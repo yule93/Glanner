@@ -115,7 +115,9 @@ export const GroupFormPageContainer = () => {
       })
         .then(res => {
           alert('작성 성공!')
-          console.log(res.data)
+          axios(`/api/glanner/`, {method: 'PUT', data: {glannerId: res.data.glannerId, glannerName: data.title}})
+            .then(res => window.location.reload())
+            .catch(err => console.log(err))
           // navigate(`/board/group/${res.data.id}`)
           navigate(`/community/group`)
         })

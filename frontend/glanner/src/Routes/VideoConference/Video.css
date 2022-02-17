@@ -1,11 +1,6 @@
 #join-dialog {
   padding: 150px 0px 25px 0px;
 }
-/* .container {
-  border: 1px solid lightgray;
-  border-radius: 30px;
-  width: 100%;
-} */
 
 .stream-container {
   padding: 0px;
@@ -23,12 +18,7 @@
   text-align: center;
 }
 
-.form-group input {
-  /* width: 300px; */
-}
-
 .form-control {
-  /* width: 350px; */
   text-align: center;
 }
 
@@ -42,4 +32,13 @@
 
 #img-div {
   margin-top: 10px;
+}
+
+#video-container .streamcomponent {
+  width: 300px;
+}
+
+#video-container .streamcomponent div p {
+  /* display: none; */
+  font-size: small;
 }

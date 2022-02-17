@@ -55,7 +55,7 @@ const StyledMenu = styled((props) => (
 
 
 
-export default function MoreBtn({ editData, type, comments, setComments, setOpenForm, setContent, setUpdateFlag, addMember, glannerInfo}) {
+export default function GlannerMoreBtn({ editData, type, refreshData, page, comment, setComments, getGlannerComments, setCommentCount }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();  
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -74,13 +74,13 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
   };
 
   useEffect(() => {
-    if (pathname.includes('/notice/')) {
-      setPath('latestNoticeList')
-    } else if (pathname.includes('/free/')) {
-      setPath('free-board')
-    } else if (pathname.includes('/group/')) {
-      setPath('group-board')
-    }
+    // if (pathname.includes('/notice/')) {
+    //   setPath('latestNoticeList')
+    // } else if (pathname.includes('/free/')) {
+    //   setPath('free-board')
+    // } else if (pathname.includes('/group/')) {
+    //   setPath('group-board')
+    // }
     const token = localStorage.getItem('token');
     const decoded = jwt_decode(token);
     setAuthData(decoded)
@@ -92,95 +92,64 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
     const ok = window.confirm('삭제하겠습니까?')
     if (ok) {
       // 게시글인 경우
-      if (type.includes('body')) {
+      if (type === 'body') {
         axios({
-          url: `/api/${path}/${item.boardId}`,
+          url: `/api/glanner-board/${item.boardId}`,
           method: 'DELETE'})
           .then(res => {        
             alert('삭제되었습니다.')
-            if (pathname.includes('/free/')) {
-              navigate(`/community/free`)
-            } else if (pathname.includes('/group/')) {
-              navigate(`/community/group`)
-            } else if (pathname.includes('/notice/')) {
-              navigate(`/community/notice`)
-            }
+            refreshData(page)
           })
           .catch(err => {
             alert('삭제할 수 없습니다.')
           })
-      // 댓글인 경우
-      } else {
-        if (pathname.includes('free') && type.includes('comment')) {
-          axios({
-            url: `/api/free-board/comment/${item.commentId}`,
-            method: 'DELETE'})
-            .then(res => {        
-              // alert('삭제되었습니다.')
-              const newComments = comments.filter(comment => {
-                return comment.commentId !== item.commentId
-              })
-              setComments(newComments)            
-            })
-            .catch(err => {
-              alert('삭제할 수 없습니다.')
-            })
-        } else if (pathname.includes('group') && type.includes('comment')) {
-          axios({
-            url: `/api/group-board/comment/${item.commentId}`,
-            method: 'DELETE'})
-            .then(res => {        
-              // alert('삭제되었습니다.')
-              const newComments = comments.filter(comment => {
-                return comment.commentId !== item.commentId
-              })
-              setComments(newComments)            
-            })
-            .catch(err => {
-              alert('삭제할 수 없습니다.')
-            })
-        }
+    //   // 댓글인 경우
+      } else if (type === 'comment') {        
+        axios({
+        url: `/api/glanner-board/comment/${item.commentId}`,
+        method: 'DELETE'})
+        .then(res => {        
+            // alert('삭제되었습니다.')
+            getGlannerComments()
+            setCommentCount(prev => prev - 1)
+        })
+        .catch(err => {
+            alert('삭제할 수 없습니다.')
+        })        
       }
     }    
   }
-// 게시글 수정
-  const updateItem = (item, type) => {    
-    if (type === '/free/body') {
-      navigate(`/board-form`, {state: editData})
-    } else if (type === '/group/body') {
-      navigate(`/group-form`, {state: editData})
-    } else if (type === '/notice/body') {
-      navigate(`/notice-form`, {state: editData})
-    } else {
-      setOpenForm(true);
-      if (setUpdateFlag) setUpdateFlag(true);
-      setContent(item.content);
-    }
-  }
-  const getNewGlannerInfo = () => {
-    // glanner에 포함된 유저인지 확인 용도
-    axios(`/api/group-board/glanner/${id}`)
-      .then(res => { 
-        setHostMail(res.data.hostEmail)       
-        res.data.membersInfos.map(info => {
-          if (info.userEmail === editData.userEmail) {
-            setAdded(false)
-            return
-          }
-        })
-      })
-      .catch(err => console.log(err))
-  }
-
-  useEffect(() => {
-    if (path.includes('/group/')) {
-      getNewGlannerInfo()
-    }
-    return () => setAdded(false)
-  }, [glannerInfo])
-
+// // 게시글 수정
+//   const updateItem = (item, type) => {    
+//     if (type === '/free/body') {
+//       navigate(`/board-form`, {state: editData})
+//     } else if (type === '/group/body') {
+//       navigate(`/group-form`, {state: editData})
+//     } else if (type === '/notice/body') {
+//       navigate(`/notice-form`, {state: editData})
+//     } else {
+//       setOpenForm(true);
+//       if (setUpdateFlag) setUpdateFlag(true);
+//       setContent(item.content);
+//     }
+//   }
+  
+//   useEffect(() => {
+//     // glanner에 포함된 유저인지 확인 용도
+//     axios(`/api/group-board/glanner/${id}`)
+//       .then(res => { 
+//         setHostMail(res.data.hostEmail)       
+//         res.data.membersInfos.map(info => {
+//           if (info.userEmail === editData.userEmail) {
+//             setAdded(false)
+//             return
+//           }
+//         })
+//       })
+//       .catch(err => console.log(err))
+//   }, [])
   return (
-    <div>
+    <div style={{ display: 'inline'}}>
       <IconButton
         id="demo-customized-button"
         aria-controls={open ? 'demo-customized-menu' : undefined}
@@ -202,19 +171,15 @@ export default function MoreBtn({ editData, type, comments, setComments, setOpen
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-      > 
-
-        {hostMail === authData.sub && authData.sub !== editData.userEmail && type.includes('comment') && added && 
-        <MenuItem onClick={() => {addMember(editData.userEmail); setAnchorEl(null)}} disableRipple>
-          <AddCircleIcon />
-          글래너에 추가
-        </MenuItem>}    
+      >          
         {authData.sub === editData.userEmail &&
         <div>
-          <MenuItem onClick={() => updateItem(editData, type, comments, setComments)} disableRipple>
+          {/* <MenuItem onClick={() => {}
+            // updateItem(editData, type, comments, setComments)
+            } disableRipple>
             <EditIcon />
             수정
-          </MenuItem>        
+          </MenuItem>         */}
           <MenuItem onClick={() => deleteItem(editData, type)} disableRipple>
             <DeleteIcon />
             삭제

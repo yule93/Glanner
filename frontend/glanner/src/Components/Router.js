@@ -19,7 +19,7 @@ import FloatingActionButtons from "../Routes/Community/BoardDetail/Sections/Floa
 import DailyPlanner from "../Routes/Planner/DailyPlanner/DailyPlanerContainer";
 import GroupPlanner from "../Routes/Planner/GroupPlanner/GroupPlannerContainer";
 import VideoConference from "../Routes/VideoConference/Video";
-
+import GlannerBoard from "../Routes/Community/GlannerBoard/GlannerBoardContainer";
 const HeaderDiv = styled.div`
   border-bottom: 2px solid #e5e5e5;
 `;
@@ -72,7 +72,7 @@ export default function RouterComponent() {
             <Route path="/daily" element={<DailyPlanner />} />
 
             <Route path="/group/:id" element={<GroupPlanner />} />
-
+            <Route path="/group/:id/glanner-board" element={<GlannerBoard />} />
             {/* 화상회의 페이지 */}
             <Route path="/conference/:id" element={<VideoConference />} />
           </Routes>
