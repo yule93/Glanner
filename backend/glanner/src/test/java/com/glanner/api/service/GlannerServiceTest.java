@@ -65,7 +65,7 @@ public class GlannerServiceTest {
     @Test
     public void testCreateGlanner() throws Exception{
         //given
-        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail(userEmail));
 
 
         //when
@@ -113,7 +113,7 @@ public class GlannerServiceTest {
     @Test
     public void testAddUser() throws Exception{
         //given
-        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail(userEmail));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -188,7 +188,7 @@ public class GlannerServiceTest {
     @Test
     public void deleteDailyWork() throws Exception{
         //given
-        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail(userEmail));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -215,7 +215,7 @@ public class GlannerServiceTest {
     @Test
     public void updateDailyWork() throws Exception{
         //given
-        User findUser = getUser(userRepository.findByEmail("cherish8513@naver.com"));
+        User findUser = getUser(userRepository.findByEmail(userEmail));
         Glanner glanner = Glanner.builder()
                 .host(findUser)
                 .build();
@@ -242,7 +242,7 @@ public class GlannerServiceTest {
     @Test
     public void testFindAGlannerInfo() throws Exception{
         //given
-        User findUser = userRepository.findByEmail("cherish8513@naver.com").orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
+        User findUser = userRepository.findByEmail(userEmail).orElseThrow(() -> new IllegalStateException("없는 회원 입니다."));
 
         SaveGroupBoardReqDto reqDto = new SaveGroupBoardReqDto("title", "content", new ArrayList<>(), "null");
         GroupBoard groupBoard = reqDto.toEntity(findUser);
@@ -276,7 +276,7 @@ public class GlannerServiceTest {
         assertThat(findGlannerResDto.getNumOfMember()).isEqualTo(1);
         assertThat(findGlannerResDto.getMembersInfos().size()).isEqualTo(1);
         assertThat(findGlannerResDto.getMembersInfos().get(0).getUserId()).isEqualTo(findUser.getId());
-        assertThat(findGlannerResDto.getMembersInfos().get(0).getUserEmail()).isEqualTo("cherish8513@naver.com");
+        assertThat(findGlannerResDto.getMembersInfos().get(0).getUserEmail()).isEqualTo(userEmail);
         assertThat(findGlannerResDto.getMembersInfos().get(0).getUserName()).isEqualTo("JeongJooHeon");
         assertThat(findGlannerResDto.getGroupBoardId()).isEqualTo(findGroupBoard.getId());
     }
