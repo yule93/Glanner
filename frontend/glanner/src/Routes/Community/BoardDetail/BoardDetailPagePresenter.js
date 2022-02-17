@@ -21,8 +21,7 @@ export const BoardDetailPagePresenter = ({
   addCommentLike,
   updateComment,
   pathname,
-  glannerInfo,
-  addMember,
+  glannerInfo
 }) => {
   const classes = useStyles();  
   return (
@@ -42,16 +41,13 @@ export const BoardDetailPagePresenter = ({
               {comment.parentId === -1 &&
               <>
                 <SingleComment
-                  boardId={post.boardId}
-                  comments={comments}            
-                  comment={comment}
-                  addComment={addComment}
-                  addCommentLike={addCommentLike}
-                  setComments={setComments}
-                  updateComment={updateComment}
-                  pathname={pathname}
-                  glannerInfo={glannerInfo}
-                  addMember={addMember}
+                comments={comments}            
+                comment={comment}
+                addComment={addComment}
+                addCommentLike={addCommentLike}
+                setComments={setComments}
+                updateComment={updateComment}
+                pathname={pathname}                
                 />
                 <ReplyComment
                   addCommentLike={addCommentLike} 

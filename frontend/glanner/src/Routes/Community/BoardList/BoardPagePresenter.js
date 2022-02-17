@@ -42,7 +42,6 @@ export default function BoardPagePresenter({
   handleChangePage,
   inputData,
   handleInput,
-  searchBoard
 }) {
   const classes = useStyles();
   return (

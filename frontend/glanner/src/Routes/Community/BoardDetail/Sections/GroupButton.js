@@ -76,11 +76,16 @@ export const GroupMember = ({post, glannerInfo}) => {
           참가자
         </Typography>
         <Divider />
-        {glannerInfo.membersInfos && glannerInfo.membersInfos.map((info, idx) => {
-          return <MenuItem key={idx}>
-          <Avatar /> <Box style={{textAlign: 'center'}}>{info.userName}</Box>
+        <MenuItem>
+          <Avatar /> 유저1{}
         </MenuItem>
-        })}        
+        <MenuItem>
+          <Avatar /> 유저2
+        </MenuItem>
+        <MenuItem>
+          <Avatar /> 운영자
+        </MenuItem>
+        
       </Menu>
     </React.Fragment>
   );

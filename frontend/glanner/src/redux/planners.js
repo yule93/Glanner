@@ -20,9 +20,6 @@ export const plannerSlice = createSlice({
               
             ],
           },
-        ],
-        userList: [
-
         ]
 
     },
@@ -53,14 +50,10 @@ export const plannerSlice = createSlice({
             console.log(current(state.plannerList))
             });
           });
-        },
-        checkUser: (state, action) => {
-          state.userList = action.payload
-          console.log(current(state.userList))
-        }, 
+        }
     }
 
 })
 
-export const { getGlanners, addGlanner, removeGlanner, onClickPlanner, checkUser } = plannerSlice.actions;
+export const { getGlanners, addGlanner, removeGlanner, onClickPlanner } = plannerSlice.actions;
 export default plannerSlice.reducer;

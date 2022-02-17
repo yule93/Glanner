@@ -9,11 +9,13 @@ import { useRef } from 'react';
 import "./SignupComponent.scoped.css";
 import { useState } from 'react';
 import axios from 'axios';
+
 const SignupComponent = ({signupPage, setSignupPage}) => {
   const { register, watch, formState: {errors}, handleSubmit } = useForm();
   const [consent, setConsent] = useState(false);
   const password = useRef();
   password.current = watch("password");
+
   const onSubmit = (data) => {
     if (!consent) {
       alert('서비스 이용약관에 동의해주세요.')
@@ -25,7 +27,6 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
       password: data.password,
       phoneNumber: data.phone
     }
-
     axios(`/api/user`, {method: 'POST', data: joinData})
       .then(res => {
         console.log(res.data)
@@ -93,7 +94,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                   <SignupPageLabel htmlFor="name">이름</SignupPageLabel>                  
                 </Grid>
                 <Grid item xs={6}>
-             <SignupInput
+                  <SignupInput
                     required
                     fullWidth                    
                     id="name"
