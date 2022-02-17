@@ -26,7 +26,7 @@ export default function FindGroupContainer () {
       setPage((newPage - 1) * 4)
     }
     const handleInput = (e) => {
-      console.log(e.target.value)
+      // console.log(e.target.value)
       setInputData(e.target.value)
     }
 
