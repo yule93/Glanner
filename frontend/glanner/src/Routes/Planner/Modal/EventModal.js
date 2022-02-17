@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
-import { Box, Typography, Modal, Grid } from "@mui/material";
+import { Box, Typography, Modal, Grid, NativeSelect } from "@mui/material";
 import { InputUnstyled, TextareaAutosize } from "@mui/base";
 import { styled as styledClass } from "@mui/system";
 import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
@@ -180,6 +180,7 @@ export default function EventModal({
       dateToString(StartDate) + " " + TimeToString(StartTime, StartMinute);
     data.endDate =
       dateToString(EndDate) + " " + TimeToString(EndTime, EndMinute);
+    data.alarmDate = null
     if (data.title === "") {
       alert("제목을 입력해주세요.");
       return;
@@ -597,7 +598,7 @@ export default function EventModal({
                   selected={EndDate}
                   onChange={(date) => setEndDate(date)}
                   dateFormat="yyyy-MM-dd(eee)"
-                  minDate={StartDate}
+                  minDate={StartDate} 
                 />
               </Grid>
               <Grid item xs={2}>
@@ -763,12 +764,33 @@ export default function EventModal({
                 </Typography>
               </Grid>
               <Grid item xs={9}>
-                <InputUnstyled
+                {/* <InputUnstyled
                   id="alarmDate"
                   components={{ Input: StyledInputElement }}
                   onChange={(e) => handle(e)}
                   value={data.alarmDate}
-                />
+                /> */}
+                <Box sx={{ minWidth: 120 }}>
+                  <FormControl fullWidth>
+                    <NativeSelect
+                      onChange={(e) => handle(e)}
+                      inputProps={{
+                        name: 'age',
+                        id: "alarmDate",
+                      }}
+                      components={{ Input: StyledInputElement }}                      
+                      value={data.alarmDate}
+                      
+                      sx={{                       
+                                         
+                      }}
+                    >
+                      <option  value={1}>1분 전</option>
+                      <option  value={10}>10분 전</option>
+                      <option  value={30}>30분 전</option>
+                    </NativeSelect>
+                  </FormControl>
+                </Box>
               </Grid>
             </Grid>
             <Grid container sx={{ mb: 2 }}>
