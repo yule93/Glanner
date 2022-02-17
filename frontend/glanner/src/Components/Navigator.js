@@ -266,7 +266,10 @@ function Navigator(props) {
           >
             {groupPList.map(({ glannerId, glannerName }) => (
               <ListItem key={glannerId} sx={{ pb: 0 }}>
-                <GroupPlannerList>
+                <GroupPlannerList style={{ 
+                  textOverflow: 'ellipsis', 
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden'}}>
                   <Link to={`/group/${glannerId}`}>
                     <ListItemButton
                       // selected={
@@ -283,6 +286,7 @@ function Navigator(props) {
                       //     />
                       //   );
                       // }}
+                      style={{width: 200}}
                       onClick={(e) => {
                         setNowIdx(Number(e.currentTarget.id))                        
                       }}
@@ -301,6 +305,7 @@ function Navigator(props) {
                           style={{
                             fontFamily: "Noto Sans KR",
                             marginLeft: "4px",
+                            textOverflow: 'ellipsis'
                           }}
                         >
                           {glannerName}

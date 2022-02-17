@@ -70,15 +70,20 @@ export default function Header({ title, host }) {
           lineHeight: 3.5,
           textAlign: "left",
           fontSize: "28px",
-          width: "400px",
+          width: "800px",
           float: "left",
           fontFamily: "Noto Sans KR",
+          textOverflow: 'ellipsis', 
+          whiteSpace: 'nowrap',
+          overflow: 'hidden'
         }}
       >
         {/* {title}  */}
         {headTitle}
         {glannerPage && hostEmail === host && <GroupPlannerMoreBtn setHeadTitle={setHeadTitle} />}
       </div>
+        
+      
       <div
         style={{
           height: "100%",
