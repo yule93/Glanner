@@ -1,15 +1,21 @@
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import React, { Component } from "react";
-import "./App.css";
+import "./Video.css";
 import UserVideoComponent from "./UserVideoComponent";
 import jwt_decode from "jwt-decode";
+import { useParams, Link } from "react-router-dom";
+import logo from "../../assets/glannerLogo1.png";
+import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import TextField from "@mui/material/TextField";
+import { Container, Stack } from "@mui/material";
 
-const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
-// const GLANNER_SERVER_URL = "https://i6a606.p.ssafy.io:8080";
+// const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
+const OPENVIDU_SERVER_URL = "https://i6a606.p.ssafy.io:5443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
-class App extends Component {
+class Video extends Component {
   constructor(props) {
     super(props);
 
@@ -36,11 +42,12 @@ class App extends Component {
   componentDidMount() {
     const accessToken = localStorage.getItem("token");
     const decodedToken = jwt_decode(accessToken);
+    const groupSessionId = this.props.params;
 
     if (accessToken != null) {
       // 로그인 했을 때
       this.setState({
-        mySessionId: "glannerA", // 각 glannerId를 세션 Id로 설정 예정
+        mySessionId: "Glanner" + groupSessionId.id, // 각 glannerId를 세션 Id로 설정
         myUserName: decodedToken.sub, // 토큰의 email 정보를 userName으로 설정
       });
     } else {
@@ -187,8 +194,6 @@ class App extends Component {
   }
 
   muteAudio() {
-    // console.log("현재 상태에 따라서 오디오 끄고 켜기");
-    // console.log(this.state.publisher.stream.audioActive);
     if (this.state.publisher.stream.audioActive === true) {
       this.state.publisher.publishAudio(false);
     } else {
@@ -197,9 +202,6 @@ class App extends Component {
   }
 
   muteVideo() {
-    // console.log("현재 상태에 따라서 비디오 끄고 켜기");
-    // console.log("퍼블리셔", this.state.publisher);
-    // console.log(this.state.publisher.stream.videoActive);
     if (this.state.publisher.stream.videoActive === true) {
       this.state.publisher.publishVideo(false);
     } else {
@@ -212,6 +214,7 @@ class App extends Component {
     const accessToken = localStorage.getItem("token");
     const decodedToken = jwt_decode(accessToken);
     const mySession = this.state.session;
+    const groupSessionId = this.props.params;
 
     if (mySession) {
       mySession.disconnect();
@@ -222,7 +225,7 @@ class App extends Component {
     this.setState({
       session: undefined,
       subscribers: [],
-      mySessionId: "glannerA",
+      mySessionId: "Glanner" + groupSessionId.id,
       myUserName: decodedToken.sub,
       mainStreamManager: undefined,
       publisher: undefined,
@@ -275,43 +278,52 @@ class App extends Component {
       <div className="container">
         {this.state.session === undefined ? (
           <div id="join">
-            <div id="join-dialog" className="jumbotron vertical-center">
-              <h1> 그룹 모임 참여하기 </h1>
-              <br />
-              <form className="form-group" onSubmit={this.joinSession}>
-                <p>
-                  <label>Participant: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="userName"
-                    value={myUserName}
-                    onChange={this.handleChangeUserName}
-                    required
-                    disabled
-                  />
-                </p>
-                <p>
-                  <label> Session: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="sessionId"
-                    value={mySessionId}
-                    onChange={this.handleChangeSessionId}
-                    required
-                    disabled
-                  />
-                </p>
-                <p className="text-center">
-                  <input
-                    className="btn btn-lg btn-success"
-                    name="commit"
-                    type="submit"
-                    value="JOIN"
-                  />
-                </p>
-              </form>
+            <div id="img-div">
+              <Link to={`/`}>
+                <img
+                  src={logo}
+                  style={{ height: 120 + "px" }}
+                  alt="Glanner logo"
+                />
+              </Link>
+            </div>
+            <div
+              id="join-dialog"
+              className="jumbotron vertical-center"
+              style={{ fontFamily: "Noto Sans KR" }}
+            >
+              <h1> 그룹 모임 참여 </h1>
+              <div style={{ width: "50%", margin: "0 auto" }}>
+                <form className="form-group" onSubmit={this.joinSession}>
+                  <Stack>
+                    <TextField
+                      id="outlined-read-only-input"
+                      label="이메일 주소"
+                      value={myUserName}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <TextField
+                      sx={{ mt: 2 }}
+                      id="outlined-read-only-input"
+                      label="세션"
+                      value={mySessionId}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <Button
+                      sx={{ mt: 4, mb: 1, fontFamily: "Noto Sans KR" }}
+                      variant="contained"
+                      size="large"
+                      onClick={this.joinSession}
+                    >
+                      참여하기
+                    </Button>
+                  </Stack>
+                </form>
+              </div>
             </div>
           </div>
         ) : null}
@@ -320,65 +332,50 @@ class App extends Component {
           <div id="session">
             <div id="session-header">
               <h1 id="session-title">{mySessionId}</h1>
-              <br />
-              <input
-                className="btn btn-large btn-danger"
-                type="button"
-                id="buttonLeaveSession"
-                onClick={this.leaveSession}
-                value="Leave session"
-              />
-              <input
-                className="btn btn-large btn-danger"
-                type="button"
-                id="buttonMuteAudio"
-                onClick={this.muteAudio}
-                value="Audio"
-              />
-              <input
-                className="btn btn-large btn-danger"
-                type="button"
-                id="buttonMuteVideo"
-                onClick={this.muteVideo}
-                value="Video"
-              />
+              <ButtonGroup
+                variant="outlined"
+                aria-label="outlined button group"
+              >
+                <Button onClick={this.leaveSession}>Leave Session</Button>
+                <Button onClick={this.muteAudio}>Audio</Button>
+                <Button onClick={this.muteVideo}>Video</Button>
+              </ButtonGroup>
             </div>
 
-            {this.state.mainStreamManager !== undefined ? (
-              <div id="main-video" className="col-md-6">
-                <UserVideoComponent
-                  streamManager={this.state.mainStreamManager}
-                />
-                {/* <input
-                  className="btn btn-large btn-success"
-                  type="button"
-                  id="buttonSwitchCamera"
-                  onClick={this.switchCamera}
-                  value="Switch Camera"
-                /> */}
-              </div>
-            ) : null}
-            <div id="video-container" className="col-md-6">
-              {this.state.publisher !== undefined ? (
-                <div
-                  className="stream-container col-md-6 col-xs-6"
-                  onClick={() =>
-                    this.handleMainVideoStream(this.state.publisher)
-                  }
-                >
-                  <UserVideoComponent streamManager={this.state.publisher} />
-                </div>
+            <Stack direction="row">
+              {this.state.mainStreamManager !== undefined ? (
+                <Container>
+                  <UserVideoComponent
+                    streamManager={this.state.mainStreamManager}
+                  />
+                </Container>
               ) : null}
-              {this.state.subscribers.map((sub, i) => (
-                <div
-                  key={i}
-                  className="stream-container col-md-6 col-xs-6"
-                  onClick={() => this.handleMainVideoStream(sub)}
-                >
-                  <UserVideoComponent streamManager={sub} />
+              <Container>
+                <div id="video-container" className="col-md-6">
+                  {this.state.publisher !== undefined ? (
+                    <div
+                      className="stream-container col-md-6 col-xs-6"
+                      onClick={() =>
+                        this.handleMainVideoStream(this.state.publisher)
+                      }
+                    >
+                      <UserVideoComponent
+                        streamManager={this.state.publisher}
+                      />
+                    </div>
+                  ) : null}
+                  {this.state.subscribers.map((sub, i) => (
+                    <div
+                      key={i}
+                      className="stream-container col-md-6 col-xs-6"
+                      onClick={() => this.handleMainVideoStream(sub)}
+                    >
+                      <UserVideoComponent streamManager={sub} />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </Container>
+            </Stack>
           </div>
         ) : null}
       </div>
@@ -392,7 +389,7 @@ class App extends Component {
    * These methods retrieve the mandatory user token from OpenVidu Server.
    * This behavior MUST BE IN YOUR SERVER-SIDE IN PRODUCTION (by using
    * the API REST, openvidu-java-client or openvidu-node-client):
-   *   1) Initialize a Session in OpenVidu Server	(POST /openvidu/api/sessions)
+   *   1) Initialize a Session in OpenVidu Server (POST /openvidu/api/sessions)
    *   2) Create a Connection in OpenVidu Server (POST /openvidu/api/sessions/<SESSION_ID>/connection)
    *   3) The Connection.token must be consumed in Session.connect() method
    */
@@ -415,7 +412,7 @@ class App extends Component {
           },
         })
         .then((response) => {
-          console.log("CREATE SESION", response);
+          // console.log("CREATE SESION", response);
           resolve(response.data.id);
         })
         .catch((response) => {
@@ -466,7 +463,7 @@ class App extends Component {
           }
         )
         .then((response) => {
-          console.log("TOKEN", response);
+          // console.log("TOKEN", response);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));
@@ -474,4 +471,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default (props) => <Video {...props} params={useParams()} />;

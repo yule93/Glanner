@@ -227,8 +227,10 @@ export default function GroupPlannerPresenter({
   handleModalClose,
   handlePickerOpen,
   handlePickerClose,
+  handleEvent,
 }) {
   const [specificEvent, setSpecificEvent] = useState({});
+  const [eventId, setEventId] = useState();
   const [date, setDate] = useState(new Date());
   const emptyPlans = [];
   const emptyWrite = [];
@@ -270,6 +272,7 @@ export default function GroupPlannerPresenter({
             alarmDate: "",
           };
           setSpecificEvent(newEvent);
+          setEventId(e.event._def.extendedProps.workId);
         }}
         titleFormat={function (date) {
           //console.log(date)
@@ -360,7 +363,11 @@ export default function GroupPlannerPresenter({
                   marginRight: "20px",
                 }}
               >
-                <AddEventModal date={date.date} />
+                <AddEventModal
+                  date={date.date}
+                  type={"groupPlanner"}
+                  handleEvent={handleEvent}
+                />
               </div>
             </div>
           );
@@ -374,6 +381,8 @@ export default function GroupPlannerPresenter({
         specificEvent={specificEvent}
         type={"groupPlanner"}
         groupPlannerId={groupPlannerId}
+        handleEvent={handleEvent}
+        eventId={eventId}
       />
 
       {/* 플래너 예정된 일정, 최근 글 파트 */}
