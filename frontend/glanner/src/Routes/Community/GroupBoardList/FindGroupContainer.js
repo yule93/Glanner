@@ -29,14 +29,26 @@ export default function FindGroupContainer () {
       console.log(e.target.value)
       setInputData(e.target.value)
     }
-    // 검색 기능 다시 검토 필요
+
+    // 검색 기능
     const searchBoard = () => {
       if (category === 'search') {
-        axios(`/api/group-board/search/${page}/4`)
+        axios(`/api/group-board/search/${page}/4/?keyword=${inputData}`, { method: 'GET' })
           .then(res => {
-            setGroupBoardList(res.data)
-            setLoading(false)
-          })
+              setInputData('')
+              setGroupBoardList(res.data)
+              setLoading(false)
+            }
+          )
+        .catch(err => console.log(err))
+      } else if (category === 'interest') {
+        axios(`/api/group-board/interest/${page}/4/?keyword=${inputData}`, { method: 'GET' })
+          .then(res => {
+              setInputData('')
+              setGroupBoardList(res.data)
+              setLoading(false)
+            }
+          )
           .catch(err => console.log(err))
       }
     }

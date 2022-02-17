@@ -24,6 +24,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactComponent as Logout } from "../assets/arrow-right-from-bracket-solid.svg";
 import logo from "../assets/glannerLogo1.png";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+// import { addGlanner, onClickPlanner, removeGlanner } from "../redux/planners";
+// import { deleteGlanner, fetchGlanner } from "../redux/apiCalls";
 import { Typography } from "@mui/material";
 
 const GroupPlannerList = styled.div`
@@ -161,7 +165,7 @@ function Navigator(props) {
   };
   const fetchGroupList = () => {
     axios
-      .get(`/api/glanner`, bodyParams)
+      .get(`/api/glanner`)
       .then((res) => {
         setGroupPList(res.data);
       })
@@ -170,8 +174,8 @@ function Navigator(props) {
 
   React.useEffect(() => {
     fetchGroupList();
-  }, []);
 
+  }, []);
   return (
     <Drawer variant="persistent" {...other} open={true} varient="no">
       <List disablePadding sx={{ display: "inline-block" }}>
@@ -263,19 +267,20 @@ function Navigator(props) {
                 <GroupPlannerList>
                   <Link to={`/group/${glannerId}`}>
                     <ListItemButton
-                      selected={function () {
-                        return (
-                          <FontAwesomeIcon
-                            icon={faAngleRight}
-                            className="arrowRight"
-                            style={{
-                              width: 15 + "px",
-                              color: "#959595",
-                              marginLeft: 10 + "px",
-                            }}
-                          />
-                        );
-                      }}
+                      // selected={
+                      //   () => {
+                      //   return (
+                      //     <FontAwesomeIcon
+                      //       icon={faAngleRight}
+                      //       className="arrowRight"
+                      //       style={{
+                      //         width: 15 + "px",
+                      //         color: "#959595",
+                      //         marginLeft: 10 + "px",
+                      //       }}
+                      //     />
+                      //   );
+                      // }}
                       sx={item}
                       id={glannerId}
                     >
