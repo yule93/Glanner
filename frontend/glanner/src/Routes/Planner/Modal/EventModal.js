@@ -33,7 +33,7 @@ const ModalHeaderDiv = styled.div`
   border-bottom: 2px solid #e5e5e5;
   display: flex;
   padding-bottom: 5px;
-  font-family: 'Noto Sans KR, sans-serif';
+  font-family: "Noto Sans KR, sans-serif";
 `;
 
 const ModalFooterDiv = styled.div`
@@ -50,7 +50,25 @@ const SubmitButton = styled.button`
   border-radius: 6px;
   height: 35px;
   width: 55px;
-  font-family: 'Noto Sans KR, sans-serif';
+  font-family: "Noto Sans KR, sans-serif";
+  &:hover {
+    color: #ffffff;
+    background-color: #8c7b8066;
+    border: 0px solid #8c7b8066;
+  }
+`;
+
+const DeleteButton = styled.button`
+  background-color: #ac7b8022;
+  color: #ac7b80;
+  font-size: 18px;
+  font-family: "Noto Sans KR, sans-serif";
+  line-height: 14px;
+  border: 0px solid #8c7b80;
+  border-radius: 6px;
+  margin-left: 4px;
+  height: 35px;
+  width: 55px;
   &:hover {
     color: #ffffff;
     background-color: #8c7b8066;
@@ -119,8 +137,10 @@ export default function EventModal({
   handleClose,
   open,
   specificEvent,
+  eventId,
   type,
   groupPlannerId,
+  handleEvent,
 }) {
   const navigate = useNavigate();
   const [data, setData] = useState({
@@ -164,8 +184,11 @@ export default function EventModal({
           .put("/api/glanner/work", data)
           .then((res) => {
             alert("수정 성공!");
-            setData({});
+            if (handleEvent) {
+              handleEvent(String(data.startDate).substring(0, 8) + "01");
+            }
             console.log(res.data);
+            setData({});
             handleClose();
             navigate(`/group/${groupPlannerId}`);
           })
@@ -175,10 +198,14 @@ export default function EventModal({
           });
       } else if (type === "myPlanner") {
         axios
-          .put("", data)
+          .put(`/api/user/planner/work/${eventId}`, data)
           .then((res) => {
             alert("수정 성공!");
             console.log(res.data);
+            if (handleEvent) {
+              handleEvent(String(data.startDate).substring(0, 8) + "01");
+            }
+            setData({});
             handleClose();
             navigate("/");
           })
@@ -194,8 +221,11 @@ export default function EventModal({
           .post("/api/glanner/work", data)
           .then((res) => {
             alert("작성 성공!");
-            setData({});
+            if (handleEvent) {
+              handleEvent(String(data.startDate).substring(0, 8) + "01");
+            }
             console.log(res.data);
+            setData({});
             handleClose();
             navigate(`/group/${groupPlannerId}`);
           })
@@ -208,13 +238,57 @@ export default function EventModal({
           .post("/api/user/planner/work", data)
           .then((res) => {
             alert("작성 성공!");
+            if (handleEvent) {
+              handleEvent(String(data.startDate).substring(0, 8) + "01");
+            }
             console.log(res.data);
+            setData({});
             handleClose();
             navigate("/");
           })
           .catch((err) => {
-            console.log(err.toJSON(), data);
+            console.log(err.toJSON());
             alert("작성 실패!");
+          });
+      }
+    }
+  };
+
+  const handleDelete = (e) => {
+    if (specificEvent && eventId) {
+      if (type === "myPlanner") {
+        axios
+          .delete(`/api/user/planner/work/${eventId}`)
+          .then((res) => {
+            alert("삭제 성공!");
+            if (handleEvent) {
+              handleEvent(String(data.startDate).substring(0, 8) + "01");
+            }
+            console.log(res.data);
+            setData({});
+            handleClose();
+            navigate("/");
+            e.preventDefault();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (type === "groupPlanner" && groupPlannerId) {
+        axios
+          .delete(`/api/user/planner/work/${groupPlannerId}/${eventId}`)
+          .then((res) => {
+            alert("삭제 성공!");
+            if (handleEvent) {
+              handleEvent(String(data.startDate).substring(0, 8) + "01");
+            }
+            console.log(res.data);
+            setData({});
+            handleClose();
+            navigate(`/group/${groupPlannerId}`);
+            e.preventDefault();
+          })
+          .catch((err) => {
+            console.log(err);
           });
       }
     }
@@ -424,6 +498,18 @@ export default function EventModal({
             </Grid>
             <ModalFooterDiv>
               <SubmitButton type="submit">OK</SubmitButton>
+              {specificEvent ? (
+                <DeleteButton
+                  type="button"
+                  onClick={(e) => {
+                    handleDelete(e);
+                  }}
+                >
+                  삭제
+                </DeleteButton>
+              ) : (
+                ""
+              )}
             </ModalFooterDiv>
           </form>
         </Box>

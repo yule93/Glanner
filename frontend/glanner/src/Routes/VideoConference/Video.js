@@ -11,8 +11,8 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import TextField from "@mui/material/TextField";
 import { Container, Stack } from "@mui/material";
 
-const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
-// const OPENVIDU_SERVER_URL = "https://i6a606.p.ssafy.io:5443";
+// const OPENVIDU_SERVER_URL = "https://" + window.location.hostname + ":4443";
+const OPENVIDU_SERVER_URL = "https://i6a606.p.ssafy.io:5443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 class Video extends Component {

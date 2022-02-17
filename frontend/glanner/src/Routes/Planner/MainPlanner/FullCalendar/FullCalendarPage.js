@@ -103,6 +103,10 @@ const CalendarDiv = styled.div`
     background-color: #e5e5e5;
   }
 
+  .fc-scroller-harness::webkit-scrollbar {
+    display: none;
+  }
+
   .fc-daygrid-day-events {
     margin: 0 10px;
     margin-bottom: 5px;
@@ -176,6 +180,7 @@ export default function Calendar({ eventList, handleEvent }) {
       .substring(0, 10)
   );
   const [specificEvent, setSpecificEvent] = useState({});
+  const [eventId, setEventId] = useState();
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const handlePickerOpen = () => setPickerOpen(true);
@@ -186,8 +191,8 @@ export default function Calendar({ eventList, handleEvent }) {
 
   const calendarRef = useRef();
 
-  useEffect(() => { }, [eventList, date]);
-  
+  useEffect(() => {}, [eventList, date]);
+
   return (
     <CalendarDiv>
       <FullCalendar
@@ -196,8 +201,8 @@ export default function Calendar({ eventList, handleEvent }) {
         ref={calendarRef}
         headerToolbar={{
           start: "title gotoDate",
-          center: "",
-          end: "filtering today prev next",
+          center: "prevYear prev next nextYear",
+          end: "filtering today",
         }}
         customButtons={{
           gotoDate: {
@@ -241,11 +246,9 @@ export default function Calendar({ eventList, handleEvent }) {
           var newDay = new Date(date.date);
           console.log(newDay.toISOString().substring(0, 10));
           // console.log(eventList);
-          if (
-            newDay.toISOString().substring(8, 10) === "15"
-          ) {
-            setDate(newDay.getUTCFullYear(), newDay.getMonth(), 1);
-            handleEvent(newDay.toISOString().substring(0, 10));
+          if (newDay.toISOString().substring(8, 10) === "15") {
+            setDate(newDay.toISOString().substring(0, 8)+"01");
+            handleEvent(newDay.toISOString().substring(0, 8)+"01");
           }
         }}
         events={eventList}
@@ -268,8 +271,9 @@ export default function Calendar({ eventList, handleEvent }) {
             alarmDate: "",
           };
           setSpecificEvent(newEvent);
+          setEventId(e.event._def.extendedProps.workId);
         }}
-        height={780}
+        aspectRatio={1.8}
         expandRows={false}
         titleFormat={function (date) {
           //console.log(date)
@@ -304,7 +308,11 @@ export default function Calendar({ eventList, handleEvent }) {
                   marginRight: "20px",
                 }}
               >
-                <AddEventModal date={date.date} type={"myPlanner"} />
+                <AddEventModal
+                  date={date.date}
+                  type={"myPlanner"}
+                  handleEvent={handleEvent}
+                />
               </div>
             </div>
           );
@@ -316,6 +324,7 @@ export default function Calendar({ eventList, handleEvent }) {
         open={modalOpen}
         handleClose={handleModalClose}
         specificEvent={specificEvent}
+        eventId={eventId}
         type={"myPlanner"}
       />
     </CalendarDiv>
