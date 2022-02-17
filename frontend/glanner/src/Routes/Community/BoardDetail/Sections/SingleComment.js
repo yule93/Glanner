@@ -97,9 +97,9 @@ export const SingleComment = ({
         title={comment.userName}
         subheader={getTime(comment.createdDate)}
         className={classes.commentDateText}
-        sx={ comment.parentId !== -1 ? {'& .MuiCardHeader-content': {position: 'relative', right: '25px'}} : null }
+        sx={ comment.parentId !== -1 ? {'& .MuiCardHeader-content': {padding: 0, position: 'relative', right: '25px'}} : null }
       />
-      <CardContent>
+      <CardContent sx={{padding: '0px 16px 0px 16px'}}>
         <p className={classes.commentContent} style={{ whiteSpace: 'normal', overflow: 'hidden', wordWrap: 'break-word'}}>
           {comment.content}
         </p>

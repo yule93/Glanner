@@ -33,7 +33,7 @@ export const BoardDetailPagePresenter = ({
         <DetailBody post={post} addLike={addLike} postLikeCount={postLikeCount} glannerInfo={glannerInfo} />
 
         <Divider />        
-        <Typography component="div" variant="h5" sx={{ padding: 3}}> 댓글 {comments && comments.length}</Typography>            
+        <Typography component="div" sx={{ padding: '15px 24px 10px 24px', fontSize: '20px'}}> 댓글 {comments && comments.length}</Typography>            
         
         {/* 댓글 박스 */}       
         {comments && comments.map(comment => {           
