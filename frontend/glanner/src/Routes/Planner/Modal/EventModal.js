@@ -466,6 +466,7 @@ export default function EventModal({
                   selected={StartDate}
                   onChange={(date) => setStartDate(date)}
                   dateFormat="yyyy-MM-dd(eee)"
+                  minDate={new Date()}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -596,6 +597,7 @@ export default function EventModal({
                   selected={EndDate}
                   onChange={(date) => setEndDate(date)}
                   dateFormat="yyyy-MM-dd(eee)"
+                  minDate={StartDate}
                 />
               </Grid>
               <Grid item xs={2}>
