@@ -112,18 +112,6 @@ const settingItem = {
   fontFamily: "Noto Sans KR",
 };
 
-// const onClickPlanner = (e) => {
-//   categories.map(({ id, children }) => {
-//     children.map(({ id: childId, active }) => {
-//       if (e.currentTarget.id == childId) {
-//         active = true;
-//       } else {
-//         active = false;
-//       }
-//     });
-//   });
-// };
-
 function Navigator(props) {
   const { ...other } = props;
   const settings = [
