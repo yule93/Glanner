@@ -59,6 +59,8 @@ export const BoardDetailPagePresenter = ({
                   parentCommentId={comment.commentId} 
                   setComments={setComments}
                   updateComment={updateComment}
+                  glannerInfo={glannerInfo}
+                  addMember={addMember}
                 />
               </>
               }

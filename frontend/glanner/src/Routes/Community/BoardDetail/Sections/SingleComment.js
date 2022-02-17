@@ -43,46 +43,48 @@ export const SingleComment = ({
   };
   const [added, setAdded] = useState(true);
   const { id } = useParams();
-
+  // console.log('댓글')
   return (
     <Box className={comment.parentId === -1 ? classes.comments : classes.nestedComment} key={comment.boardId}>
       <CardHeader
         avatar={
           comment.parentId === -1 ? 
-          <>
-            <CircleUser
-              style={{
-                fontSize: 30 + "px",
-                color: "#5F5F5F",
-                backgroundColor: "#F2D0D9",
-                borderRadius: "50%",
-                marginRight: 2
-              }}
-            />   
-          </> 
-          :
-          <>
-            <span 
-              className={classes.replyIcon}
-              style={{ position: 'relative', left: '-30px'}}
-            >ㄴ</span>
-            <CircleUser
-              style={{
-                fontSize: 30 + "px",
-                color: "#5F5F5F",
-                backgroundColor: "#F2D0D9",
-                borderRadius: "50%",
-                marginRight: 2,
-                position: 'relative',
-                left: -25
-              }}
-            /> 
-          </>
-        }
+            <>
+              <CircleUser
+                style={{
+                  fontSize: 30 + "px",
+                  color: "#5F5F5F",
+                  backgroundColor: "#F2D0D9",
+                  borderRadius: "50%",
+                  marginRight: 2
+                }}
+              />   
+            </> 
+            :
+            <>
+              <span 
+                className={classes.replyIcon}
+                style={{ position: 'relative', left: '-30px'}}
+              >ㄴ</span>
+              <CircleUser
+                style={{
+                  fontSize: 30 + "px",
+                  color: "#5F5F5F",
+                  backgroundColor: "#F2D0D9",
+                  borderRadius: "50%",
+                  marginRight: 2,
+                  position: 'relative',
+                  left: -25
+                }}
+              /> 
+            </>
+         }
         action={
           <>          
             <MoreBtn
-              editData={comment} 
+              editData={comment}
+              commentData={comment}
+              commentUserName={comment.userName} 
               type={`${pathname}comment`}
               comments={comments} 
               setComments={setComments} 

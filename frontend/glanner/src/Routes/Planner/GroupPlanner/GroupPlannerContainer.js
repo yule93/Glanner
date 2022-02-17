@@ -158,7 +158,6 @@ export default function GroupPlannerContainer() {
       })
       .catch(err => console.log(err))
   }, [id, date])
-  console.log(id)
 
     // 멤버 삭제
   const deleteMember = (user, userId) => {

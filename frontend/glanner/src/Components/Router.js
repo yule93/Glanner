@@ -25,6 +25,7 @@ const HeaderDiv = styled.div`
 `;
 
 export default function RouterComponent() {
+  console.log(jwt_decode(localStorage.getItem("token")))
   return (
     <>
       <Paper
@@ -40,7 +41,8 @@ export default function RouterComponent() {
                       "@"
                     )[0]
                   : ""
-              }님의 플래너`}
+              }의 플래너`}
+              host={jwt_decode(localStorage.getItem("token")).sub}
             />
           </HeaderDiv>
           <Navigator
