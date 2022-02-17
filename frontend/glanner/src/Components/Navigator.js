@@ -163,7 +163,7 @@ function Navigator(props) {
   React.useEffect(() => {
     fetchGroupList();
 
-  }, []);
+  }, [groupPList]);
   return (
     <Drawer variant="persistent" {...other} open={true} varient="no">
       <List disablePadding sx={{ display: "inline-block" }}>
