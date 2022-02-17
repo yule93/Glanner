@@ -101,19 +101,21 @@ export default function GroupPlannerContainer() {
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
 
-  const fetchEventList = (date) => {
-    // axios
-    //   .get(`/api/glanner/${groupPlannerId.id}/${date}`)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+  const fetchEventList = (moveDay) => {
+    if (moveDay !== undefined) {
+      setDate(moveDay);
+      console.log(date);
+    } else {
+      const nowDate =
+        new Date(new Date().getTime()).toISOString().substring(0, 8) + "01";
+      setDate(nowDate);
+    }
 
-    axios(`/api/glanner/${id}`)
-      .then(res => {
-        setGlannerInfo(res.data)
+    axios
+      .get(`/api/glanner/${groupPlannerId.id}/${date}`)
+      .then((res) => {
+        console.log(res.data);
+        setEventList(res.data);
       })
       .catch(err => console.log(err))
     axios(`/api/glanner-board/${id}/0/3`)
@@ -126,17 +128,13 @@ export default function GroupPlannerContainer() {
         setlatestPlan(res.data)
       })
       .catch(err => console.log(err))
-
   };
 
   useEffect(() => {
-    fetchEventList(date);
     const token = localStorage.getItem('token');
     const decoded = jwt_decode(token);
     setAuthData(decoded)
-  }, [id])
-
-
+  }, [id, date])
   
 
     // 멤버 삭제
@@ -173,9 +171,8 @@ export default function GroupPlannerContainer() {
         groupBoardId={glannerInfo.groupBoardId}
         deleteMember={deleteMember}
         authData={authData}
-
         groupPlannerId={groupPlannerId.id}
-        // eventList={eventList}
+        eventList={eventList}
         handleModalOpen={handleModalOpen}
         handleModalClose={handleModalClose}
         modalOpen={modalOpen}

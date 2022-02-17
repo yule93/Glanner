@@ -273,7 +273,7 @@ export default function Calendar({ eventList, handleEvent }) {
           setSpecificEvent(newEvent);
           setEventId(e.event._def.extendedProps.workId);
         }}
-        aspectRatio={1.8}
+        contentHeight={780}
         expandRows={false}
         titleFormat={function (date) {
           //console.log(date)
