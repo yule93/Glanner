@@ -115,7 +115,9 @@ export const GroupFormPageContainer = () => {
       })
         .then(res => {
           alert('작성 성공!')
-          axios(`/api/glanner/`, {method: 'PUT', data: {glannerId: res.data.glannerId, glannerName: data.title}})
+          let name = window.prompt('원하시는 글래너 이름을 입력해주세요.')
+          if (name.trim() == '') {name = res.data.glannerName} 
+          axios(`/api/glanner/`, {method: 'PUT', data: {glannerId: res.data.glannerId, glannerName: name}})
             .then(res => window.location.reload())
             .catch(err => console.log(err))
           // navigate(`/board/group/${res.data.id}`)
