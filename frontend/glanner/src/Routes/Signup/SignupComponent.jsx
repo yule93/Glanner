@@ -64,28 +64,31 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
 
   const regPhone = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/
   const [min, setMin] = useState(3);
-  const [sec, setSec] = useState(0);
+  const [sec, setSec] = useState(20);
   const time = useRef(180);
   const timerId = useRef(null);
 
   React.useEffect(() => {
-    timerId.current = setInterval(() => {
-      setMin(parseInt(time.current / 60));
-      setSec(time.current % 60);
-      time.current -= 1;
-    }, 1000);
-
-    return () => clearInterval(timerId.current);
-  }, []);
+    if (isSent) {
+      timerId.current = setInterval(() => {
+        setMin(parseInt(time.current / 60));
+        setSec(time.current % 60);
+        time.current -= 1;
+      }, 1000);
+      
+      return () => clearInterval(timerId.current);
+    }
+  }, [isSent]);
 
   React.useEffect(() => {
     // 만약 타임 아웃이 발생했을 경우
-    if (time.current <= 0) {
+    if (time.current <= -1) {
       alert('다시 인증해주세요.')
       clearInterval(timerId.current);
+      setIsSent(false)
       // dispatch event
       setMin(3)
-      setSec(0)
+      setSec(20)
     }
     if (time.current == 200) {
       clearInterval(timerId.current);
@@ -142,10 +145,10 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={12} md={4} component={Paper} elevation={6} square backgroundColor="#F6F6F6" sx={{height: "100%"}}>
+        <Grid item xs={12} sm={12} md={4} component={Paper} elevation={6} square backgroundColor="#F6F6F6" sx={{height: "100%", display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
           <Box
             sx={{
-              mt: '15%',
+              
               // mx: {
               //   xs: 0,
               //   sm: 0
@@ -192,7 +195,6 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                     id="email"
                     name="email"
                     autoComplete="email"
-                    autoFocus
                     {...register('email', {required: true, pattern: /^\S+@\S+$/i})}              
                     />
                 </Grid>
@@ -257,7 +259,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                     placeholder='숫자만 입력'
                     name="phone"
                     // autoComplete="email"
-                    autoFocus
+
                     {...register('phone', {required: true, pattern: /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/})}                
                     />
                 </Grid>
@@ -295,7 +297,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                       InputProps={{
                         endAdornment: (
                           <Box>
-                            {min}:{sec}
+                            {min}:{String(sec).padStart(2, '0')}
                           </Box>
                         ),
                       }}
