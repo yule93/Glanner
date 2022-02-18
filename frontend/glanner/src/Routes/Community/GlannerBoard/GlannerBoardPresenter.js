@@ -176,7 +176,11 @@ export const GlannerBoardPresenter = ({
                             {post.title}
                         </Typography>
                         <Typography variant="body2" sx={{my: 5}} color="text.secondary">
-                            {post.content}
+                            {String(post.content).split('\n').map(line => {
+                                return (
+                                    <span>{line}<br/></span>
+                                )
+                            })}
                         </Typography>
                     </Box>
                     {/* 댓글 시작 */}
