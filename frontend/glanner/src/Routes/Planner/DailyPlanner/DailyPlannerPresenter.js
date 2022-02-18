@@ -146,14 +146,6 @@ const events = [
   },
   {
     id: 2,
-    title: "event 2",
-    type: "groupPlanner",
-    content: "UI 마무리 얼른 해야....",
-    start: "2022-02-08T13:00:00",
-    end: "2022-02-08T18:00:00",
-  },
-  {
-    id: 3,
     title: "UI 마무리",
     type: "myPlanner",
     content: "UI 마무리 얼른 해야....",
@@ -161,12 +153,20 @@ const events = [
     end: "2022-02-08T18:00:00",
   },
   {
+    id: 3,
+    title: "발표",
+    type: "myPlanner",
+    content: "글래너 발표",
+    start: "2022-02-18T13:00:00",
+    end: "2022-02-18T15:00:00",
+  },
+  {
     id: 4,
-    title: "event 3",
+    title: "[온라인 PT] PT-필라테스 18:00-20:00",
     type: "groupPlanner",
-    content: "UI 마무리 얼른 해야....",
-    start: "2022-02-08T13:00:00",
-    end: "2022-02-08T18:00:00",
+    content: "강사는 저입니다. 매트만 준비하세요.",
+    start: "2022-02-18T18:00:00",
+    end: "2022-02-18T20:00:00",
   },
 ];
 
@@ -221,8 +221,8 @@ function renderEventContent(events) {
 }
 
 export default function DailyPlannerPresenter(plannerEvent) {
-  const [myCount, setMyCount] = useState(2);
-  const [groupCount, setGroupCount] = useState(2);
+  const [myCount, setMyCount] = useState(1);
+  const [groupCount, setGroupCount] = useState(1);
 
   return (
     <CalendarDiv>
