@@ -19,9 +19,9 @@ import momentPlugin from "@fullcalendar/moment";
 import monthName from "../../../store/monthName";
 import AddEventModal from "../Modal/AddEventModal";
 import { Link, useNavigate } from "react-router-dom";
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import {MenuItem, Menu, } from "@mui/material";
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
+import { MenuItem, Menu } from "@mui/material";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import EventModal from "../Modal/EventModal";
 import { getTime } from "../../Community/helper";
 
@@ -197,7 +197,9 @@ function renderEventContent(events) {
         style={{ width: 14 + "px", color: "#ABC3FF" }}
       />
       {"  "}
-      {events.event._def.title}
+      {String(events.event._def.title).length > 13
+        ? String(events.event._def.title).substring(0, 11) + "..."
+        : events.event._def.title}
     </div>
   );
 }
@@ -241,7 +243,6 @@ export default function GroupPlannerPresenter({
   handlePickerClose,
   handleEvent,
 }) {
-
   const navigator = useNavigate();
   const [specificEvent, setSpecificEvent] = useState({});
   const [eventId, setEventId] = useState();
@@ -301,11 +302,11 @@ export default function GroupPlannerPresenter({
           center: "",
           end: "member filtering prev next updateBoard",
         }}
-        customButtons={{          
+        customButtons={{
           updateBoard: {
             text: "모집글",
             click: () => {
-              navigator(`/board/group/${groupBoardId}`)
+              navigator(`/board/group/${groupBoardId}`);
             },
           },
           gotoDate: {
@@ -348,27 +349,45 @@ export default function GroupPlannerPresenter({
                           icon={faUser}
                           className="user"
                           style={{
-                            width: 'auto',
+                            width: "auto",
                             color: "#959595",
                             marginRight: "5px",
-                          }}                          
+                          }}
                         />
                         {numOfMember}
                       </div>
                     </Box>
                     <Menu {...bindMenu(popupState)}>
-                      {membersInfos && membersInfos.map((info, idx) => {
-                        return <MenuItem key={idx} sx={{width: 200, display: 'flex', justifyContent: 'space-between'}}>
-                          {info.userName} 
-                          {authData.sub === hostEmail && authData.sub !== info.userEmail && <PersonRemoveIcon onClick={() => {popupState.close(); deleteMember(info.userName, info.userId)}} />}
-                          </MenuItem>
-                      })}   
+                      {membersInfos &&
+                        membersInfos.map((info, idx) => {
+                          return (
+                            <MenuItem
+                              key={idx}
+                              sx={{
+                                width: 200,
+                                display: "flex",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              {info.userName}
+                              {authData.sub === hostEmail &&
+                                authData.sub !== info.userEmail && (
+                                  <PersonRemoveIcon
+                                    onClick={() => {
+                                      popupState.close();
+                                      deleteMember(info.userName, info.userId);
+                                    }}
+                                  />
+                                )}
+                            </MenuItem>
+                          );
+                        })}
                     </Menu>
                   </React.Fragment>
                 )}
-              </PopupState>   
+              </PopupState>
             ),
-          },          
+          },
         }}
         initialDate={date}
         locale={"ko"}
@@ -429,7 +448,9 @@ export default function GroupPlannerPresenter({
         }}
       >
         {/* 예정된 일정 파트 */}
-        <Typography component={'div'} sx={{ mx: "7px" }}>예정된 일정</Typography>
+        <Typography component={"div"} sx={{ mx: "7px" }}>
+          예정된 일정
+        </Typography>
         <Box
           sx={{
             width: "auto",
@@ -456,14 +477,16 @@ export default function GroupPlannerPresenter({
                   }}
                 >
                   <Typography
-                    component={'div'}
+                    component={"div"}
                     sx={{ color: "#262626", fontSize: "20px", display: "flex" }}
                   >
-                    {title}
+                    {String(title).length > 16
+                      ? String(title).substring(0, 16) + "..."
+                      : title}
                     <Dday date={start} />
                   </Typography>
                   <Typography
-                    component={'div'}
+                    component={"div"}
                     sx={{ color: "#262626", fontSize: "18px", mt: "5px" }}
                   >
                     {String(start).substring(0, 10).replaceAll("-", ".")}{" "}
@@ -471,7 +494,7 @@ export default function GroupPlannerPresenter({
                     {String(end).substring(11, end.length)}
                   </Typography>
                   <Typography
-                    component={'div'}
+                    component={"div"}
                     sx={{ color: "#5F5F5F", fontSize: "16px", mt: "10px" }}
                   >
                     {content.length > 30
@@ -479,11 +502,14 @@ export default function GroupPlannerPresenter({
                       : content}
                   </Typography>
                   <Typography
-                    component={'div'}
+                    component={"div"}
                     sx={{ display: "flex", alignItems: "center", mt: "24px" }}
                   >
                     화상회의
-                    <Typography component={'div'} sx={{ ml: "8px", color: "#929292" }}>
+                    <Typography
+                      component={"div"}
+                      sx={{ ml: "8px", color: "#929292" }}
+                    >
                       ON
                     </Typography>
                   </Typography>
@@ -491,128 +517,8 @@ export default function GroupPlannerPresenter({
               </Link>
             );
           })}
-          {latestPlan.length < 3 && emptyPlans.slice(latestPlan.length - 3).map((idx) => {
-            return (
-              <Paper
-                elevation={0}
-                sx={{
-                  width: "370px",
-                  height: "180px",
-                  my: "10px",
-                  mx: "7px",
-                  boxShadow: "0px 2px 4px 2px rgba(130, 130, 130, 0.3)",
-                  py: "10px",
-                  px: "20px",
-                  overflow: "hidden",
-                  textAlign: "center",
-                  color: "#C4C4C4",
-                }}
-                key={idx}
-              >
-                <Typography component={'div'}>예정된 일정이 없습니다.</Typography>
-              </Paper>
-            );
-          })}
-        </Box>
-
-        {/* 최근 글 부분 */}
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            marginTop: "20px",
-            textAlign: "left",
-          }}
-        >
-          <Typography sx={{ mx: "7px" }} component={'div'}>최근 글
-            <Link to={'./glanner-board'}> 
-              <span style={{float: 'right', marginRight: 50, color: '#959595' }}>
-                더보기 {'>'}
-              </span>
-            </Link>
-          </Typography>
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {latestBoard.map(({ boardId, title, userName, createdDate, content }) => {
-              return (
-                <Link to={``} key={boardId}>
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      width: "370px",
-                      height: "180px",
-                      my: "10px",
-                      mx: "7px",
-                      boxShadow: "0px 2px 4px 2px rgba(130, 130, 130, 0.3)",
-                      py: "10px",
-                      px: "20px",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <Typography
-                      component={'div'}
-                      sx={{
-                        color: "#262626",
-                        fontSize: "20px",
-                        display: "flex",
-                        mb: "10px",
-                      }}
-                    >
-                      {title}
-                    </Typography>
-                    <Typography
-                      component={'div'}
-                      sx={{
-                        color: "#5F5F5F",
-                        fontSize: "16px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      작성자{" "}
-                      <Typography
-                        component={'div'}
-                        sx={{ ml: "5px", fontSize: "18px", color: "#262626" }}
-                      >
-                        {userName}
-                      </Typography>
-                    </Typography>
-                    <Typography
-                      component={'div'}
-                      sx={{
-                        color: "#5F5F5F",
-                        fontSize: "16px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      작성일{" "}
-                      <Typography
-                        component={'div'}
-                        sx={{ ml: "5px", fontSize: "18px", color: "#262626" }}
-                      >
-                        {getTime(createdDate)}
-                      </Typography>
-                    </Typography>
-                    <Typography
-                      component={'div'}
-                      sx={{ color: "#262626", fontSize: "16px", mt: "20px" }}
-                    >
-                      {content.length > 30
-                        ? String(content).substring(0, 30) + "..."
-                        : content}
-                    </Typography>
-                  </Paper>
-                </Link>
-              );
-            })}
-            {latestBoard.length < 3 && emptyWrite.slice(latestBoard.length - 3).map((idx) => {
+          {latestPlan.length < 3 &&
+            emptyPlans.slice(latestPlan.length - 3).map((idx) => {
               return (
                 <Paper
                   elevation={0}
@@ -630,10 +536,143 @@ export default function GroupPlannerPresenter({
                   }}
                   key={idx}
                 >
-                  <Typography component={'div'}>작성된 게시물이 없습니다.</Typography>
+                  <Typography component={"div"}>
+                    예정된 일정이 없습니다.
+                  </Typography>
                 </Paper>
               );
             })}
+        </Box>
+
+        {/* 최근 글 부분 */}
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            marginTop: "20px",
+            textAlign: "left",
+          }}
+        >
+          <Typography sx={{ mx: "7px" }} component={"div"}>
+            최근 글
+            <Link to={"./glanner-board"}>
+              <span
+                style={{ float: "right", marginRight: 50, color: "#959595" }}
+              >
+                더보기 {">"}
+              </span>
+            </Link>
+          </Typography>
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {latestBoard.map(
+              ({ boardId, title, userName, createdDate, content }) => {
+                return (
+                  <Link to={``} key={boardId}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        width: "370px",
+                        height: "180px",
+                        my: "10px",
+                        mx: "7px",
+                        boxShadow: "0px 2px 4px 2px rgba(130, 130, 130, 0.3)",
+                        py: "10px",
+                        px: "20px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Typography
+                        component={"div"}
+                        sx={{
+                          color: "#262626",
+                          fontSize: "20px",
+                          display: "flex",
+                          mb: "10px",
+                        }}
+                      >
+                        {String(title).length > 20
+                          ? String(title).substring(0, 20) + "..."
+                          : title}
+                      </Typography>
+                      <Typography
+                        component={"div"}
+                        sx={{
+                          color: "#5F5F5F",
+                          fontSize: "16px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        작성자{" "}
+                        <Typography
+                          component={"div"}
+                          sx={{ ml: "5px", fontSize: "18px", color: "#262626" }}
+                        >
+                          {userName}
+                        </Typography>
+                      </Typography>
+                      <Typography
+                        component={"div"}
+                        sx={{
+                          color: "#5F5F5F",
+                          fontSize: "16px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        작성일{" "}
+                        <Typography
+                          component={"div"}
+                          sx={{ ml: "5px", fontSize: "18px", color: "#262626" }}
+                        >
+                          {getTime(createdDate)}
+                        </Typography>
+                      </Typography>
+                      <Typography
+                        component={"div"}
+                        sx={{ color: "#262626", fontSize: "16px", mt: "20px" }}
+                      >
+                        {content.length > 30
+                          ? String(content).substring(0, 30) + "..."
+                          : content}
+                      </Typography>
+                    </Paper>
+                  </Link>
+                );
+              }
+            )}
+            {latestBoard.length < 3 &&
+              emptyWrite.slice(latestBoard.length - 3).map((idx) => {
+                return (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      width: "370px",
+                      height: "180px",
+                      my: "10px",
+                      mx: "7px",
+                      boxShadow: "0px 2px 4px 2px rgba(130, 130, 130, 0.3)",
+                      py: "10px",
+                      px: "20px",
+                      overflow: "hidden",
+                      textAlign: "center",
+                      color: "#C4C4C4",
+                    }}
+                    key={idx}
+                  >
+                    <Typography component={"div"}>
+                      작성된 게시물이 없습니다.
+                    </Typography>
+                  </Paper>
+                );
+              })}
           </Box>
         </Box>
       </Box>
