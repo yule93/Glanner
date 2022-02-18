@@ -300,7 +300,7 @@ export default function EventModal({
           });
       } else if (type === "groupPlanner" && groupPlannerId) {
         axios
-          .delete(`/api/user/planner/work/${groupPlannerId}/${eventId}`)
+          .delete(`/api/glanner/work/${groupPlannerId}/${eventId}`)
           .then((res) => {
             alert("삭제 성공!");
             if (handleEvent) {
