@@ -195,7 +195,6 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                     id="email"
                     name="email"
                     autoComplete="email"
-                    autoFocus
                     {...register('email', {required: true, pattern: /^\S+@\S+$/i})}              
                     />
                 </Grid>
@@ -260,7 +259,7 @@ const SignupComponent = ({signupPage, setSignupPage}) => {
                     placeholder='숫자만 입력'
                     name="phone"
                     // autoComplete="email"
-                    autoFocus
+
                     {...register('phone', {required: true, pattern: /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/})}                
                     />
                 </Grid>
