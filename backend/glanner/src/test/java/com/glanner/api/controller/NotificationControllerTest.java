@@ -73,7 +73,7 @@ class NotificationControllerTest {
     @Test
     public void testSendMail() throws Exception{
         //given
-        SendMailReqDto reqDto = new SendMailReqDto("aldlswjddma@naver.com","title","content");
+        SendMailReqDto reqDto = new SendMailReqDto("glanner.ssafy@gmail.com","title","content");
 
         //when
         mockMvc.perform(post("/api/notification/mail")
