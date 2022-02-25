@@ -1,6 +1,6 @@
 ## 📅Glanner
 
-<img src="https://i.imgur.com/UP0wmvm.png" title="source: imgur.com" />
+<img src="https://i.imgur.com/UP0wmvm.png" title="source: imgur.com" width="80%" />
 
 [<img src="https://img.shields.io/badge/Notion-go-007396?style=flat-square"/>](https://butter-node-0ad.notion.site/Glanner-b16e6b30b2d64e76b05c75cfccc0862f)
 
@@ -68,7 +68,7 @@
 <img src="https://img.shields.io/badge/-Agile-181717?style=flat-square"/>
 
 ## 🌏Distribution flow
-![FLOW](https://raw.githubusercontent.com/johnna963/UseImg/main/flow.png)
+<img src="https://i.imgur.com/Bb71egG.png" title="source: imgur.com" width="80%" />
 
 ## 📋Sprint Planning
 
