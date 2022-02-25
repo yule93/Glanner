@@ -1,5 +1,10 @@
 ## 📅Glanner
 
+※ 다른 팀원들과 공유한 커밋 로그는 내부 보안으로 인해 적용되지 않았습니다. 감사합니다.
+
+Team commit logs were not showed, because there are internal security.
+
+
 <img src="https://i.imgur.com/UP0wmvm.png" title="source: imgur.com" width="80%" />
 
 [<img src="https://img.shields.io/badge/Notion-go-007396?style=flat-square"/>](https://butter-node-0ad.notion.site/Glanner-b16e6b30b2d64e76b05c75cfccc0862f)
