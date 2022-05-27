@@ -96,7 +96,7 @@ EOF
 ```
 
 #### 백엔드
-release-backend 브랜치에 리액트 프로젝트를 푸쉬하면 깃랩 웹훅으로 아래 명령으로 빌드 실행 <br>
+release-backend 브랜치에 스프링 부트 프로젝트를 푸쉬하면 깃랩 웹훅으로 아래 명령으로 빌드 실행 <br>
 
 ```
 cd ./backend/glanner
