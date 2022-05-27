@@ -18,7 +18,7 @@ Team commit logs were not showed, because there are internal security.
 #### 담당 : 웹 페이지 제작, CSS, 시각적 기능 서비스
 #### 😎 송민주<br>
 #### 분야 : FE, FE Jira
-#### 담당 : 웹 페이지 제작, CSS, 글래너, 플래너 서비스
+#### 담당 : 웹 페이지 제작, CSS, 글래너/플래너 서비스, 헤더/네비게이터
 #### 😁 안재영 <br>
 #### 분야 : FE
 #### 담당 : 웹 페이지 제작, CSS, 게시판 서비스
